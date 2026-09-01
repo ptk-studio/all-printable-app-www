@@ -36,10 +36,13 @@ be deployed as-is to any static host.
 - **Cards & labels** (`docs/printables/cards/`) — flashcards with correct
   duplex alignment, gift tags, bookmarks, tent place cards and Avery-matched
   address labels. See `features/cards/README.md`.
+- **Puzzles** (`docs/printables/puzzles/`) — sudoku with a guaranteed unique
+  solution, word searches, mazes and bingo, all seeded so a link reprints the
+  same puzzles. See `features/puzzles/README.md`.
 - **Catalogue** (`docs/index.html`) — driven by
   `docs/assets/js/registry.js`; add an entry and a card appears.
 
-All four run on the shared studio shell in `docs/assets/js/core/studio.js`,
+All five run on the shared studio shell in `docs/assets/js/core/studio.js`,
 which owns state, controls, preview, printing and export. Sheet geometry for
 the small formats lives in `docs/assets/js/core/impose.js`.
 

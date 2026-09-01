@@ -19,6 +19,8 @@ features/
     README.md        habit tracker and chore chart
   cards/
     README.md        flashcards, tags, bookmarks, place cards, labels
+  puzzles/
+    README.md        sudoku, word search, mazes, bingo
 ```
 
 ## Adding a printable

@@ -15,18 +15,18 @@ alternatives handle it. Registry ids match `docs/assets/js/registry.js`.
   asserted rather than eyeballed.
 - **flashcards, gift-tags, bookmarks, place-cards, labels** — one `cards`
   generator on top of it.
+- **sudoku, word-search, maze, bingo** — one `puzzles` generator, seeded so a
+  link reproduces the same puzzles, with answer keys.
 
 ## Next
 
-1. **times-tables** — drill sheets with a separate answer key page.
-3. **sudoku**, **word-search**, **maze**, **bingo** — generated puzzles with
-   solution pages. Each needs a generator plus a difficulty model.
-4. **budget**, **packing-list**, **meal-planner** — form-shaped sheets; mostly
+1. **times-tables** — drill sheets with a separate answer key page. The puzzles
+   generator's seed-and-answer-key shape carries over almost unchanged.
+2. **budget**, **packing-list**, **meal-planner** — form-shaped sheets; mostly
    a table engine plus good typography.
-5. **gift-tags**, **bookmarks**, **place-cards**, **labels** — small formats
-   with trim and fold marks; needs a shared imposition helper.
-6. **daily-planner** — time-blocked day sheets; close to the calendar's week
+3. **daily-planner** — time-blocked day sheets; close to the calendar's week
    layout but per-day.
+4. **reward-chart** — star grids; a variation on the tracker's grid.
 
 ## Platform work worth doing first
 

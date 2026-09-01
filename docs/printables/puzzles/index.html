@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printable Sudoku, Word Search, Mazes &amp; Bingo — with answers · All Printable</title>
+<meta name="description" content="Generate printable sudoku with a guaranteed unique solution, word searches from your own list, mazes at any size and bingo cards — answer keys included. Free, nothing uploaded.">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/studio.css">
+<link rel="stylesheet" href="../../assets/css/sheet.css">
+<link rel="stylesheet" href="print.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='4' width='24' height='24' rx='2' fill='none' stroke='%23b4472e' stroke-width='2.4'/><path d='M12 4v24M20 4v24M4 12h24M4 20h24' stroke='%23b4472e' stroke-width='1.4'/></svg>">
+</head>
+<body class="app">
+
+<header class="site-header no-print">
+  <a class="brand" href="../../index.html"><span class="brand-mark"></span> All Printable</a>
+  <nav class="nav">
+    <a href="../../index.html">All printables</a>
+    <a href="../calendar/index.html">Calendar</a>
+    <a href="../paper/index.html">Paper</a>
+    <a href="../cards/index.html">Cards</a>
+    <a href="index.html" aria-current="page">Puzzles</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="btn btn-sm" id="btn-share" title="Copy a link that restores these puzzles">Copy link</button>
+  <button class="btn btn-sm" id="btn-html">Download HTML</button>
+  <button class="btn btn-sm btn-primary" id="btn-print">Print / Save PDF</button>
+</header>
+
+<div class="app-shell">
+  <aside class="sidebar no-print">
+    <div class="sidebar-head">
+      <h1>Puzzles</h1>
+      <p>Generated fresh, with answer keys. The same link always deals the same puzzles.</p>
+    </div>
+
+    <div class="presets" id="presets"></div>
+
+    <details class="panel" open>
+      <summary>Puzzle</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Kind</span>
+          <div class="tiles" id="type-tiles"></div>
+          <span class="field-hint" id="type-hint"></span>
+        </div>
+
+        <div class="field" data-when="type=sudoku">
+          <span class="field-label">Difficulty</span>
+          <select data-bind="difficulty">
+            <option value="easy">Easy · about 43 clues</option>
+            <option value="medium">Medium · about 36</option>
+            <option value="hard">Hard · about 30</option>
+            <option value="expert">Expert · about 27</option>
+            <option value="evil">Evil · about 25</option>
+          </select>
+          <span class="field-hint">Every puzzle is checked for a single solution before it is offered.</span>
+        </div>
+
+        <div data-when="type=search">
+          <label class="field">
+            <span class="field-label">Words, one per line</span>
+            <textarea data-bind="words" rows="7" spellcheck="false"></textarea>
+            <span class="field-hint">Words longer than the grid are skipped; the count below says how many fitted.</span>
+          </label>
+          <label class="field"><span class="field-label">Grid <span data-out="gridSize" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="gridSize" min="8" max="22" step="1"></label>
+          <label class="check"><input type="checkbox" data-bind="diagonals"> Diagonals</label>
+          <label class="check"><input type="checkbox" data-bind="backwards"> Backwards</label>
+          <label class="check"><input type="checkbox" data-bind="showWords"> Print the word list</label>
+        </div>
+
+        <div data-when="type=maze">
+          <div class="grid-2">
+            <label class="field"><span class="field-label">Cells across</span>
+              <input type="number" data-bind="mazeW" min="4" max="60"></label>
+            <label class="field"><span class="field-label">Cells down</span>
+              <input type="number" data-bind="mazeH" min="4" max="80"></label>
+          </div>
+          <label class="field"><span class="field-label">Loops <span data-out="braid" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="braid" min="0" max="0.6" step="0.05"></label>
+          <span class="field-hint">Opening dead ends makes a maze harder, not easier — there are more
+            ways to go wrong.</span>
+        </div>
+
+        <div data-when="type=bingo">
+          <div class="field">
+            <span class="field-label">Squares hold</span>
+            <div class="seg">
+              <label><input type="radio" name="bingoMode" data-bind="bingoMode" value="numbers">Numbers</label>
+              <label><input type="radio" name="bingoMode" data-bind="bingoMode" value="words">Your words</label>
+            </div>
+          </div>
+          <div class="grid-2">
+            <label class="field"><span class="field-label">Grid</span>
+              <select data-bind="bingoSize">
+                <option value="3">3 × 3</option>
+                <option value="4">4 × 4</option>
+                <option value="5">5 × 5</option>
+                <option value="6">6 × 6</option>
+              </select></label>
+            <label class="field" data-when="bingoMode=numbers"><span class="field-label">Highest number</span>
+              <input type="number" data-bind="bingoMax" min="9" max="99"></label>
+          </div>
+          <label class="field" data-when="bingoMode=words">
+            <span class="field-label">Words, one per line</span>
+            <textarea data-bind="words" rows="6" spellcheck="false"></textarea>
+            <span class="field-hint">Needs at least as many words as squares, or the card falls back to numbers.</span>
+          </label>
+          <label class="field"><span class="field-label">Header letters</span>
+            <input type="text" data-bind="bingoHeader" placeholder="BINGO — leave empty for none"></label>
+          <label class="check"><input type="checkbox" data-bind="freeSquare"> Free centre square</label>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary>How many</summary>
+      <div class="panel-body">
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Puzzles</span>
+            <input type="number" data-bind="count" min="1" max="40"></label>
+          <div class="field"><span class="field-label">Per sheet</span>
+            <div class="seg">
+              <label><input type="radio" name="perPage" data-bind="perPage" value="1">1</label>
+              <label><input type="radio" name="perPage" data-bind="perPage" value="2">2</label>
+              <label><input type="radio" name="perPage" data-bind="perPage" value="4">4</label>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field-label">Answer key</span>
+          <div class="seg">
+            <label><input type="radio" name="solutions" data-bind="solutions" value="end">Sheets at the end</label>
+            <label><input type="radio" name="solutions" data-bind="solutions" value="none">None</label>
+          </div>
+        </div>
+        <p class="inline-note" id="sheet-readout"></p>
+        <div class="row-wrap">
+          <button class="btn btn-sm btn-primary" id="btn-reroll">Deal new puzzles</button>
+          <span class="field-hint" style="margin:0">Seed <span data-out="seed"></span></span>
+        </div>
+        <label class="check" style="margin-top:8px"><input type="checkbox" data-bind="numbering"> Number each puzzle</label>
+        <label class="check"><input type="checkbox" data-bind="showMeta"> Show difficulty beside the number</label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Paper &amp; style</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Size</span>
+          <select data-bind="paper" id="sel-paper"></select>
+        </div>
+        <div class="field">
+          <span class="field-label">Orientation</span>
+          <div class="seg">
+            <label><input type="radio" name="orientation" data-bind="orientation" value="portrait">Portrait</label>
+            <label><input type="radio" name="orientation" data-bind="orientation" value="landscape">Landscape</label>
+          </div>
+        </div>
+        <label class="field"><span class="field-label">Margin <span data-out="margin" class="field-hint" style="display:inline"></span></span>
+          <input type="range" data-bind="margin" min="4" max="30" step="1"></label>
+        <div class="field">
+          <span class="field-label">Theme</span>
+          <select data-bind="theme">
+            <option value="classic">Classic serif</option>
+            <option value="modern">Modern sans</option>
+            <option value="minimal">Minimal</option>
+            <option value="bold">Bold</option>
+            <option value="editorial">Editorial</option>
+            <option value="mono">Monospace</option>
+          </select>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Accent</span>
+            <input type="color" data-bind="accent"></label>
+          <label class="field"><span class="field-label">Grid lines</span>
+            <input type="color" data-bind="ruleColor"></label>
+        </div>
+        <div class="swatches" id="accent-swatches"></div>
+        <label class="check" style="margin-top:10px"><input type="checkbox" data-bind="accentTitle"> Colour the title</label>
+        <label class="check"><input type="checkbox" data-bind="inkSaver"> Ink saver (outline answers instead of filling)</label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Wording</summary>
+      <div class="panel-body">
+        <label class="field"><span class="field-label">Title</span>
+          <input type="text" data-bind="title" placeholder="Sudoku"></label>
+        <label class="field"><span class="field-label">Subtitle</span>
+          <input type="text" data-bind="subtitle" placeholder="e.g. Rainy Saturday"></label>
+        <div class="field">
+          <span class="field-label">Title position</span>
+          <div class="seg">
+            <label><input type="radio" name="headerAlign" data-bind="headerAlign" value="left">Left</label>
+            <label><input type="radio" name="headerAlign" data-bind="headerAlign" value="center">Centre</label>
+          </div>
+        </div>
+        <label class="field"><span class="field-label">Footer</span>
+          <input type="text" data-bind="footer" placeholder="e.g. all-printable.com"></label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Saved settings</summary>
+      <div class="panel-body">
+        <div class="row-wrap">
+          <button class="btn btn-sm" id="btn-save">Save current</button>
+          <button class="btn btn-sm" id="btn-reset">Reset all</button>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <span class="field-label">Your saves</span>
+          <div id="saved-list"><span class="field-hint">Nothing saved yet.</span></div>
+        </div>
+      </div>
+    </details>
+
+    <div style="padding:16px 16px 40px">
+      <p class="field-hint">Everything is generated here in the browser. Nothing is uploaded.</p>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div class="toolbar no-print" id="toolbar"></div>
+    <div class="canvas" id="canvas"></div>
+  </main>
+</div>
+
+<script src="../../assets/js/core/util.js"></script>
+<script src="../../assets/js/core/paper.js"></script>
+<script src="../../assets/js/core/studio.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

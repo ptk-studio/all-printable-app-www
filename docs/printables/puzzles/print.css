@@ -1,0 +1,107 @@
+/* ==========================================================================
+   Puzzle sheet styles. Page shell comes from assets/css/sheet.css.
+   ========================================================================== */
+
+.pz-wrap { flex: 1 1 auto; min-height: 0; display: grid; gap: 1.2em; }
+.pz-wrap.per-1 { grid-template-columns: 1fr; }
+.pz-wrap.per-2 { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+.pz-wrap.per-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+/* Two to a landscape sheet read better side by side than stacked. */
+.pz-wrap.per-2.wide { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+
+.pz-item { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.pz-num {
+  flex: 0 0 auto; display: flex; align-items: baseline; gap: .6em;
+  font-family: var(--face-head); font-size: .72em; margin-bottom: .4em;
+  color: var(--accent); letter-spacing: .06em;
+}
+.pz-num em { font-style: normal; color: var(--ink-faint); font-size: .85em; }
+.pz-body { flex: 1 1 auto; min-height: 0; min-width: 0; display: flex; }
+.pz-body > * { flex: 1 1 auto; min-width: 0; min-height: 0; }
+
+/* A size container, so a square grid can be exactly min(width, height) of the
+   space it is given. Without a definite size the grid collapses to its
+   content and the cells come out uneven. */
+.pz-gridbox {
+  container-type: size;
+  display: flex; align-items: center; justify-content: center;
+  min-width: 0; min-height: 0;
+}
+
+/* ---- Square-cell grids --------------------------------------------------- */
+.pz-grid, .pz-sudoku {
+  display: grid;
+  width: 100cqmin; height: 100cqmin;
+  border: 0.5mm solid var(--ink);
+  font-family: var(--face-head);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.pz-grid { grid-auto-rows: 1fr; }
+.pz-sudoku {
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  font-size: calc(100cqmin / 13);
+}
+.pz-grid .sq, .pz-sudoku .sq {
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  min-width: 0; min-height: 0;
+  font-size: 1em; line-height: 1;
+}
+.pz-sudoku .sq { font-size: 1.15em; }
+.pz-sudoku .sq.bx-r { border-right: 0.45mm solid var(--ink); }
+.pz-sudoku .sq.bx-b { border-bottom: 0.45mm solid var(--ink); }
+.pz-sudoku .sq.filled { color: var(--accent); }
+
+/* ---- Word search --------------------------------------------------------- */
+.pz-search { display: flex; flex-direction: column; gap: .7em; min-height: 0; min-width: 0; }
+.pz-search .pz-gridbox { flex: 1 1 auto; }
+.pz-grid .sq.hit {
+  background: var(--accent); color: #fff; font-weight: 700;
+}
+.pz-words {
+  flex: 0 0 auto; width: 100%; font-size: .68em; column-gap: 1.2em;
+  font-family: var(--face-head); letter-spacing: .06em;
+}
+.pz-words span { display: block; break-inside: avoid; padding: .08em 0; }
+
+/* ---- Maze ---------------------------------------------------------------- */
+.pz-maze { width: 100%; height: 100%; display: block; }
+.pz-maze .wall {
+  fill: none; stroke: var(--ink); stroke-width: 0.9;
+  stroke-linecap: square; stroke-linejoin: miter;
+}
+.pz-maze .solution {
+  fill: none; stroke: var(--accent); stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round; opacity: .8;
+}
+
+/* ---- Bingo --------------------------------------------------------------- */
+/* Header plus a square grid: size the card off the width, capped by height so
+   the header still fits. */
+.bingo-card { width: min(100cqw, 84cqh); display: flex; flex-direction: column; }
+.bingo-card .pz-grid.bingo { width: 100%; height: auto; aspect-ratio: 1; }
+.bingo-head {
+  display: grid; background: var(--accent);
+  border: 0.5mm solid var(--ink); border-bottom: 0;
+  font-family: var(--face-head);
+}
+.bingo-head .sq {
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; padding: .1em 0;
+  border-right: var(--rule-w) solid rgba(255,255,255,.45);
+  letter-spacing: .06em;
+}
+.bingo-head .sq:last-child { border-right: 0; }
+.pz-grid.bingo .sq.free {
+  font-size: .45em; letter-spacing: .1em; color: var(--accent); font-weight: 700;
+}
+
+/* Word cards need much smaller type than number cards. */
+.page[data-layout="bingo"] .pz-grid.bingo .sq { text-align: center; padding: .1em; line-height: 1.05; }
+
+.page.ink-saver .pz-grid .sq.hit { background: none; color: var(--accent);
+  outline: 0.4mm solid var(--accent); outline-offset: -0.4mm; }
+.page.ink-saver .bingo-head { background: none; }
+.page.ink-saver .bingo-head .sq { color: var(--accent); border-color: var(--rule); }
