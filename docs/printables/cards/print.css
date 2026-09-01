@@ -1,0 +1,86 @@
+/* ==========================================================================
+   Cards & labels sheet styles. Pieces are positioned in sheet coordinates,
+   so there is no .page-inner here — the imposition owns the margins.
+   ========================================================================== */
+
+.page[data-layout] { --mark-w: 0.2; }
+
+/* Cut and crop marks sit under the pieces. */
+.imp-marks { position: absolute; left: 0; top: 0; }
+.imp-marks line {
+  stroke: var(--rule); stroke-width: var(--mark-w); stroke-linecap: butt;
+}
+
+.imp-slug {
+  position: absolute; left: 4mm; top: 3mm;
+  font-size: .5em; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ---- A piece ------------------------------------------------------------- */
+.imp-card {
+  position: absolute; overflow: hidden;
+  display: flex; flex-direction: column;
+  /* Card faces are display type, not body copy — follow the theme's headline
+     face so the editorial and classic themes actually look different. */
+  font-family: var(--face-head);
+  color: var(--ink);
+}
+.imp-card.bordered { border: var(--rule-w) solid var(--rule); }
+
+.card-inner {
+  flex: 1 1 auto; min-height: 0; position: relative;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: .5em .7em;
+}
+.card-text { line-height: 1.25; }
+.card-text.align-center { text-align: center; }
+.card-text.align-left { text-align: left; }
+.card-text.align-right { text-align: right; }
+.card-line { display: block; }
+.card-line:empty { min-height: .1em; }
+
+.card-cat {
+  position: absolute; left: .7em; top: .5em;
+  font-size: .42em; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--accent); font-weight: 600;
+}
+.card-num {
+  position: absolute; right: .7em; bottom: .5em;
+  font-size: .42em; color: var(--ink-faint);
+}
+
+/* Ruled backs, for cards people write on themselves. */
+.card-ruled {
+  position: absolute; inset: 12% 8% 10%;
+  display: flex; flex-direction: column; justify-content: space-around;
+}
+.card-ruled .r-line { border-bottom: var(--rule-w) solid var(--rule); }
+
+/* ---- Folds, tents and holes ---------------------------------------------- */
+.card-fold {
+  position: absolute; pointer-events: none;
+  border-color: var(--rule);
+}
+.card-fold.horizontal {
+  left: 0; right: 0; top: 50%;
+  border-top: var(--rule-w) dashed var(--rule);
+}
+.card-fold.vertical {
+  top: 0; bottom: 0; left: 50%;
+  border-left: var(--rule-w) dashed var(--rule);
+}
+
+/* A tent card folds across the middle: the upper half is printed inverted so
+   both faces read correctly once it stands up. */
+.tent-top, .tent-bottom { flex: 1 1 0; min-height: 0; display: flex; }
+.tent-top { transform: rotate(180deg); }
+.tent-top .card-inner, .tent-bottom .card-inner { flex: 1 1 auto; }
+
+.card-hole {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: 3.5mm; height: 3.5mm; border-radius: 50%;
+  border: var(--rule-w) dashed var(--rule);
+}
+
+.page.ink-saver .imp-card.bordered { border-style: dotted; }

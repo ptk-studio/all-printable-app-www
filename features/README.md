@@ -17,6 +17,8 @@ features/
     README.md        graph, dot, ruled, isometric, hex, manuscript, handwriting
   tracker/
     README.md        habit tracker and chore chart
+  cards/
+    README.md        flashcards, tags, bookmarks, place cards, labels
 ```
 
 ## Adding a printable

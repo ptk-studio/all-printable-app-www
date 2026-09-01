@@ -10,13 +10,15 @@ alternatives handle it. Registry ids match `docs/assets/js/registry.js`.
 - **graph-paper, dot-grid, lined-paper, isometric, hex, manuscript,
   handwriting** — all seven from one `paper` generator, drawn to measured scale.
 - **habit-tracker and chore-chart** — one `tracker` generator, three layouts.
+- **The imposition helper** — `core/impose.js`: N-up layout, crop and cut
+  marks, Avery die-cut stock and duplex card ordering, with the flip geometry
+  asserted rather than eyeballed.
+- **flashcards, gift-tags, bookmarks, place-cards, labels** — one `cards`
+  generator on top of it.
 
 ## Next
 
-1. **flashcards** — double-sided with accurate cut lines and back-side mirroring
-   so duplex printing lines up. The hard part is the duplex geometry, which is
-   exactly why the free options are bad.
-2. **times-tables** — drill sheets with a separate answer key page.
+1. **times-tables** — drill sheets with a separate answer key page.
 3. **sudoku**, **word-search**, **maze**, **bingo** — generated puzzles with
    solution pages. Each needs a generator plus a difficulty model.
 4. **budget**, **packing-list**, **meal-planner** — form-shaped sheets; mostly
@@ -32,8 +34,6 @@ alternatives handle it. Registry ids match `docs/assets/js/registry.js`.
   headings and writing space". The tracker's grid is most of it already —
   generalising it turns the budget, packing-list and meal-planner sheets into
   configuration.
-- **An imposition helper.** N-up placement with trim marks, bleed and duplex
-  mirroring, shared by flashcards, tags, bookmarks and place cards.
 - **A real PDF export.** Today the browser's print dialog does the conversion,
   which is high quality and dependency-free but makes the user do two steps.
   A direct download would need a PDF writer with font embedding — worth it only
