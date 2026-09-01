@@ -1,0 +1,130 @@
+/* Screen chrome for the calendar generator (never printed). */
+
+html, body { height: 100%; }
+body.app { overflow: hidden; }
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  height: calc(100vh - var(--topbar-h));
+}
+
+/* ---- Sidebar ------------------------------------------------------------- */
+.sidebar {
+  border-right: 1px solid var(--line);
+  background: var(--surface);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.sidebar-head {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; background: var(--surface); z-index: 5;
+}
+.sidebar-head h1 { font-size: 1.15rem; margin: 0 0 2px; }
+.sidebar-head p { margin: 0; font-size: 12.5px; color: var(--muted); }
+
+.presets { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.preset-chip {
+  font-size: 12px; padding: 4px 9px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-soft);
+  cursor: pointer; font-family: inherit;
+}
+.preset-chip:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+/* ---- Toolbar ------------------------------------------------------------- */
+.workspace { display: flex; flex-direction: column; min-width: 0; background: var(--canvas); }
+.toolbar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-bottom: 1px solid var(--line);
+  background: var(--surface); flex: 0 0 auto;
+}
+.pager { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--muted); }
+.pager .count { min-width: 74px; text-align: center; font-variant-numeric: tabular-nums; }
+.zoomer { display: flex; align-items: center; gap: 4px; }
+.zoom-val { font-size: 12.5px; color: var(--muted); width: 40px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* ---- Preview canvas ------------------------------------------------------ */
+.canvas {
+  flex: 1 1 auto; overflow: auto; padding: 28px;
+  display: flex; flex-direction: column; align-items: center; gap: 28px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,.06) 1px, transparent 1px) 0 0 / 22px 22px,
+    var(--canvas);
+}
+@media (prefers-color-scheme: dark) {
+  .canvas { background:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,.06) 1px, transparent 1px) 0 0 / 22px 22px,
+    var(--canvas); }
+}
+.canvas.grid-view { flex-direction: row; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 20px; }
+
+.page-shell { position: relative; flex: 0 0 auto; }
+.page-shell > .page {
+  transform-origin: top left;
+  box-shadow: var(--shadow-lg);
+  border-radius: 2px;
+}
+.page-shell::after {
+  content: attr(data-num);
+  position: absolute; left: 0; right: 0; bottom: -20px;
+  text-align: center; font-size: 11.5px; color: var(--muted);
+}
+.canvas .empty { color: var(--muted); font-size: 14px; margin: 60px 0; }
+
+/* ---- Mobile -------------------------------------------------------------- */
+.mobile-tabs { display: none; }
+@media (max-width: 900px) {
+  body.app { overflow: auto; }
+  :root { --topbar-h: 52px; }
+  .app-shell { grid-template-columns: 1fr; height: auto; }
+  .sidebar { order: 2; border-right: 0; border-top: 1px solid var(--line); overflow: visible; max-height: none; }
+  .workspace { order: 1; height: 62vh; }
+  .canvas { padding: 16px; }
+  .toolbar { flex-wrap: wrap; }
+}
+
+/* ---- Print --------------------------------------------------------------- */
+@media print {
+  html, body { height: auto; background: #fff; overflow: visible; }
+  body.app { overflow: visible; }
+  .site-header, .sidebar, .toolbar, .site-footer, .toast, .no-print { display: none !important; }
+  .app-shell { display: block; height: auto; }
+  .workspace { display: block; }
+  .canvas {
+    display: block; padding: 0; margin: 0; gap: 0; background: none; overflow: visible;
+  }
+  .page-shell { display: block; width: auto !important; height: auto !important; margin: 0; }
+  .page-shell::after { display: none; }
+  .page-shell > .page {
+    transform: none !important; box-shadow: none; border-radius: 0;
+    break-after: page; page-break-after: always;
+  }
+  .page-shell:last-child > .page { break-after: auto; page-break-after: auto; }
+  /* Keep browser-added backgrounds (weekend tints, today marker). */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ---- Colour swatch row --------------------------------------------------- */
+.swatches { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.swatch {
+  width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,.15);
+  cursor: pointer; padding: 0;
+}
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+
+/* ---- Layout picker art --------------------------------------------------- */
+.tile-art rect, .tile-art line, .tile-art path { vector-effect: non-scaling-stroke; }
+.tile-art .fill { fill: currentColor; opacity: .18; }
+.tile-art .stroke { fill: none; stroke: currentColor; stroke-width: 1; opacity: .75; }
+
+.inline-note {
+  font-size: 12px; color: var(--muted); background: var(--surface-2);
+  border-left: 2px solid var(--line); padding: 7px 10px; border-radius: 0 6px 6px 0;
+  margin: 8px 0 0; line-height: 1.45;
+}
+.country-list {
+  max-height: 168px; overflow-y: auto; border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 8px; background: var(--surface-2);
+}
+.country-list .check { font-size: 13px; }

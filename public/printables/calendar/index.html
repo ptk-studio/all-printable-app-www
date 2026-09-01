@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printable Calendar Maker — 7 layouts, any paper size · All Printable</title>
+<meta name="description" content="Make a printable calendar in seven layouts — month, multi-month, year, year grid, agenda, weekly planner and photo — on any paper size, with holidays for 30 countries, moon phases, week numbers and your own events. Free, no sign-up.">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="print.css">
+<link rel="stylesheet" href="app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='6' width='26' height='23' rx='3' fill='none' stroke='%23b4472e' stroke-width='2.5'/><path d='M3 13h26' stroke='%23b4472e' stroke-width='2.5'/><path d='M10 3v6M22 3v6' stroke='%23b4472e' stroke-width='2.5' stroke-linecap='round'/></svg>">
+</head>
+<body class="app">
+
+<header class="site-header no-print">
+  <a class="brand" href="../../index.html"><span class="brand-mark"></span> All Printable</a>
+  <nav class="nav">
+    <a href="../../index.html">All printables</a>
+    <a href="index.html" aria-current="page">Calendar</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="btn btn-sm" id="btn-share" title="Copy a link that restores these settings">Copy link</button>
+  <button class="btn btn-sm" id="btn-html">Download HTML</button>
+  <button class="btn btn-sm btn-primary" id="btn-print">Print / Save PDF</button>
+</header>
+
+<div class="app-shell">
+
+  <!-- ================= Sidebar ================= -->
+  <aside class="sidebar no-print" id="sidebar">
+    <div class="sidebar-head">
+      <h1>Calendar maker</h1>
+      <p>Everything updates as you type. Nothing leaves your browser.</p>
+    </div>
+
+    <div class="presets" id="presets"></div>
+
+    <details class="panel" open>
+      <summary>Format</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Layout</span>
+          <div class="tiles" id="layout-tiles"></div>
+          <span class="field-hint" id="layout-hint"></span>
+        </div>
+
+        <div class="field" data-when="layout=multi">
+          <span class="field-label">Months per page</span>
+          <div class="seg">
+            <label><input type="radio" name="perPage" data-bind="perPage" value="2">2</label>
+            <label><input type="radio" name="perPage" data-bind="perPage" value="3">3</label>
+            <label><input type="radio" name="perPage" data-bind="perPage" value="4">4</label>
+            <label><input type="radio" name="perPage" data-bind="perPage" value="6">6</label>
+          </div>
+          <label class="check" style="margin-top:8px">
+            <input type="checkbox" data-bind="showRangeTitle"> Show date range heading
+          </label>
+        </div>
+
+        <div class="field" data-when="layout=year">
+          <span class="field-label">Columns</span>
+          <div class="seg">
+            <label><input type="radio" name="yearCols" data-bind="yearCols" value="2">2</label>
+            <label><input type="radio" name="yearCols" data-bind="yearCols" value="3">3</label>
+            <label><input type="radio" name="yearCols" data-bind="yearCols" value="4">4</label>
+            <label><input type="radio" name="yearCols" data-bind="yearCols" value="6">6</label>
+          </div>
+        </div>
+
+        <div class="field" data-when="layout=yeargrid">
+          <span class="field-label">Direction</span>
+          <div class="seg">
+            <label><input type="radio" name="ygridOrient" data-bind="ygridOrient" value="across">Months across</label>
+            <label><input type="radio" name="ygridOrient" data-bind="ygridOrient" value="down">Months down</label>
+          </div>
+          <label class="check" style="margin-top:8px">
+            <input type="checkbox" data-bind="ygridLabels"> Print holiday names in cells
+          </label>
+        </div>
+
+        <div class="field" data-when="layout=agenda">
+          <span class="field-label">Columns</span>
+          <div class="seg">
+            <label><input type="radio" name="agendaCols" data-bind="agendaCols" value="1">Single</label>
+            <label><input type="radio" name="agendaCols" data-bind="agendaCols" value="2">Two up</label>
+          </div>
+        </div>
+
+        <div data-when="layout=week">
+          <div class="field">
+            <span class="field-label">Arrangement</span>
+            <div class="seg">
+              <label><input type="radio" name="weekShape" data-bind="weekShape" value="rows">Rows</label>
+              <label><input type="radio" name="weekShape" data-bind="weekShape" value="columns">Columns</label>
+              <label><input type="radio" name="weekShape" data-bind="weekShape" value="grid">Grid</label>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" data-bind="weekHours"> Hourly time slots</label>
+          <div class="grid-2" data-when="weekHours=true" style="margin-top:8px">
+            <label class="field"><span class="field-label">From</span>
+              <input type="number" min="0" max="23" data-bind="hourStart"></label>
+            <label class="field"><span class="field-label">To</span>
+              <input type="number" min="0" max="23" data-bind="hourEnd"></label>
+          </div>
+          <label class="check"><input type="checkbox" data-bind="weekNotes"> Add a notes block</label>
+          <div class="field" data-when="weekHours=false" style="margin-top:8px">
+            <span class="field-label">Writing surface</span>
+            <select data-bind="weekFill">
+              <option value="none">Blank</option>
+              <option value="lines">Ruled lines</option>
+              <option value="dots">Dot grid</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" data-when="layout=photo">
+          <span class="field-label">Photo height <span id="photoSize-out" class="field-hint" style="display:inline"></span></span>
+          <input type="range" min="20" max="70" step="1" data-bind="photoSize">
+          <input type="file" id="photo-file" accept="image/*" style="margin-top:8px;font-size:12px">
+          <span class="field-hint">Leave empty to print a frame you can glue a photo into.</span>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary>Dates</summary>
+      <div class="panel-body">
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Start month</span>
+            <select data-bind="startMonth" id="sel-startMonth"></select></label>
+          <label class="field"><span class="field-label">Year</span>
+            <input type="number" min="1900" max="2200" data-bind="startYear"></label>
+        </div>
+        <label class="field"><span class="field-label"><span id="count-label">Months</span> to make</span>
+          <input type="number" min="1" max="60" data-bind="count"></label>
+        <div class="field">
+          <span class="field-label">Week starts on</span>
+          <select data-bind="weekStart" id="sel-weekStart"></select>
+        </div>
+        <div class="field">
+          <span class="field-label">Weekend days</span>
+          <div class="grid-3" id="weekend-days"></div>
+          <span class="field-hint">Shade any days you like — Fri/Sat, Sun only, or none.</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Language</span>
+          <select data-bind="locale" id="sel-locale"></select>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary>Paper</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Size</span>
+          <select data-bind="paper" id="sel-paper"></select>
+        </div>
+        <div class="field">
+          <span class="field-label">Orientation</span>
+          <div class="seg">
+            <label><input type="radio" name="orientation" data-bind="orientation" value="portrait">Portrait</label>
+            <label><input type="radio" name="orientation" data-bind="orientation" value="landscape">Landscape</label>
+          </div>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Margin <span id="margin-out" class="field-hint" style="display:inline"></span></span>
+            <input type="range" min="0" max="30" step="1" data-bind="margin"></label>
+          <label class="field"><span class="field-label">Text size <span id="textScale-out" class="field-hint" style="display:inline"></span></span>
+            <input type="range" min="0.7" max="1.4" step="0.05" data-bind="textScale"></label>
+        </div>
+        <p class="inline-note">Printing tip: in the print dialog set <b>Scale 100%</b> (not “Fit to page”) and margins to <b>None</b> so the sheet comes out at exactly the size you picked.</p>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Style</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Theme</span>
+          <select data-bind="theme">
+            <option value="classic">Classic serif</option>
+            <option value="modern">Modern sans</option>
+            <option value="minimal">Minimal</option>
+            <option value="bold">Bold</option>
+            <option value="editorial">Editorial</option>
+            <option value="mono">Monospace</option>
+          </select>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Accent</span>
+            <input type="color" data-bind="accent"></label>
+          <label class="field"><span class="field-label">Grid lines</span>
+            <input type="color" data-bind="ruleColor"></label>
+        </div>
+        <div class="swatches" id="accent-swatches"></div>
+
+        <div class="field" style="margin-top:12px">
+          <span class="field-label">Rules</span>
+          <div class="seg">
+            <label><input type="radio" name="rules" data-bind="rules" value="all">All</label>
+            <label><input type="radio" name="rules" data-bind="rules" value="outer">Outer only</label>
+            <label><input type="radio" name="rules" data-bind="rules" value="none">None</label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field-label">Weekends</span>
+          <div class="seg">
+            <label><input type="radio" name="weekendStyle" data-bind="weekendStyle" value="none">Plain</label>
+            <label><input type="radio" name="weekendStyle" data-bind="weekendStyle" value="tint">Shaded</label>
+            <label><input type="radio" name="weekendStyle" data-bind="weekendStyle" value="accent">Coloured</label>
+          </div>
+          <input type="color" data-bind="shadeColor" data-when="weekendStyle=tint" style="margin-top:8px">
+        </div>
+        <div class="field">
+          <span class="field-label">Day number</span>
+          <div class="seg">
+            <label><input type="radio" name="numberPos" data-bind="numberPos" value="tl">Left</label>
+            <label><input type="radio" name="numberPos" data-bind="numberPos" value="tr">Right</label>
+            <label><input type="radio" name="numberPos" data-bind="numberPos" value="center">Centre</label>
+          </div>
+        </div>
+        <label class="field"><span class="field-label">Day number size <span id="numberScale-out" class="field-hint" style="display:inline"></span></span>
+          <input type="range" min="0.6" max="2.4" step="0.1" data-bind="numberScale"></label>
+        <div class="grid-2">
+          <div class="field"><span class="field-label">Day names</span>
+            <select data-bind="dowStyle">
+              <option value="long">Monday</option>
+              <option value="short">Mon</option>
+              <option value="narrow">M</option>
+            </select></div>
+          <div class="field"><span class="field-label">Align</span>
+            <select data-bind="dowAlign">
+              <option value="left">Left</option>
+              <option value="center">Centre</option>
+              <option value="right">Right</option>
+            </select></div>
+        </div>
+        <div class="field">
+          <span class="field-label">Title</span>
+          <div class="seg">
+            <label><input type="radio" name="headerAlign" data-bind="headerAlign" value="left">Left</label>
+            <label><input type="radio" name="headerAlign" data-bind="headerAlign" value="center">Centre</label>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" data-bind="accentTitle"> Colour the month name</label>
+        <label class="check"><input type="checkbox" data-bind="inkSaver"> Ink saver (no fills, hairline rules)</label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>What’s in each day</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Week numbers</span>
+          <div class="seg">
+            <label><input type="radio" name="weekNumbers" data-bind="weekNumbers" value="none">Off</label>
+            <label><input type="radio" name="weekNumbers" data-bind="weekNumbers" value="iso">ISO</label>
+            <label><input type="radio" name="weekNumbers" data-bind="weekNumbers" value="us">US</label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field-label">Extra number</span>
+          <select data-bind="altLabel">
+            <option value="none">None</option>
+            <option value="doy">Day of year</option>
+            <option value="left">Days left in year</option>
+            <option value="week">Week number</option>
+          </select>
+        </div>
+        <div class="field">
+          <span class="field-label">Days from other months</span>
+          <div class="seg">
+            <label><input type="radio" name="adjacent" data-bind="adjacent" value="show">Show</label>
+            <label><input type="radio" name="adjacent" data-bind="adjacent" value="grey">Faded</label>
+            <label><input type="radio" name="adjacent" data-bind="adjacent" value="hide">Blank</label>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" data-bind="sixWeeks"> Always six week rows (same height every month)</label>
+        <label class="check"><input type="checkbox" data-bind="markToday"> Circle today’s date</label>
+        <label class="check"><input type="checkbox" data-bind="miniMonths"> Mini previous / next month in header</label>
+        <label class="check"><input type="checkbox" data-bind="moon"> Moon phases</label>
+
+        <div class="field" style="margin-top:12px">
+          <span class="field-label">Lines inside each day</span>
+          <select data-bind="cellFill">
+            <option value="none">None</option>
+            <option value="lines">Ruled</option>
+            <option value="dots">Dots</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Notes area</span>
+          <select data-bind="notes">
+            <option value="none">None</option>
+            <option value="lines">Ruled lines</option>
+            <option value="dots">Dot grid</option>
+            <option value="grid">Squared</option>
+            <option value="blank">Blank box</option>
+          </select>
+        </div>
+        <div data-when="notes!=none">
+          <div class="grid-2">
+            <div class="field"><span class="field-label">Position</span>
+              <select data-bind="notesPos">
+                <option value="below">Below grid</option>
+                <option value="side">Beside grid</option>
+              </select></div>
+            <label class="field"><span class="field-label">Size <span id="notesSize-out" class="field-hint" style="display:inline"></span></span>
+              <input type="range" min="10" max="45" step="1" data-bind="notesSize"></label>
+          </div>
+          <label class="field"><span class="field-label">Heading</span>
+            <input type="text" data-bind="notesTitle" placeholder="Notes"></label>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Holidays</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Countries</span>
+          <div class="country-list" id="country-list"></div>
+          <span class="field-hint">Pick as many as you need — useful for family spread across borders.</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Show as</span>
+          <div class="seg">
+            <label><input type="radio" name="holStyle" data-bind="holiday.style" value="name">Name</label>
+            <label><input type="radio" name="holStyle" data-bind="holiday.style" value="dot">Dot</label>
+            <label><input type="radio" name="holStyle" data-bind="holiday.style" value="both">Both</label>
+            <label><input type="radio" name="holStyle" data-bind="holiday.style" value="none">Off</label>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" data-bind="holiday.showObserved"> Include “observed” substitute days</label>
+        <label class="check"><input type="checkbox" data-bind="holiday.observances"> Add common observances (Valentine’s, Mother’s Day…)</label>
+        <label class="check"><input type="checkbox" data-bind="holiday.lunarNewYear"> Add Chinese New Year</label>
+        <label class="check"><input type="checkbox" data-bind="holiday.seasons"> Add equinoxes &amp; solstices</label>
+        <label class="check"><input type="checkbox" data-bind="holiday.legend"> Print a holiday list at the bottom</label>
+        <p class="inline-note">Dates are computed from each country’s rules, so any year works — including
+          Easter-linked days, “observed” Monday substitutes and Japan’s bridge holidays. Religious festivals
+          on lunar calendars (Diwali, Eid, Seollal) vary by sighting and are best added under Your events.</p>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Your events</summary>
+      <div class="panel-body">
+        <label class="field">
+          <span class="field-label">One per line</span>
+          <textarea data-bind="events" rows="7" spellcheck="false"
+            placeholder="2026-03-14 Flight to Osaka&#10;06-21 Mum's birthday&#10;*-01 Rent due"></textarea>
+          <span class="field-hint">
+            <b>2026-03-14 Text</b> — that exact date.<br>
+            <b>06-21 Text</b> — every year.<br>
+            <b>*-01 Text</b> — that day of every month.
+          </span>
+        </label>
+        <div class="row-wrap">
+          <button class="btn btn-sm" id="btn-events-csv">Import .csv / .txt</button>
+          <input type="file" id="events-file" accept=".csv,.txt" class="hide">
+        </div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Wording</summary>
+      <div class="panel-body">
+        <label class="field"><span class="field-label">Subtitle</span>
+          <input type="text" data-bind="subtitle" placeholder="e.g. Ashwood family"></label>
+        <label class="field"><span class="field-label">Footer</span>
+          <input type="text" data-bind="footer" placeholder="e.g. allprintable.example"></label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Saved settings</summary>
+      <div class="panel-body">
+        <div class="row-wrap">
+          <button class="btn btn-sm" id="btn-save">Save current</button>
+          <button class="btn btn-sm" id="btn-reset">Reset all</button>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <span class="field-label">Your saves</span>
+          <div id="saved-list"><span class="field-hint">Nothing saved yet.</span></div>
+        </div>
+      </div>
+    </details>
+
+    <div style="padding:16px 16px 40px">
+      <p class="field-hint">Made something good? It never left this browser — no account, no upload.</p>
+    </div>
+  </aside>
+
+  <!-- ================= Workspace ================= -->
+  <main class="workspace">
+    <div class="toolbar no-print">
+      <div class="pager">
+        <button class="btn btn-sm btn-icon" id="prev-page" title="Previous page" aria-label="Previous page">‹</button>
+        <span class="count" id="page-count">1 / 1</span>
+        <button class="btn btn-sm btn-icon" id="next-page" title="Next page" aria-label="Next page">›</button>
+      </div>
+      <div class="seg" style="width:auto">
+        <label><input type="radio" name="view" id="view-single" checked>Single</label>
+        <label><input type="radio" name="view" id="view-all">All pages</label>
+      </div>
+      <span class="spacer"></span>
+      <div class="zoomer">
+        <button class="btn btn-sm btn-icon" id="zoom-out" aria-label="Zoom out">−</button>
+        <span class="zoom-val" id="zoom-val">Fit</span>
+        <button class="btn btn-sm btn-icon" id="zoom-in" aria-label="Zoom in">+</button>
+        <button class="btn btn-sm" id="zoom-fit">Fit</button>
+      </div>
+    </div>
+    <div class="canvas" id="canvas"></div>
+  </main>
+</div>
+
+<script src="../../assets/js/core/util.js"></script>
+<script src="../../assets/js/core/paper.js"></script>
+<script src="astro.js"></script>
+<script src="holidays.js"></script>
+<script src="layouts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

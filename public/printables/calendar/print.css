@@ -1,0 +1,319 @@
+/* ==========================================================================
+   Paper styles. Everything inside .page is measured in `em` off a font-size
+   set in millimetres, so a layout scales identically from Pocket to 24×36.
+   ========================================================================== */
+
+.page {
+  --rule:        #cfc9bb;
+  --rule-w:      max(0.055em, 0.2mm);
+  --ink:         #16150f;
+  --ink-soft:    #5b564a;
+  --ink-faint:   #a8a294;
+  --accent:      #b4472e;
+  --shade:       #f2efe7;
+  --pad:         10mm;
+  --weeks:       6;
+  --numscale:    1;
+
+  position: relative;
+  background: #fff;
+  color: var(--ink);
+  overflow: hidden;
+  font-family: var(--cal-body, "Helvetica Neue", Helvetica, Arial, sans-serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  break-after: page;
+}
+.page-inner {
+  position: absolute; inset: var(--pad);
+  display: flex; flex-direction: column;
+}
+
+/* ---- Themes -------------------------------------------------------------- */
+.theme-classic { --cal-head: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+                 --cal-body: "Iowan Old Style", Palatino, Georgia, serif;
+                 --dow-tf: none; --dow-ls: .12em; --dow-w: 600; --title-w: 500; }
+.theme-modern  { --cal-head: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                 --cal-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                 --dow-tf: uppercase; --dow-ls: .16em; --dow-w: 600; --title-w: 300; }
+.theme-minimal { --cal-head: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                 --cal-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                 --dow-tf: uppercase; --dow-ls: .22em; --dow-w: 400; --title-w: 200;
+                 --rule: #e3ded2; }
+.theme-bold    { --cal-head: "Helvetica Neue", Impact, "Arial Black", sans-serif;
+                 --cal-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                 --dow-tf: uppercase; --dow-ls: .05em; --dow-w: 800; --title-w: 800; }
+.theme-mono    { --cal-head: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+                 --cal-body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+                 --dow-tf: uppercase; --dow-ls: .1em; --dow-w: 500; --title-w: 500; }
+.theme-editorial { --cal-head: "Didot", "Bodoni MT", "Playfair Display", Georgia, serif;
+                 --cal-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                 --dow-tf: uppercase; --dow-ls: .2em; --dow-w: 500; --title-w: 400; }
+
+/* Ink saver: no fills, hairline rules. */
+.page.ink-saver { --shade: #fff; --rule-w: max(0.04em, 0.15mm); --rule: #d8d3c6; }
+.page.ink-saver .cal-title, .page.ink-saver .dnum { color: var(--ink); }
+
+/* ---- Header -------------------------------------------------------------- */
+.cal-head { display: flex; align-items: flex-end; gap: 1em; margin-bottom: .85em; flex: 0 0 auto; }
+.cal-head.center { flex-direction: column; align-items: center; text-align: center; gap: .2em; }
+.cal-titles { flex: 1 1 auto; min-width: 0; }
+.cal-title {
+  font-family: var(--cal-head); font-weight: var(--title-w, 500);
+  font-size: 2.6em; line-height: 1; margin: 0;
+  letter-spacing: -.01em; color: var(--ink);
+}
+.cal-title .cal-year { color: var(--ink-faint); font-weight: 300; margin-left: .28em; }
+.cal-title.accent .cal-month { color: var(--accent); }
+.cal-sub { font-size: .95em; color: var(--ink-soft); margin-top: .35em; letter-spacing: .04em; }
+.cal-minis { display: flex; gap: .8em; flex: 0 0 auto; align-items: flex-end; }
+
+/* Miniature month blocks used in headers and year pages. */
+.mini { font-size: .62em; line-height: 1.25; }
+.mini-name { font-family: var(--cal-head); font-weight: 600; text-align: center; margin-bottom: .35em; letter-spacing: .04em; }
+.mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0 .1em; text-align: center; }
+.mini-grid .dow { color: var(--ink-faint); font-size: .85em; font-weight: 600; text-transform: uppercase; }
+.mini-grid .d { color: var(--ink); padding: .05em 0; }
+.mini-grid .d.out { color: transparent; }
+.mini-grid .d.we { color: var(--ink-soft); }
+.mini-grid .d.hol { color: var(--accent); font-weight: 700; }
+.mini-grid .d.today { background: var(--accent); color: #fff; border-radius: 50%; }
+
+/* ---- Main grid ----------------------------------------------------------- */
+.cal-body { flex: 1 1 auto; display: flex; gap: .8em; min-height: 0; }
+.cal-body.stacked { flex-direction: column; }
+.cal-grid {
+  flex: 1 1 auto; min-height: 0; min-width: 0;
+  display: grid;
+  grid-template-rows: auto repeat(var(--weeks), 1fr);
+  grid-auto-flow: row;
+  border-top: var(--rule-w) solid var(--rule);
+  border-left: var(--rule-w) solid var(--rule);
+}
+.cal-grid.no-rules { border: 0; }
+.cal-grid.no-rules .cell, .cal-grid.no-rules .dow { border-color: transparent; }
+.cal-grid.rules-outer .cell { border-color: transparent; }
+.cal-grid.rules-outer { border: var(--rule-w) solid var(--rule); }
+
+.dow {
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+  padding: .32em .45em;
+  font-size: .78em;
+  font-weight: var(--dow-w, 600);
+  letter-spacing: var(--dow-ls, .12em);
+  text-transform: var(--dow-tf, none);
+  color: var(--ink-soft);
+  text-align: var(--dow-align, left);
+  white-space: nowrap; overflow: hidden;
+}
+.dow.we { color: var(--accent); }
+.dow.wk-col, .cell.wk-col {
+  background: none; color: var(--ink-faint);
+  font-size: .62em; text-align: center; letter-spacing: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.cell {
+  position: relative;
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+  padding: .28em .38em;
+  min-width: 0; overflow: hidden;
+  display: flex; flex-direction: column; gap: .1em;
+}
+.cell.we { background: var(--shade); }
+.cell.out { color: var(--ink-faint); }
+.cell.out .dnum { color: var(--ink-faint); font-weight: 400; }
+.cell.hidden-out .dnum, .cell.hidden-out .cell-items { visibility: hidden; }
+
+.cell-top { display: flex; align-items: baseline; gap: .3em; }
+.dnum {
+  font-family: var(--cal-head);
+  font-size: calc(1.35em * var(--numscale));
+  line-height: 1; font-weight: 500; color: var(--ink);
+}
+.pos-tr .cell-top { justify-content: flex-end; flex-direction: row-reverse; }
+.pos-center .cell-top { justify-content: center; }
+.pos-center .cell { align-items: center; text-align: center; }
+
+.cell.today .dnum {
+  color: #fff; background: var(--accent);
+  border-radius: 50%; width: 1.5em; height: 1.5em;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.cell.hol .dnum { color: var(--accent); }
+.dnum-alt { font-size: .55em; color: var(--ink-faint); letter-spacing: .02em; }
+
+.moon { color: var(--ink-soft); flex: 0 0 auto; margin-left: auto; }
+.pos-tr .moon, .pos-center .moon { margin-left: 0; }
+
+.cell-items { font-size: .62em; line-height: 1.25; color: var(--ink-soft); overflow: hidden; }
+.cell-items .it { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cell-items .it.hol { color: var(--accent); }
+.cell-items .it.evt { color: var(--ink); }
+.cell-items .it.evt::before { content: "• "; color: var(--accent); }
+.cell-items .it.season { font-style: italic; }
+
+/* Holiday marker dot instead of names, for tight layouts. */
+.hol-dot {
+  position: absolute; right: .3em; bottom: .3em;
+  width: .3em; height: .3em; border-radius: 50%; background: var(--accent);
+}
+
+/* Ruled writing lines inside big day cells. */
+.cell-lines { flex: 1 1 auto; margin-top: .1em; }
+.cell-lines.lines {
+  background-image: linear-gradient(to bottom, transparent 0,
+    transparent calc(100% - var(--rule-w)), var(--rule) calc(100% - var(--rule-w)));
+  background-size: 100% 1.05em;
+}
+.cell-lines.dots {
+  background-image: radial-gradient(circle at .5px .5px, var(--rule) .55px, transparent .6px);
+  background-size: 1.05em 1.05em;
+}
+
+/* ---- Notes panel --------------------------------------------------------- */
+.cal-notes {
+  flex: 0 0 auto; display: flex; flex-direction: column;
+  border: var(--rule-w) solid var(--rule);
+  padding: .5em .6em;
+}
+.cal-notes.side { width: 22%; }
+.cal-notes.below { width: 100%; height: 22%; }
+.cal-notes.plain { border: 0; padding: .5em 0 0; }
+.notes-title {
+  font-family: var(--cal-head); font-size: .72em; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--ink-faint);
+  margin-bottom: .5em;
+}
+.notes-fill { flex: 1 1 auto; }
+.notes-fill.lines {
+  background-image: linear-gradient(to bottom, transparent 0,
+    transparent calc(100% - var(--rule-w)), var(--rule) calc(100% - var(--rule-w)));
+  background-size: 100% 1.5em;
+}
+.notes-fill.dots {
+  background-image: radial-gradient(circle at 1px 1px, var(--rule) .7px, transparent .75px);
+  background-size: 1.3em 1.3em;
+}
+.notes-fill.grid {
+  background-image: linear-gradient(to right, var(--rule) var(--rule-w), transparent var(--rule-w)),
+                    linear-gradient(to bottom, var(--rule) var(--rule-w), transparent var(--rule-w));
+  background-size: 1.3em 1.3em;
+}
+
+/* ---- Multi-month pages --------------------------------------------------- */
+.multi-wrap { flex: 1 1 auto; display: grid; gap: 1em; min-height: 0; }
+.multi-cell { display: flex; flex-direction: column; min-height: 0; }
+.multi-cell .cal-title { font-size: 1.3em; margin-bottom: .3em; }
+.multi-cell .cal-grid { font-size: .9em; }
+.multi-cell .dnum { font-size: calc(1.05em * var(--numscale)); }
+.multi-cell .cell-items { font-size: .55em; }
+
+/* ---- Year page (12 minis) ------------------------------------------------ */
+.year-wrap { flex: 1 1 auto; display: grid; gap: 1.1em .9em; align-content: stretch; min-height: 0; }
+.year-wrap .mini { font-size: .78em; }
+.year-wrap .mini-name {
+  text-align: left; font-size: 1.15em; letter-spacing: .06em;
+  color: var(--accent); margin-bottom: .45em;
+  border-bottom: var(--rule-w) solid var(--rule); padding-bottom: .25em;
+}
+.year-wrap .mini { display: flex; flex-direction: column; min-height: 0; }
+.year-wrap .mini-grid { flex: 1 1 auto; gap: 0 .1em; grid-auto-rows: 1fr; align-items: center; }
+.year-wrap .mini-grid .d { padding: 0; }
+
+/* ---- Year grid (days down, months across) -------------------------------- */
+.ygrid { flex: 1 1 auto; display: grid; min-height: 0; font-size: .72em;
+  border-top: var(--rule-w) solid var(--rule); border-left: var(--rule-w) solid var(--rule); }
+.ygrid > div {
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+  padding: 0 .3em; display: flex; align-items: center; gap: .3em;
+  overflow: hidden; white-space: nowrap;
+}
+.ygrid .yg-head {
+  font-family: var(--cal-head); font-weight: 700; justify-content: center;
+  text-transform: var(--dow-tf, none); letter-spacing: .08em;
+  color: var(--accent); font-size: .95em;
+}
+.ygrid .yg-dnum { justify-content: flex-end; color: var(--ink-faint); font-size: .9em; }
+.ygrid .yg-cell.we { background: var(--shade); }
+.ygrid .yg-cell.hol { color: var(--accent); font-weight: 600; }
+.ygrid .yg-cell .wd { color: var(--ink-faint); font-size: .82em; width: 1.6em; flex: 0 0 auto; }
+.ygrid .yg-cell.blank { background: repeating-linear-gradient(135deg,
+    transparent 0 .35em, var(--rule) .35em .4em); }
+.ygrid .yg-label { font-size: .78em; color: var(--ink-faint); overflow: hidden; text-overflow: ellipsis; }
+
+/* ---- Agenda / list month ------------------------------------------------- */
+.agenda { flex: 1 1 auto; display: grid; gap: 0; min-height: 0;
+  border-top: var(--rule-w) solid var(--rule); }
+.agenda .arow {
+  display: flex; align-items: stretch; gap: .6em;
+  border-bottom: var(--rule-w) solid var(--rule); padding: .18em .2em;
+  min-height: 0;
+}
+.agenda .arow.we { background: var(--shade); }
+.agenda .a-date { flex: 0 0 3.4em; display: flex; align-items: baseline; gap: .35em; }
+.agenda .a-num { font-family: var(--cal-head); font-size: 1.15em; font-weight: 600; }
+.agenda .a-dow { font-size: .62em; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-faint); }
+.agenda .a-body { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; }
+.agenda .a-meta { font-size: .62em; color: var(--accent); }
+.agenda.two-col { grid-template-columns: 1fr 1fr; column-gap: 1.2em; }
+
+/* ---- Week planner -------------------------------------------------------- */
+.weekwrap { flex: 1 1 auto; display: grid; gap: .5em; min-height: 0; }
+.wday { display: flex; flex-direction: column; border: var(--rule-w) solid var(--rule);
+  min-height: 0; min-width: 0; overflow: hidden; }
+.wday.we { background: var(--shade); }
+.wday-head {
+  display: flex; align-items: baseline; gap: .4em; padding: .25em .45em;
+  border-bottom: var(--rule-w) solid var(--rule);
+  min-width: 0; overflow: hidden; white-space: nowrap;
+}
+.wday-head .wd-name { font-family: var(--cal-head); font-weight: 600; font-size: .82em;
+  text-transform: var(--dow-tf, none); letter-spacing: var(--dow-ls, .08em);
+  overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.wday-head .wd-num { font-size: .8em; color: var(--ink-faint); margin-left: auto; }
+.wday-head .wd-hol { font-size: .6em; color: var(--accent); }
+.wday-body { flex: 1 1 auto; min-height: 0; }
+.wday-body.lines {
+  background-image: linear-gradient(to bottom, transparent 0,
+    transparent calc(100% - var(--rule-w)), var(--rule) calc(100% - var(--rule-w)));
+  background-size: 100% 1.25em;
+}
+.wday-body.dots {
+  background-image: radial-gradient(circle at 1px 1px, var(--rule) .7px, transparent .75px);
+  background-size: 1.2em 1.2em;
+}
+.hours { display: flex; flex-direction: column; height: 100%; }
+.hours .hr { flex: 1 1 0; display: flex; gap: .4em; align-items: flex-start;
+  border-bottom: var(--rule-w) solid var(--rule); padding: .05em .3em; min-height: 0; }
+.hours .hr:last-child { border-bottom: 0; }
+.hours .hr-l { font-size: .58em; color: var(--ink-faint); width: 2.6em; flex: 0 0 auto; }
+
+/* ---- Photo layout -------------------------------------------------------- */
+.photo-frame {
+  flex: 0 0 auto; border: var(--rule-w) solid var(--rule);
+  background: var(--shade); position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; margin-bottom: .8em;
+}
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-frame .ph-hint {
+  font-size: .8em; color: var(--ink-faint); letter-spacing: .18em; text-transform: uppercase;
+}
+
+/* ---- Footer -------------------------------------------------------------- */
+.cal-foot {
+  flex: 0 0 auto; margin-top: .6em; padding-top: .35em;
+  border-top: var(--rule-w) solid var(--rule);
+  display: flex; gap: 1em; align-items: baseline;
+  font-size: .62em; color: var(--ink-faint); letter-spacing: .05em;
+}
+.cal-foot .f-right { margin-left: auto; }
+.cal-foot.plain { border-top: 0; }
+
+/* Holiday legend strip. */
+.legend { display: flex; flex-wrap: wrap; gap: .2em 1em; font-size: .62em;
+  color: var(--ink-soft); margin-top: .5em; flex: 0 0 auto; }
+.legend .lg { white-space: nowrap; }
+.legend .lg b { color: var(--accent); font-weight: 600; margin-right: .3em; }
