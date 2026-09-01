@@ -1,0 +1,50 @@
+/* ==========================================================================
+   Paper & grids sheet styles. The page shell lives in assets/css/sheet.css.
+   Stroke widths are set in millimetres so a hairline stays a hairline at any
+   paper size.
+   ========================================================================== */
+
+.page[data-layout] { --ln-w: 0.2; --maj-w: 0.4; }
+
+.paper-head { flex: 0 0 auto; display: flex; flex-direction: column; justify-content: flex-end; }
+.paper-title {
+  font-size: 1.5em; line-height: 1; margin-bottom: .35em;
+  letter-spacing: .01em;
+}
+.paper-head .sheet-fields { margin-bottom: .4em; }
+
+.paper-canvas { flex: 1 1 auto; min-height: 0; position: relative; }
+.paper-svg { display: block; }
+
+/* Stroke widths and dash patterns are unitless: inside the viewBox one user
+   unit is one millimetre. A CSS length such as `0.2mm` would be converted to
+   px first and then read as user units — nearly four times too thick. */
+.paper-svg .ln {
+  stroke: var(--rule); stroke-width: var(--ln-w); fill: none;
+  stroke-linecap: square;
+}
+.paper-svg .ln.maj   { stroke-width: var(--maj-w); }
+.paper-svg .ln.edge  { stroke-width: var(--maj-w); }
+.paper-svg .ln.bar   { stroke-width: var(--maj-w); }
+.paper-svg .ln.margin{ stroke: var(--accent); stroke-width: var(--maj-w); }
+.paper-svg .ln.dashed{ stroke-dasharray: 1.6 1.4; }
+.paper-svg .ln.dotted{ stroke-dasharray: 0.01 1.1; stroke-linecap: round; }
+.paper-svg .ln.faint { stroke-opacity: .5; }
+
+.paper-svg .dot { fill: var(--rule); }
+.paper-svg .dot.maj { fill: var(--rule); }
+
+.paper-svg .hexcell { fill: none; stroke: var(--rule); stroke-width: var(--ln-w); }
+
+.paper-svg .frame {
+  fill: none; stroke: var(--rule); stroke-width: var(--maj-w);
+}
+
+.paper-svg .trace {
+  font-family: var(--face-head); fill: none;
+  stroke: var(--rule); stroke-width: 0.2; stroke-opacity: .8;
+  letter-spacing: .04em;
+}
+
+.page.ink-saver .paper-svg .ln.maj,
+.page.ink-saver .paper-svg .ln.edge { stroke-width: var(--ln-w); }

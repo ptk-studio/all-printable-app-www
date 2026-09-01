@@ -194,3 +194,64 @@ AP.debounce = function (fn, ms) {
     t = setTimeout(function () { fn.apply(self, args); }, ms || 120);
   };
 };
+
+/* ---------- Shared control builders -------------------------------------- */
+/* Populate controls that every generator needs, so their markup stays short. */
+
+AP.fillLocales = function (select) {
+  AP.LOCALES.forEach(function (l) {
+    select.appendChild(AP.el('option', { value: l.id, text: l.label }));
+  });
+};
+
+AP.fillPaperSizes = function (select) {
+  var groups = AP.paperGroups();
+  var titles = { US: 'US sizes', ISO: 'ISO / A sizes', Planner: 'Planner inserts', Special: 'Special' };
+  ['US', 'ISO', 'Planner', 'Special'].forEach(function (g) {
+    if (!groups[g]) return;
+    var og = AP.el('optgroup', { label: titles[g] || g });
+    groups[g].forEach(function (id) {
+      var p = AP.PAPER[id];
+      og.appendChild(AP.el('option', { value: id, text: p.label + ' · ' + p.sub }));
+    });
+    select.appendChild(og);
+  });
+};
+
+AP.fillSwatches = function (box, path, colours) {
+  colours.forEach(function (c) {
+    box.appendChild(AP.el('button', {
+      class: 'swatch', type: 'button', 'data-swatch': path + ':' + c,
+      title: c, style: { background: c }, 'aria-label': 'Colour ' + c
+    }));
+  });
+};
+
+AP.fillPresets = function (box, presets) {
+  presets.forEach(function (p, i) {
+    box.appendChild(AP.el('button', {
+      class: 'preset-chip', type: 'button', 'data-preset': i, text: p.name
+    }));
+  });
+};
+
+/* The toolbar and export buttons are identical everywhere; render them once. */
+AP.toolbarHtml = function () {
+  return '' +
+    '<div class="pager">' +
+      '<button class="btn btn-sm btn-icon" id="prev-page" title="Previous page" aria-label="Previous page">‹</button>' +
+      '<span class="count" id="page-count">1 / 1</span>' +
+      '<button class="btn btn-sm btn-icon" id="next-page" title="Next page" aria-label="Next page">›</button>' +
+    '</div>' +
+    '<div class="seg" style="width:auto">' +
+      '<label><input type="radio" name="view" id="view-single" checked>Single</label>' +
+      '<label><input type="radio" name="view" id="view-all">All pages</label>' +
+    '</div>' +
+    '<span class="spacer"></span>' +
+    '<div class="zoomer">' +
+      '<button class="btn btn-sm btn-icon" id="zoom-out" aria-label="Zoom out">−</button>' +
+      '<span class="zoom-val" id="zoom-val">Fit</span>' +
+      '<button class="btn btn-sm btn-icon" id="zoom-in" aria-label="Zoom in">+</button>' +
+      '<button class="btn btn-sm" id="zoom-fit">Fit</button>' +
+    '</div>';
+};

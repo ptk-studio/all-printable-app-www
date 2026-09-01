@@ -3,38 +3,34 @@
 Ordered by how often people search for the thing and how badly the free
 alternatives handle it. Registry ids match `docs/assets/js/registry.js`.
 
+## Done
+
+- **The studio shell** — state, binding, preview, print and export extracted to
+  `core/studio.js`; a new generator is now an engine plus a control panel.
+- **graph-paper, dot-grid, lined-paper, isometric, hex, manuscript,
+  handwriting** — all seven from one `paper` generator, drawn to measured scale.
+- **habit-tracker and chore-chart** — one `tracker` generator, three layouts.
+
 ## Next
 
-1. **graph-paper** — square grid in mm or inches, any line weight and colour,
-   optional heavier every-nth line, margin box. Trivial to build on the
-   platform, and the existing sites all get the scale wrong when printing.
-2. **lined-paper** — wide / college / narrow rule, margin line, name-and-date
-   header, handwriting variant with dashed midlines.
-3. **dot-grid** — bullet-journal dots at true 5 mm spacing, sized for A5 and
-   planner inserts. The differentiator is sizes other than Letter.
-4. **habit-tracker** — a month of circles, habits down the side. Shares the
-   calendar's month grid and holiday engine.
-
-## After that
-
-5. **weekly-planner** — currently the calendar's week layout. Worth splitting
-   into its own generator once daily/undated variants are wanted.
-6. **chore-chart** — names × days, sticker-sized squares.
-7. **flashcards** — double-sided with accurate cut lines and back-side mirroring
+1. **flashcards** — double-sided with accurate cut lines and back-side mirroring
    so duplex printing lines up. The hard part is the duplex geometry, which is
    exactly why the free options are bad.
-8. **times-tables** — drill sheets with a separate answer key page.
-9. **sudoku**, **word-search**, **maze**, **bingo** — generated puzzles with
+2. **times-tables** — drill sheets with a separate answer key page.
+3. **sudoku**, **word-search**, **maze**, **bingo** — generated puzzles with
    solution pages. Each needs a generator plus a difficulty model.
-10. **budget**, **packing-list**, **meal-planner** — form-shaped sheets; mostly
-    a table engine plus good typography.
-11. **gift-tags**, **bookmarks**, **place-cards**, **labels** — small formats
-    with trim and fold marks; needs a shared imposition helper.
+4. **budget**, **packing-list**, **meal-planner** — form-shaped sheets; mostly
+   a table engine plus good typography.
+5. **gift-tags**, **bookmarks**, **place-cards**, **labels** — small formats
+   with trim and fold marks; needs a shared imposition helper.
+6. **daily-planner** — time-blocked day sheets; close to the calendar's week
+   layout but per-day.
 
 ## Platform work worth doing first
 
-- **A table/form engine.** Half the roadmap is "rows and columns with headings
-  and writing space". Building it once turns items 6, 10 and 11 into
+- **A table/form engine.** Half of what is left is "rows and columns with
+  headings and writing space". The tracker's grid is most of it already —
+  generalising it turns the budget, packing-list and meal-planner sheets into
   configuration.
 - **An imposition helper.** N-up placement with trim marks, bleed and duplex
   mirroring, shared by flashcards, tags, bookmarks and place cards.

@@ -6,8 +6,9 @@
 <title>Printable Calendar Maker — 7 layouts, any paper size · All Printable</title>
 <meta name="description" content="Make a printable calendar in seven layouts — month, multi-month, year, year grid, agenda, weekly planner and photo — on any paper size, with holidays for 30 countries, moon phases, week numbers and your own events. Free, no sign-up.">
 <link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/studio.css">
+<link rel="stylesheet" href="../../assets/css/sheet.css">
 <link rel="stylesheet" href="print.css">
-<link rel="stylesheet" href="app.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='6' width='26' height='23' rx='3' fill='none' stroke='%23b4472e' stroke-width='2.5'/><path d='M3 13h26' stroke='%23b4472e' stroke-width='2.5'/><path d='M10 3v6M22 3v6' stroke='%23b4472e' stroke-width='2.5' stroke-linecap='round'/></svg>">
 </head>
 <body class="app">
@@ -114,7 +115,7 @@
         </div>
 
         <div class="field" data-when="layout=photo">
-          <span class="field-label">Photo height <span id="photoSize-out" class="field-hint" style="display:inline"></span></span>
+          <span class="field-label">Photo height <span data-out="photoSize" class="field-hint" style="display:inline"></span></span>
           <input type="range" min="20" max="70" step="1" data-bind="photoSize">
           <input type="file" id="photo-file" accept="image/*" style="margin-top:8px;font-size:12px">
           <span class="field-hint">Leave empty to print a frame you can glue a photo into.</span>
@@ -164,9 +165,9 @@
           </div>
         </div>
         <div class="grid-2">
-          <label class="field"><span class="field-label">Margin <span id="margin-out" class="field-hint" style="display:inline"></span></span>
+          <label class="field"><span class="field-label">Margin <span data-out="margin" class="field-hint" style="display:inline"></span></span>
             <input type="range" min="0" max="30" step="1" data-bind="margin"></label>
-          <label class="field"><span class="field-label">Text size <span id="textScale-out" class="field-hint" style="display:inline"></span></span>
+          <label class="field"><span class="field-label">Text size <span data-out="textScale" class="field-hint" style="display:inline"></span></span>
             <input type="range" min="0.7" max="1.4" step="0.05" data-bind="textScale"></label>
         </div>
         <p class="inline-note">Printing tip: in the print dialog set <b>Scale 100%</b> (not “Fit to page”) and margins to <b>None</b> so the sheet comes out at exactly the size you picked.</p>
@@ -220,7 +221,7 @@
             <label><input type="radio" name="numberPos" data-bind="numberPos" value="center">Centre</label>
           </div>
         </div>
-        <label class="field"><span class="field-label">Day number size <span id="numberScale-out" class="field-hint" style="display:inline"></span></span>
+        <label class="field"><span class="field-label">Day number size <span data-out="numberScale" class="field-hint" style="display:inline"></span></span>
           <input type="range" min="0.6" max="2.4" step="0.1" data-bind="numberScale"></label>
         <div class="grid-2">
           <div class="field"><span class="field-label">Day names</span>
@@ -307,7 +308,7 @@
                 <option value="below">Below grid</option>
                 <option value="side">Beside grid</option>
               </select></div>
-            <label class="field"><span class="field-label">Size <span id="notesSize-out" class="field-hint" style="display:inline"></span></span>
+            <label class="field"><span class="field-label">Size <span data-out="notesSize" class="field-hint" style="display:inline"></span></span>
               <input type="range" min="10" max="45" step="1" data-bind="notesSize"></label>
           </div>
           <label class="field"><span class="field-label">Heading</span>
@@ -395,30 +396,14 @@
 
   <!-- ================= Workspace ================= -->
   <main class="workspace">
-    <div class="toolbar no-print">
-      <div class="pager">
-        <button class="btn btn-sm btn-icon" id="prev-page" title="Previous page" aria-label="Previous page">‹</button>
-        <span class="count" id="page-count">1 / 1</span>
-        <button class="btn btn-sm btn-icon" id="next-page" title="Next page" aria-label="Next page">›</button>
-      </div>
-      <div class="seg" style="width:auto">
-        <label><input type="radio" name="view" id="view-single" checked>Single</label>
-        <label><input type="radio" name="view" id="view-all">All pages</label>
-      </div>
-      <span class="spacer"></span>
-      <div class="zoomer">
-        <button class="btn btn-sm btn-icon" id="zoom-out" aria-label="Zoom out">−</button>
-        <span class="zoom-val" id="zoom-val">Fit</span>
-        <button class="btn btn-sm btn-icon" id="zoom-in" aria-label="Zoom in">+</button>
-        <button class="btn btn-sm" id="zoom-fit">Fit</button>
-      </div>
-    </div>
+    <div class="toolbar no-print" id="toolbar"></div>
     <div class="canvas" id="canvas"></div>
   </main>
 </div>
 
 <script src="../../assets/js/core/util.js"></script>
 <script src="../../assets/js/core/paper.js"></script>
+<script src="../../assets/js/core/studio.js"></script>
 <script src="astro.js"></script>
 <script src="holidays.js"></script>
 <script src="layouts.js"></script>

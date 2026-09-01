@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printable Graph, Dot &amp; Ruled Paper — true to scale · All Printable</title>
+<meta name="description" content="Printable graph paper, dot grid, ruled paper, isometric, hexagon, music manuscript and handwriting sheets — at the exact spacing you set, in mm or inches, on any paper size. Free, no sign-up.">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/studio.css">
+<link rel="stylesheet" href="../../assets/css/sheet.css">
+<link rel="stylesheet" href="print.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='4' width='24' height='24' rx='2' fill='none' stroke='%23b4472e' stroke-width='2.5'/><path d='M12 4v24M20 4v24M4 12h24M4 20h24' stroke='%23b4472e' stroke-width='1.6'/></svg>">
+</head>
+<body class="app">
+
+<header class="site-header no-print">
+  <a class="brand" href="../../index.html"><span class="brand-mark"></span> All Printable</a>
+  <nav class="nav">
+    <a href="../../index.html">All printables</a>
+    <a href="../calendar/index.html">Calendar</a>
+    <a href="index.html" aria-current="page">Paper</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="btn btn-sm" id="btn-share" title="Copy a link that restores these settings">Copy link</button>
+  <button class="btn btn-sm" id="btn-html">Download HTML</button>
+  <button class="btn btn-sm btn-primary" id="btn-print">Print / Save PDF</button>
+</header>
+
+<div class="app-shell">
+  <aside class="sidebar no-print">
+    <div class="sidebar-head">
+      <h1>Paper &amp; grids</h1>
+      <p>Drawn as vectors at true millimetre scale — a 5 mm square really is 5 mm.</p>
+    </div>
+
+    <div class="presets" id="presets"></div>
+
+    <details class="panel" open>
+      <summary>Kind of paper</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Type</span>
+          <div class="tiles" id="type-tiles"></div>
+          <span class="field-hint" id="type-hint"></span>
+        </div>
+
+        <div class="field" data-when="type=lines">
+          <span class="field-label">Rule</span>
+          <select data-bind="rulePreset" id="sel-rule"></select>
+        </div>
+
+        <div class="field" data-when="type!=lines">
+          <span class="field-label">Spacing <span data-out="size" class="field-hint" style="display:inline"></span></span>
+          <input type="number" data-bind="size" min="0.05" max="100" step="0.05">
+        </div>
+        <div class="field" data-when="rulePreset=custom">
+          <span class="field-label">Line spacing <span data-out="size" class="field-hint" style="display:inline"></span></span>
+          <input type="number" data-bind="size" min="0.05" max="100" step="0.05">
+        </div>
+
+        <div class="field">
+          <span class="field-label">Units</span>
+          <div class="seg">
+            <label><input type="radio" name="unit" data-bind="unit" value="mm">Millimetres</label>
+            <label><input type="radio" name="unit" data-bind="unit" value="in">Inches</label>
+          </div>
+        </div>
+
+        <!-- Per-type extras -->
+        <div data-when="type=grid">
+          <label class="field"><span class="field-label">Heavier line every</span>
+            <select data-bind="major">
+              <option value="0">Never</option>
+              <option value="2">2 squares</option>
+              <option value="4">4 squares</option>
+              <option value="5">5 squares</option>
+              <option value="8">8 squares</option>
+              <option value="10">10 squares</option>
+            </select></label>
+        </div>
+
+        <div data-when="type=dots">
+          <label class="field"><span class="field-label">Dot size <span data-out="dotSize" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="dotSize" min="0.2" max="1.6" step="0.05"></label>
+          <label class="field"><span class="field-label">Larger dot every</span>
+            <select data-bind="major">
+              <option value="0">Never</option>
+              <option value="4">4 dots</option>
+              <option value="5">5 dots</option>
+              <option value="6">6 dots</option>
+            </select></label>
+        </div>
+
+        <div data-when="type=lines">
+          <div class="field">
+            <span class="field-label">Margin line</span>
+            <div class="seg">
+              <label><input type="radio" name="marginLine" data-bind="marginLine" value="none">None</label>
+              <label><input type="radio" name="marginLine" data-bind="marginLine" value="left">Left</label>
+              <label><input type="radio" name="marginLine" data-bind="marginLine" value="both">Both</label>
+            </div>
+          </div>
+          <label class="field" data-when="marginLine!=none">
+            <span class="field-label">Margin at <span data-out="marginAt" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="marginAt" min="5" max="60" step="1"></label>
+          <label class="check"><input type="checkbox" data-bind="headerRule"> Leave a header band at the top</label>
+        </div>
+
+        <div data-when="type=iso">
+          <label class="check"><input type="checkbox" data-bind="isoVertical"> Include vertical lines</label>
+        </div>
+
+        <div class="field" data-when="type=hex">
+          <span class="field-label">Orientation</span>
+          <div class="seg">
+            <label><input type="radio" name="hexOrient" data-bind="hexOrient" value="pointy">Pointy top</label>
+            <label><input type="radio" name="hexOrient" data-bind="hexOrient" value="flat">Flat top</label>
+          </div>
+        </div>
+
+        <div data-when="type=staff">
+          <div class="grid-2">
+            <label class="field"><span class="field-label">Systems</span>
+              <input type="number" data-bind="staves" min="1" max="24"></label>
+            <label class="field"><span class="field-label">Line gap (mm)</span>
+              <input type="number" data-bind="staffGap" min="1" max="12" step="0.5"></label>
+          </div>
+          <div class="field">
+            <span class="field-label">Kind</span>
+            <div class="seg">
+              <label><input type="radio" name="staffKind" data-bind="staffKind" value="staff">Staff</label>
+              <label><input type="radio" name="staffKind" data-bind="staffKind" value="tab">Tab</label>
+              <label><input type="radio" name="staffKind" data-bind="staffKind" value="both">Alternating</label>
+            </div>
+          </div>
+          <label class="field"><span class="field-label">Bars per system</span>
+            <select data-bind="staffBars">
+              <option value="1">None</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select></label>
+        </div>
+
+        <div data-when="type=hand">
+          <div class="field">
+            <span class="field-label">Middle line</span>
+            <div class="seg">
+              <label><input type="radio" name="hwMid" data-bind="hwMid" value="dashed">Dashed</label>
+              <label><input type="radio" name="hwMid" data-bind="hwMid" value="dotted">Dotted</label>
+              <label><input type="radio" name="hwMid" data-bind="hwMid" value="none">None</label>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" data-bind="hwDescender"> Descender guide below the baseline</label>
+          <label class="check"><input type="checkbox" data-bind="hwSlant"> Slant guides</label>
+          <label class="field"><span class="field-label">Words to trace</span>
+            <input type="text" data-bind="hwTrace" placeholder="e.g. Amelia"></label>
+          <span class="field-hint">Printed as hollow outlines on every line, repeated across the page.</span>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary>Paper</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Size</span>
+          <select data-bind="paper" id="sel-paper"></select>
+        </div>
+        <div class="field">
+          <span class="field-label">Orientation</span>
+          <div class="seg">
+            <label><input type="radio" name="orientation" data-bind="orientation" value="portrait">Portrait</label>
+            <label><input type="radio" name="orientation" data-bind="orientation" value="landscape">Landscape</label>
+          </div>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Margin <span data-out="margin" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="margin" min="0" max="30" step="1"></label>
+          <label class="field"><span class="field-label">Sheets</span>
+            <input type="number" data-bind="pages" min="1" max="40"></label>
+        </div>
+        <p class="inline-note">Print at <b>Scale 100%</b> with margins <b>None</b>. Anything else and the
+          spacing you chose is no longer the spacing on the page.</p>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Ink</summary>
+      <div class="panel-body">
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Line colour</span>
+            <input type="color" data-bind="color"></label>
+          <label class="field"><span class="field-label">Accent</span>
+            <input type="color" data-bind="accent"></label>
+        </div>
+        <div class="swatches" id="ink-swatches"></div>
+        <div class="grid-2" style="margin-top:12px">
+          <label class="field"><span class="field-label">Line weight <span data-out="weight" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="weight" min="0.1" max="0.8" step="0.05"></label>
+          <label class="field"><span class="field-label">Heavy weight <span data-out="majorWeight" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="majorWeight" min="0.15" max="1.2" step="0.05"></label>
+        </div>
+        <label class="check"><input type="checkbox" data-bind="border"> Draw a border around the block</label>
+        <label class="check"><input type="checkbox" data-bind="inkSaver"> Ink saver (flatten heavy lines)</label>
+        <div class="field" style="margin-top:10px">
+          <span class="field-label">Type style</span>
+          <select data-bind="theme">
+            <option value="classic">Classic serif</option>
+            <option value="modern">Modern sans</option>
+            <option value="minimal">Minimal</option>
+            <option value="bold">Bold</option>
+            <option value="editorial">Editorial</option>
+            <option value="mono">Monospace</option>
+          </select>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Headings</summary>
+      <div class="panel-body">
+        <label class="field"><span class="field-label">Title</span>
+          <input type="text" data-bind="title" placeholder="e.g. Physics — problem set"></label>
+        <label class="check"><input type="checkbox" data-bind="fields"> Name / date blanks</label>
+        <label class="field" data-when="fields=true"><span class="field-label">Blanks</span>
+          <input type="text" data-bind="fieldList" placeholder="Name, Date, Class"></label>
+        <label class="field"><span class="field-label">Footer</span>
+          <input type="text" data-bind="footer" placeholder="e.g. all-printable.com"></label>
+        <label class="check"><input type="checkbox" data-bind="pageNumbers"> Number the sheets</label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Saved settings</summary>
+      <div class="panel-body">
+        <div class="row-wrap">
+          <button class="btn btn-sm" id="btn-save">Save current</button>
+          <button class="btn btn-sm" id="btn-reset">Reset all</button>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <span class="field-label">Your saves</span>
+          <div id="saved-list"><span class="field-hint">Nothing saved yet.</span></div>
+        </div>
+      </div>
+    </details>
+
+    <div style="padding:16px 16px 40px">
+      <p class="field-hint">Everything is generated here in the browser. Nothing is uploaded.</p>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div class="toolbar no-print" id="toolbar"></div>
+    <div class="canvas" id="canvas"></div>
+  </main>
+</div>
+
+<script src="../../assets/js/core/util.js"></script>
+<script src="../../assets/js/core/paper.js"></script>
+<script src="../../assets/js/core/studio.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

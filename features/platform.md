@@ -45,6 +45,38 @@ A generator keeps one plain object. Rules:
   to `localStorage` for the next visit, and named setups can be saved.
 - Never put anything in state that cannot survive a round trip through JSON.
 
+## The studio shell
+
+`assets/js/core/studio.js` owns everything a generator has in common: state,
+control binding, the page preview, zoom and paging, printing, standalone HTML
+export, shareable links and saved setups. A printable supplies a `render`, a
+`pageSize`, a `pageRule`, its defaults and its presets — nothing else.
+
+Controls are declared in markup, not wired in code:
+
+| Attribute | Effect |
+|---|---|
+| `data-bind="a.b"` | scalar value at that path |
+| `data-list="a.b:5"` | checkbox toggling membership of an array |
+| `data-swatch="a.b:#fff"` | button that sets a value, with `aria-pressed` |
+| `data-preset="0"` | applies `presets[0]` |
+| `data-when="a.b=x"` | show only while it matches (`!=` also works) |
+| `data-out="a.b"` | read-out, formatted by the generator's `outputs` map |
+
+`?preset=<slug>` on the URL applies a named preset, which is how the catalogue
+deep-links to "College ruled" or "Chore chart".
+
+## Drawing to scale
+
+Sheets built from HTML boxes (calendar, tracker) size everything in `em` off a
+page font-size in millimetres. Sheets that are pure geometry (paper) use an SVG
+whose viewBox maps **one user unit to one millimetre**.
+
+Inside such an SVG, a CSS length is converted to px and *then* read as user
+units. `stroke-width: 0.2mm` therefore draws 0.756 mm — nearly four times too
+thick. Stroke widths and dash arrays in that context must be unitless numbers.
+This is the single easiest way to ship a graph paper generator that is wrong.
+
 ## Code style
 
 - Plain classic scripts on a single `AP` namespace — no build step, no

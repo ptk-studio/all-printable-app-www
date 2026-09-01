@@ -28,8 +28,16 @@ be deployed as-is to any static host.
 - **Calendar maker** (`docs/printables/calendar/`) — seven layouts, 18 paper
   sizes, holidays for 30 countries computed for any year, moon phases, custom
   events, 25 languages. See `features/calendar/README.md`.
+- **Paper & grids** (`docs/printables/paper/`) — graph, dot grid, ruled,
+  isometric, hexagon, music manuscript and handwriting sheets, drawn as vectors
+  at measured millimetre scale. See `features/paper/README.md`.
+- **Habit tracker** (`docs/printables/tracker/`) — habit trackers and chore
+  charts: month, weeks, or a numbered challenge. See `features/tracker/README.md`.
 - **Catalogue** (`docs/index.html`) — driven by
   `docs/assets/js/registry.js`; add an entry and a card appears.
+
+All three run on the shared studio shell in `docs/assets/js/core/studio.js`,
+which owns state, controls, preview, printing and export.
 
 ## Printing
 

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printable Habit Tracker &amp; Chore Chart — any month, any paper · All Printable</title>
+<meta name="description" content="Make a printable habit tracker or chore chart: your own list of habits or names, a month or week of boxes, circles or squares, on any paper size. Free, nothing uploaded.">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/studio.css">
+<link rel="stylesheet" href="../../assets/css/sheet.css">
+<link rel="stylesheet" href="print.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='5' width='26' height='23' rx='3' fill='none' stroke='%23b4472e' stroke-width='2.5'/><circle cx='11' cy='14' r='3' fill='%23b4472e'/><circle cx='21' cy='14' r='3' fill='none' stroke='%23b4472e' stroke-width='2'/><circle cx='11' cy='22' r='3' fill='none' stroke='%23b4472e' stroke-width='2'/><circle cx='21' cy='22' r='3' fill='none' stroke='%23b4472e' stroke-width='2'/></svg>">
+</head>
+<body class="app">
+
+<header class="site-header no-print">
+  <a class="brand" href="../../index.html"><span class="brand-mark"></span> All Printable</a>
+  <nav class="nav">
+    <a href="../../index.html">All printables</a>
+    <a href="../calendar/index.html">Calendar</a>
+    <a href="../paper/index.html">Paper</a>
+    <a href="index.html" aria-current="page">Tracker</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="btn btn-sm" id="btn-share" title="Copy a link that restores these settings">Copy link</button>
+  <button class="btn btn-sm" id="btn-html">Download HTML</button>
+  <button class="btn btn-sm btn-primary" id="btn-print">Print / Save PDF</button>
+</header>
+
+<div class="app-shell">
+  <aside class="sidebar no-print">
+    <div class="sidebar-head">
+      <h1>Habit tracker</h1>
+      <p>A list down the side, days across the top. Works just as well as a chore chart.</p>
+    </div>
+
+    <div class="presets" id="presets"></div>
+
+    <details class="panel" open>
+      <summary>What you are tracking</summary>
+      <div class="panel-body">
+        <label class="field">
+          <span class="field-label">One per line</span>
+          <textarea data-bind="items" rows="8" spellcheck="false"
+            placeholder="Read 20 minutes&#10;Walk&#10;No screens after 9&#10;Water the plants"></textarea>
+          <span class="field-hint">Up to 40 rows. For a chore chart, put names here.</span>
+        </label>
+        <label class="field"><span class="field-label">Column heading for the list</span>
+          <input type="text" data-bind="listHeading" placeholder="Habit"></label>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary>Shape of the sheet</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Layout</span>
+          <div class="tiles" id="layout-tiles"></div>
+          <span class="field-hint" id="layout-hint"></span>
+        </div>
+
+        <div data-when="layout!=goal">
+          <div class="grid-2">
+            <label class="field"><span class="field-label">Month</span>
+              <select data-bind="month" id="sel-month"></select></label>
+            <label class="field"><span class="field-label">Year</span>
+              <input type="number" data-bind="year" min="1900" max="2200"></label>
+          </div>
+        </div>
+        <label class="field" data-when="layout=month"><span class="field-label">Months to make</span>
+          <input type="number" data-bind="months" min="1" max="24"></label>
+        <div data-when="layout=week">
+          <div class="grid-2">
+            <label class="field"><span class="field-label">Weeks per sheet</span>
+              <input type="number" data-bind="weeks" min="1" max="8"></label>
+            <div class="field"><span class="field-label">Week starts</span>
+              <select data-bind="weekStart" id="sel-weekStart"></select></div>
+          </div>
+        </div>
+        <div class="grid-2" data-when="layout=goal">
+          <label class="field"><span class="field-label">Boxes</span>
+            <input type="number" data-bind="goalDays" min="1" max="200"></label>
+          <label class="field"><span class="field-label">Per row</span>
+            <input type="number" data-bind="goalCols" min="5" max="40"></label>
+        </div>
+        <label class="check" data-when="layout=goal">
+          <input type="checkbox" data-bind="numberBoxes"> Number each box</label>
+
+        <div class="field" style="margin-top:10px">
+          <span class="field-label">Box style</span>
+          <div class="tiles" id="shape-tiles"></div>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Columns &amp; extras</summary>
+      <div class="panel-body">
+        <div class="field" data-when="layout!=goal">
+          <span class="field-label">Row height</span>
+          <div class="seg">
+            <label><input type="radio" name="rowFill" data-bind="rowFill" value="stretch">Fill the sheet</label>
+            <label><input type="radio" name="rowFill" data-bind="rowFill" value="compact">Compact</label>
+          </div>
+        </div>
+        <label class="field"><span class="field-label">List column width <span data-out="labelWidth" class="field-hint" style="display:inline"></span></span>
+          <input type="range" data-bind="labelWidth" min="10" max="45" step="1"></label>
+        <label class="check"><input type="checkbox" data-bind="goalColumn"> Add a target / total column</label>
+        <label class="field" data-when="goalColumn=true"><span class="field-label">Its heading</span>
+          <input type="text" data-bind="goalHeading" placeholder="Goal"></label>
+        <label class="check" data-when="layout!=goal"><input type="checkbox" data-bind="showWeekday"> Weekday letter under each date</label>
+        <label class="check"><input type="checkbox" data-bind="showPeriod"> Month and year beside the title</label>
+        <label class="check"><input type="checkbox" data-bind="zebra"> Shade alternate rows</label>
+        <label class="check"><input type="checkbox" data-bind="weekendShade"> Shade weekends</label>
+        <div class="field" data-when="weekendShade=true">
+          <span class="field-label">Weekend days</span>
+          <div class="grid-3" id="weekend-days"></div>
+        </div>
+        <label class="field"><span class="field-label">Note lines at the bottom</span>
+          <input type="number" data-bind="notesRows" min="0" max="10"></label>
+        <label class="field" data-when="notesRows!=0"><span class="field-label">Notes heading</span>
+          <input type="text" data-bind="notesTitle" placeholder="Notes"></label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Paper &amp; style</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Size</span>
+          <select data-bind="paper" id="sel-paper"></select>
+        </div>
+        <div class="field">
+          <span class="field-label">Orientation</span>
+          <div class="seg">
+            <label><input type="radio" name="orientation" data-bind="orientation" value="portrait">Portrait</label>
+            <label><input type="radio" name="orientation" data-bind="orientation" value="landscape">Landscape</label>
+          </div>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Margin <span data-out="margin" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="margin" min="0" max="30" step="1"></label>
+          <label class="field"><span class="field-label">Text size <span data-out="textScale" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="textScale" min="0.7" max="1.4" step="0.05"></label>
+        </div>
+        <div class="field">
+          <span class="field-label">Theme</span>
+          <select data-bind="theme">
+            <option value="classic">Classic serif</option>
+            <option value="modern">Modern sans</option>
+            <option value="minimal">Minimal</option>
+            <option value="bold">Bold</option>
+            <option value="editorial">Editorial</option>
+            <option value="mono">Monospace</option>
+          </select>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Accent</span>
+            <input type="color" data-bind="accent"></label>
+          <label class="field"><span class="field-label">Lines</span>
+            <input type="color" data-bind="ruleColor"></label>
+        </div>
+        <div class="swatches" id="accent-swatches"></div>
+        <label class="check" style="margin-top:10px"><input type="checkbox" data-bind="accentTitle"> Colour the title</label>
+        <label class="check"><input type="checkbox" data-bind="inkSaver"> Ink saver (no fills)</label>
+        <div class="field" style="margin-top:10px">
+          <span class="field-label">Language</span>
+          <select data-bind="locale" id="sel-locale"></select>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Wording</summary>
+      <div class="panel-body">
+        <label class="field"><span class="field-label">Title</span>
+          <input type="text" data-bind="title" placeholder="Habit tracker"></label>
+        <label class="field"><span class="field-label">Subtitle</span>
+          <input type="text" data-bind="subtitle" placeholder="e.g. Ashwood house"></label>
+        <div class="field">
+          <span class="field-label">Title position</span>
+          <div class="seg">
+            <label><input type="radio" name="headerAlign" data-bind="headerAlign" value="left">Left</label>
+            <label><input type="radio" name="headerAlign" data-bind="headerAlign" value="center">Centre</label>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" data-bind="fields"> Name / date blanks</label>
+        <label class="field" data-when="fields=true"><span class="field-label">Blanks</span>
+          <input type="text" data-bind="fieldList" placeholder="Name, Month"></label>
+        <label class="field"><span class="field-label">Footer</span>
+          <input type="text" data-bind="footer" placeholder="e.g. all-printable.com"></label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Saved settings</summary>
+      <div class="panel-body">
+        <div class="row-wrap">
+          <button class="btn btn-sm" id="btn-save">Save current</button>
+          <button class="btn btn-sm" id="btn-reset">Reset all</button>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <span class="field-label">Your saves</span>
+          <div id="saved-list"><span class="field-hint">Nothing saved yet.</span></div>
+        </div>
+      </div>
+    </details>
+
+    <div style="padding:16px 16px 40px">
+      <p class="field-hint">Everything is generated here in the browser. Nothing is uploaded.</p>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div class="toolbar no-print" id="toolbar"></div>
+    <div class="canvas" id="canvas"></div>
+  </main>
+</div>
+
+<script src="../../assets/js/core/util.js"></script>
+<script src="../../assets/js/core/paper.js"></script>
+<script src="../../assets/js/core/studio.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

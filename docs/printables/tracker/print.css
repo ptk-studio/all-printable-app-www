@@ -1,0 +1,129 @@
+/* ==========================================================================
+   Tracker sheet styles. Page shell comes from assets/css/sheet.css.
+   ========================================================================== */
+
+.tk-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+
+/* Compact rows keep a short list from being stretched into huge bands. */
+.tk-grid.compact { flex: 0 0 auto; grid-template-rows: auto repeat(var(--rows), 3.2em); }
+.tk-weeks.compact { justify-content: flex-start; }
+.tk-weeks.compact .tk-week { flex: 0 0 auto; }
+
+/* ---- The grid ------------------------------------------------------------ */
+.tk-grid {
+  flex: 1 1 auto; min-height: 0;
+  display: grid;
+  /* Header row takes its natural height; the rest share what is left. */
+  grid-template-rows: auto repeat(var(--rows), minmax(0, 1fr));
+  border-top: var(--rule-w) solid var(--rule);
+  border-left: var(--rule-w) solid var(--rule);
+}
+.tk-grid > * {
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+  min-width: 0; overflow: hidden;
+}
+
+.tk-head {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .05em; padding: .25em .1em;
+  font-family: var(--face-head); font-size: .82em;
+  color: var(--ink-soft); line-height: 1;
+}
+.tk-head.wide { flex-direction: row; gap: .35em; }
+.tk-head .d-num { font-weight: 600; }
+.tk-head .d-dow {
+  font-size: .7em; color: var(--ink-faint);
+  text-transform: var(--label-tf, uppercase); letter-spacing: var(--label-ls, .1em);
+}
+.tk-head.we { background: var(--shade); }
+.tk-corner {
+  align-items: flex-start; justify-content: flex-end; padding: .3em .5em;
+  font-size: .7em; text-transform: var(--label-tf, uppercase);
+  letter-spacing: var(--label-ls, .12em); color: var(--ink-faint);
+}
+
+.tk-label {
+  display: flex; align-items: center; padding: .2em .55em;
+  font-size: .8em; line-height: 1.15;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.tk-label.alt, .tk-cell.alt { background: color-mix(in srgb, var(--shade) 45%, #fff); }
+
+.tk-cell {
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  /* Makes cqmin available below, so a tick scales with the SHORTER side of the
+     cell — otherwise a tall, narrow column turns every circle into an ellipse. */
+  container-type: size;
+}
+.tk-cell.we { background: var(--shade); }
+.tk-cell.we.alt { background: var(--shade); }
+.tk-cell.goal { background: none; }
+
+/* The thing you tick. */
+.mark {
+  width: 1.2em; height: 1.2em; max-width: 70%; max-height: 70%;
+  border: var(--rule-w) solid var(--rule); display: block;
+}
+@supports (width: 1cqmin) {
+  .mark { width: 62cqmin; height: 62cqmin; max-width: none; max-height: none; }
+}
+.mark-circle  { border-radius: 50%; }
+.mark-rounded { border-radius: .2em; }
+.mark-square  { border-radius: 0; }
+.mark-diamond { border-radius: .12em; transform: rotate(45deg); }
+@supports (width: 1cqmin) {
+  .mark-diamond { width: 48cqmin; height: 48cqmin; }
+}
+.mark-star {
+  border: 0; background: var(--rule);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  opacity: .45;
+}
+
+/* ---- Weeks layout -------------------------------------------------------- */
+.tk-weeks { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: .7em; }
+.tk-week { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+.tk-week-title {
+  font-family: var(--face-head); font-size: .78em; margin: 0 0 .25em;
+  color: var(--accent); text-transform: var(--label-tf, none);
+  letter-spacing: var(--label-ls, .06em); flex: 0 0 auto;
+}
+
+/* ---- Challenge layout ---------------------------------------------------- */
+.tk-goals { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: .9em; }
+.tk-goal { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.tk-goal-title {
+  font-family: var(--face-head); font-size: 1em; margin: 0 0 .3em;
+  flex: 0 0 auto; border-bottom: var(--rule-w) solid var(--rule); padding-bottom: .2em;
+}
+.tk-strip {
+  flex: 1 1 auto; min-height: 0; display: grid; grid-auto-rows: minmax(0, 1fr);
+  border-top: var(--rule-w) solid var(--rule); border-left: var(--rule-w) solid var(--rule);
+}
+.tk-strip .tk-cell {
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+}
+.tk-cell.numbered { justify-content: center; }
+.tk-cell .n {
+  position: absolute; top: .1em; left: .2em;
+  font-size: .5em; color: var(--ink-faint); line-height: 1;
+}
+
+/* ---- Notes --------------------------------------------------------------- */
+.tk-notes { flex: 0 0 auto; margin-top: .7em; }
+.tk-notes .notes-title {
+  font-family: var(--face-head); font-size: .68em; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--ink-faint);
+  margin-bottom: .35em;
+}
+.tk-notes .note-line {
+  height: 1.5em; border-bottom: var(--rule-w) solid var(--rule);
+}
+
+.page.ink-saver .tk-head.we,
+.page.ink-saver .tk-cell.we,
+.page.ink-saver .tk-label.alt,
+.page.ink-saver .tk-cell.alt { background: none; }

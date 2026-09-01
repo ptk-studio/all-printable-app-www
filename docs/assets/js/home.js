@@ -12,6 +12,7 @@
     dots:     '<g class="fill"><circle cx="12" cy="12" r="2"/><circle cx="26" cy="12" r="2"/><circle cx="40" cy="12" r="2"/><circle cx="54" cy="12" r="2"/><circle cx="12" cy="26" r="2"/><circle cx="26" cy="26" r="2"/><circle cx="40" cy="26" r="2"/><circle cx="54" cy="26" r="2"/><circle cx="12" cy="40" r="2"/><circle cx="26" cy="40" r="2"/><circle cx="40" cy="40" r="2"/><circle cx="54" cy="40" r="2"/></g><rect class="stroke" x="4" y="4" width="64" height="48"/>',
     lines:    '<rect class="stroke" x="6" y="4" width="60" height="52"/><path class="stroke" d="M14 4v52"/><path class="stroke" d="M18 14h44M18 22h44M18 30h44M18 38h44M18 46h30"/>',
     iso:      '<path class="stroke" d="M8 44l16-28 16 28zM24 16l16 28 16-28zM8 44h48"/><path class="stroke" d="M16 30h16M40 30h16"/>',
+    hex:      '<path class="stroke" d="M14 14l7-4 7 4v8l-7 4-7-4zM32 14l7-4 7 4v8l-7 4-7-4zM23 30l7-4 7 4v8l-7 4-7-4zM5 30l7-4 7 4v8l-7 4-7-4z"/>',
     staff:    '<path class="stroke" d="M6 14h60M6 20h60M6 26h60M6 32h60M6 38h60"/><path class="stroke" d="M14 46c4-6 8-2 8 2s-6 6-8 0"/>',
     hand:     '<path class="stroke" d="M6 16h60M6 40h60"/><path class="stroke" stroke-dasharray="4 4" d="M6 28h60"/><path class="stroke" d="M16 40c0-12 6-16 10-12s-4 12-2 14 6-2 8-6"/>',
     chart:    '<rect class="stroke" x="6" y="8" width="60" height="44"/><path class="stroke" d="M6 20h60M24 8v44M38 8v44M52 8v44M6 32h60M6 42h60"/><path class="stroke" d="M28 26l3 3 5-6M42 26l3 3 5-6"/>',

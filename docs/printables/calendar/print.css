@@ -1,75 +1,16 @@
 /* ==========================================================================
-   Paper styles. Everything inside .page is measured in `em` off a font-size
-   set in millimetres, so a layout scales identically from Pocket to 24×36.
+   Calendar sheet styles. The page shell, themes and header/footer furniture
+   live in assets/css/sheet.css, which must be loaded first.
    ========================================================================== */
 
-.page {
-  --rule:        #cfc9bb;
-  --rule-w:      max(0.055em, 0.2mm);
-  --ink:         #16150f;
-  --ink-soft:    #5b564a;
-  --ink-faint:   #a8a294;
-  --accent:      #b4472e;
-  --shade:       #f2efe7;
-  --pad:         10mm;
-  --weeks:       6;
-  --numscale:    1;
+.page { --weeks: 6; --numscale: 1; }
+.page.ink-saver .dnum { color: var(--ink); }
 
-  position: relative;
-  background: #fff;
-  color: var(--ink);
-  overflow: hidden;
-  font-family: var(--cal-body, "Helvetica Neue", Helvetica, Arial, sans-serif);
-  font-variant-numeric: lining-nums tabular-nums;
-  break-after: page;
-}
-.page-inner {
-  position: absolute; inset: var(--pad);
-  display: flex; flex-direction: column;
-}
-
-/* ---- Themes -------------------------------------------------------------- */
-.theme-classic { --cal-head: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-                 --cal-body: "Iowan Old Style", Palatino, Georgia, serif;
-                 --dow-tf: none; --dow-ls: .12em; --dow-w: 600; --title-w: 500; }
-.theme-modern  { --cal-head: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                 --cal-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                 --dow-tf: uppercase; --dow-ls: .16em; --dow-w: 600; --title-w: 300; }
-.theme-minimal { --cal-head: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                 --cal-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                 --dow-tf: uppercase; --dow-ls: .22em; --dow-w: 400; --title-w: 200;
-                 --rule: #e3ded2; }
-.theme-bold    { --cal-head: "Helvetica Neue", Impact, "Arial Black", sans-serif;
-                 --cal-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                 --dow-tf: uppercase; --dow-ls: .05em; --dow-w: 800; --title-w: 800; }
-.theme-mono    { --cal-head: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-                 --cal-body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-                 --dow-tf: uppercase; --dow-ls: .1em; --dow-w: 500; --title-w: 500; }
-.theme-editorial { --cal-head: "Didot", "Bodoni MT", "Playfair Display", Georgia, serif;
-                 --cal-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                 --dow-tf: uppercase; --dow-ls: .2em; --dow-w: 500; --title-w: 400; }
-
-/* Ink saver: no fills, hairline rules. */
-.page.ink-saver { --shade: #fff; --rule-w: max(0.04em, 0.15mm); --rule: #d8d3c6; }
-.page.ink-saver .cal-title, .page.ink-saver .dnum { color: var(--ink); }
-
-/* ---- Header -------------------------------------------------------------- */
-.cal-head { display: flex; align-items: flex-end; gap: 1em; margin-bottom: .85em; flex: 0 0 auto; }
-.cal-head.center { flex-direction: column; align-items: center; text-align: center; gap: .2em; }
-.cal-titles { flex: 1 1 auto; min-width: 0; }
-.cal-title {
-  font-family: var(--cal-head); font-weight: var(--title-w, 500);
-  font-size: 2.6em; line-height: 1; margin: 0;
-  letter-spacing: -.01em; color: var(--ink);
-}
-.cal-title .cal-year { color: var(--ink-faint); font-weight: 300; margin-left: .28em; }
-.cal-title.accent .cal-month { color: var(--accent); }
-.cal-sub { font-size: .95em; color: var(--ink-soft); margin-top: .35em; letter-spacing: .04em; }
 .cal-minis { display: flex; gap: .8em; flex: 0 0 auto; align-items: flex-end; }
 
 /* Miniature month blocks used in headers and year pages. */
 .mini { font-size: .62em; line-height: 1.25; }
-.mini-name { font-family: var(--cal-head); font-weight: 600; text-align: center; margin-bottom: .35em; letter-spacing: .04em; }
+.mini-name { font-family: var(--face-head); font-weight: 600; text-align: center; margin-bottom: .35em; letter-spacing: .04em; }
 .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0 .1em; text-align: center; }
 .mini-grid .dow { color: var(--ink-faint); font-size: .85em; font-weight: 600; text-transform: uppercase; }
 .mini-grid .d { color: var(--ink); padding: .05em 0; }
@@ -99,9 +40,9 @@
   border-bottom: var(--rule-w) solid var(--rule);
   padding: .32em .45em;
   font-size: .78em;
-  font-weight: var(--dow-w, 600);
-  letter-spacing: var(--dow-ls, .12em);
-  text-transform: var(--dow-tf, none);
+  font-weight: var(--label-w, 600);
+  letter-spacing: var(--label-ls, .12em);
+  text-transform: var(--label-tf, none);
   color: var(--ink-soft);
   text-align: var(--dow-align, left);
   white-space: nowrap; overflow: hidden;
@@ -128,7 +69,7 @@
 
 .cell-top { display: flex; align-items: baseline; gap: .3em; }
 .dnum {
-  font-family: var(--cal-head);
+  font-family: var(--face-head);
   font-size: calc(1.35em * var(--numscale));
   line-height: 1; font-weight: 500; color: var(--ink);
 }
@@ -182,7 +123,7 @@
 .cal-notes.below { width: 100%; height: 22%; }
 .cal-notes.plain { border: 0; padding: .5em 0 0; }
 .notes-title {
-  font-family: var(--cal-head); font-size: .72em; font-weight: 600;
+  font-family: var(--face-head); font-size: .72em; font-weight: 600;
   letter-spacing: .18em; text-transform: uppercase; color: var(--ink-faint);
   margin-bottom: .5em;
 }
@@ -205,7 +146,7 @@
 /* ---- Multi-month pages --------------------------------------------------- */
 .multi-wrap { flex: 1 1 auto; display: grid; gap: 1em; min-height: 0; }
 .multi-cell { display: flex; flex-direction: column; min-height: 0; }
-.multi-cell .cal-title { font-size: 1.3em; margin-bottom: .3em; }
+.multi-cell .sheet-title { font-size: 1.3em; margin-bottom: .3em; }
 .multi-cell .cal-grid { font-size: .9em; }
 .multi-cell .dnum { font-size: calc(1.05em * var(--numscale)); }
 .multi-cell .cell-items { font-size: .55em; }
@@ -232,8 +173,8 @@
   overflow: hidden; white-space: nowrap;
 }
 .ygrid .yg-head {
-  font-family: var(--cal-head); font-weight: 700; justify-content: center;
-  text-transform: var(--dow-tf, none); letter-spacing: .08em;
+  font-family: var(--face-head); font-weight: 700; justify-content: center;
+  text-transform: var(--label-tf, none); letter-spacing: .08em;
   color: var(--accent); font-size: .95em;
 }
 .ygrid .yg-dnum { justify-content: flex-end; color: var(--ink-faint); font-size: .9em; }
@@ -254,7 +195,7 @@
 }
 .agenda .arow.we { background: var(--shade); }
 .agenda .a-date { flex: 0 0 3.4em; display: flex; align-items: baseline; gap: .35em; }
-.agenda .a-num { font-family: var(--cal-head); font-size: 1.15em; font-weight: 600; }
+.agenda .a-num { font-family: var(--face-head); font-size: 1.15em; font-weight: 600; }
 .agenda .a-dow { font-size: .62em; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-faint); }
 .agenda .a-body { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; }
 .agenda .a-meta { font-size: .62em; color: var(--accent); }
@@ -270,8 +211,8 @@
   border-bottom: var(--rule-w) solid var(--rule);
   min-width: 0; overflow: hidden; white-space: nowrap;
 }
-.wday-head .wd-name { font-family: var(--cal-head); font-weight: 600; font-size: .82em;
-  text-transform: var(--dow-tf, none); letter-spacing: var(--dow-ls, .08em);
+.wday-head .wd-name { font-family: var(--face-head); font-weight: 600; font-size: .82em;
+  text-transform: var(--label-tf, none); letter-spacing: var(--label-ls, .08em);
   overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .wday-head .wd-num { font-size: .8em; color: var(--ink-faint); margin-left: auto; }
 .wday-head .wd-hol { font-size: .6em; color: var(--accent); }
@@ -301,19 +242,3 @@
 .photo-frame .ph-hint {
   font-size: .8em; color: var(--ink-faint); letter-spacing: .18em; text-transform: uppercase;
 }
-
-/* ---- Footer -------------------------------------------------------------- */
-.cal-foot {
-  flex: 0 0 auto; margin-top: .6em; padding-top: .35em;
-  border-top: var(--rule-w) solid var(--rule);
-  display: flex; gap: 1em; align-items: baseline;
-  font-size: .62em; color: var(--ink-faint); letter-spacing: .05em;
-}
-.cal-foot .f-right { margin-left: auto; }
-.cal-foot.plain { border-top: 0; }
-
-/* Holiday legend strip. */
-.legend { display: flex; flex-wrap: wrap; gap: .2em 1em; font-size: .62em;
-  color: var(--ink-soft); margin-top: .5em; flex: 0 0 auto; }
-.legend .lg { white-space: nowrap; }
-.legend .lg b { color: var(--accent); font-weight: 600; margin-right: .3em; }

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ptk-studio.github.io/all-printable-www/sitemap.xml
+Sitemap: https://all-printable.com/sitemap.xml

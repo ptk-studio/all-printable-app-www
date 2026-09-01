@@ -39,7 +39,7 @@
 .hero .lede { font-size: clamp(1.02rem, 1.6vw, 1.22rem); color: var(--ink-soft); max-width: 56ch; margin-bottom: 1.6em; }
 .hero .cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 .hero .btn { padding: 11px 20px; font-size: 15px; }
-.hero-points { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 34px; font-size: 13.5px; color: var(--muted); }
+.hero-points { display: flex; gap: 10px 22px; flex-wrap: wrap; margin-top: 34px; font-size: 13.5px; color: var(--muted); }
 .hero-points span { display: flex; align-items: center; gap: 7px; }
 .hero-points .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex: 0 0 auto; }
 

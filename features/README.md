@@ -13,6 +13,10 @@ features/
     README.md        the calendar maker's full feature spec
     holidays.md      holiday rule coverage and its known limits
     layouts.md       the seven layout engines in detail
+  paper/
+    README.md        graph, dot, ruled, isometric, hex, manuscript, handwriting
+  tracker/
+    README.md        habit tracker and chore chart
 ```
 
 ## Adding a printable
@@ -21,8 +25,9 @@ features/
    behaviour, and what the printed sheet must look like.
 2. Add an entry to `docs/assets/js/registry.js` with `status: 'soon'`.
    The home page picks it up automatically.
-3. Build under `docs/printables/<name>/`, reusing
-   `assets/js/core/*` and the platform contract in `platform.md`.
+3. Build under `docs/printables/<name>/`: an `engine.js` that turns state into
+   pages, a `print.css` for the sheet, an `index.html` of controls, and a short
+   `app.js` that hands both to `AP.studio`. See `platform.md`.
 4. Flip the registry entry to `status: 'live'` with an `href` and `bullets`.
 
 ## Principles

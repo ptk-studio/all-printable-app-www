@@ -1,0 +1,95 @@
+/* ==========================================================================
+   The printed sheet: shared page shell, themes and header/footer furniture.
+   Every printable loads this, then its own stylesheet for the sheet's body.
+
+   Everything inside .page is measured in `em` off a font-size set in
+   millimetres, so a layout scales identically from Pocket to 24 × 36 in.
+   ========================================================================== */
+
+.page {
+  --rule:        #cfc9bb;
+  --rule-w:      max(0.055em, 0.2mm);
+  --ink:         #16150f;
+  --ink-soft:    #5b564a;
+  --ink-faint:   #a8a294;
+  --accent:      #b4472e;
+  --shade:       #f2efe7;
+  --pad:         10mm;
+
+  position: relative;
+  background: #fff;
+  color: var(--ink);
+  overflow: hidden;
+  font-family: var(--face-body, "Helvetica Neue", Helvetica, Arial, sans-serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  break-after: page;
+}
+.page-inner {
+  position: absolute; inset: var(--pad);
+  display: flex; flex-direction: column;
+}
+
+/* ---- Themes -------------------------------------------------------------- */
+/* --label-* drive small capitalised labels (weekday names, column heads);
+   --title-w is the display weight of a sheet's main title. */
+.theme-classic   { --face-head: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+                   --face-body: "Iowan Old Style", Palatino, Georgia, serif;
+                   --label-tf: none; --label-ls: .12em; --label-w: 600; --title-w: 500; }
+.theme-modern    { --face-head: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                   --face-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                   --label-tf: uppercase; --label-ls: .16em; --label-w: 600; --title-w: 300; }
+.theme-minimal   { --face-head: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                   --face-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                   --label-tf: uppercase; --label-ls: .22em; --label-w: 400; --title-w: 200;
+                   --rule: #e3ded2; }
+.theme-bold      { --face-head: "Helvetica Neue", Impact, "Arial Black", sans-serif;
+                   --face-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                   --label-tf: uppercase; --label-ls: .05em; --label-w: 800; --title-w: 800; }
+.theme-mono      { --face-head: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+                   --face-body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+                   --label-tf: uppercase; --label-ls: .1em; --label-w: 500; --title-w: 500; }
+.theme-editorial { --face-head: "Didot", "Bodoni MT", "Playfair Display", Georgia, serif;
+                   --face-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                   --label-tf: uppercase; --label-ls: .2em; --label-w: 500; --title-w: 400; }
+
+/* Ink saver: no fills, hairline rules. */
+.page.ink-saver { --shade: #fff; --rule-w: max(0.04em, 0.15mm); --rule: #d8d3c6; }
+.page.ink-saver .sheet-title { color: var(--ink); }
+
+/* ---- Header -------------------------------------------------------------- */
+.sheet-head { display: flex; align-items: flex-end; gap: 1em; margin-bottom: .85em; flex: 0 0 auto; }
+.sheet-head.center { flex-direction: column; align-items: center; text-align: center; gap: .2em; }
+.sheet-titles { flex: 1 1 auto; min-width: 0; }
+.sheet-title {
+  font-family: var(--face-head); font-weight: var(--title-w, 500);
+  font-size: 2.6em; line-height: 1; margin: 0;
+  letter-spacing: -.01em; color: var(--ink);
+}
+.sheet-title .muted { color: var(--ink-faint); font-weight: 300; margin-left: .28em; }
+.sheet-title.accent .lead { color: var(--accent); }
+.sheet-sub { font-size: .95em; color: var(--ink-soft); margin-top: .35em; letter-spacing: .04em; }
+
+/* A rule of blanks for name / date / week, printed under a header. */
+.sheet-fields { display: flex; gap: 1.4em; flex: 0 0 auto; margin-bottom: .8em; font-size: .8em; }
+.sheet-fields .fld { display: flex; align-items: baseline; gap: .5em; flex: 1 1 auto; }
+.sheet-fields .fld span {
+  color: var(--ink-faint); text-transform: var(--label-tf, uppercase);
+  letter-spacing: var(--label-ls, .12em); font-size: .85em; flex: 0 0 auto;
+}
+.sheet-fields .fld i { flex: 1 1 auto; border-bottom: var(--rule-w) solid var(--rule); height: 1.4em; }
+
+/* ---- Footer -------------------------------------------------------------- */
+.sheet-foot {
+  flex: 0 0 auto; margin-top: .6em; padding-top: .35em;
+  border-top: var(--rule-w) solid var(--rule);
+  display: flex; gap: 1em; align-items: baseline;
+  font-size: .62em; color: var(--ink-faint); letter-spacing: .05em;
+}
+.sheet-foot .f-right { margin-left: auto; }
+.sheet-foot.plain { border-top: 0; }
+
+/* A wrapping list of small labelled entries (holiday legends, keys). */
+.legend { display: flex; flex-wrap: wrap; gap: .2em 1em; font-size: .62em;
+  color: var(--ink-soft); margin-top: .5em; flex: 0 0 auto; }
+.legend .lg { white-space: nowrap; }
+.legend .lg b { color: var(--accent); font-weight: 600; margin-right: .3em; }

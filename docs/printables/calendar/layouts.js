@@ -210,15 +210,15 @@ window.AP = window.AP || {};
     var monthText = opts.titleText !== undefined
       ? opts.titleText
       : AP.monthName(y, m, state.locale, 'long');
-    titleKids.push(el('span', { class: 'cal-month', text: monthText }));
-    if (opts.year !== false) titleKids.push(el('span', { class: 'cal-year', text: String(y) }));
+    titleKids.push(el('span', { class: 'lead', text: monthText }));
+    if (opts.year !== false) titleKids.push(el('span', { class: 'muted', text: String(y) }));
 
-    var titles = el('div', { class: 'cal-titles' }, [
-      el('div', { class: 'cal-title' + (state.accentTitle ? ' accent' : '') }, titleKids),
-      state.subtitle ? el('div', { class: 'cal-sub', text: state.subtitle }) : null
+    var titles = el('div', { class: 'sheet-titles' }, [
+      el('div', { class: 'sheet-title' + (state.accentTitle ? ' accent' : '') }, titleKids),
+      state.subtitle ? el('div', { class: 'sheet-sub', text: state.subtitle }) : null
     ]);
 
-    var head = el('header', { class: 'cal-head' + (state.headerAlign === 'center' ? ' center' : '') }, [titles]);
+    var head = el('header', { class: 'sheet-head' + (state.headerAlign === 'center' ? ' center' : '') }, [titles]);
 
     if (state.miniMonths && opts.minis !== false) {
       var prev = AP.addMonths(y, m, -1), next = AP.addMonths(y, m, 1);
@@ -244,7 +244,7 @@ window.AP = window.AP || {};
 
   function footerEl(state, extra) {
     if (!state.footer && !extra) return null;
-    return el('footer', { class: 'cal-foot' }, [
+    return el('footer', { class: 'sheet-foot' }, [
       state.footer ? el('span', { text: state.footer }) : null,
       extra ? el('span', { class: 'f-right', text: extra }) : null
     ]);
@@ -347,9 +347,9 @@ window.AP = window.AP || {};
     for (var i = 0; i < per; i++) {
       var c = AP.addMonths(cursor.y, cursor.m, i);
       var cell = el('div', { class: 'multi-cell' }, [
-        el('div', { class: 'cal-title' + (state.accentTitle ? ' accent' : '') }, [
-          el('span', { class: 'cal-month', text: AP.monthName(c.y, c.m, state.locale, 'long') }),
-          el('span', { class: 'cal-year', text: String(c.y) })
+        el('div', { class: 'sheet-title' + (state.accentTitle ? ' accent' : '') }, [
+          el('span', { class: 'lead', text: AP.monthName(c.y, c.m, state.locale, 'long') }),
+          el('span', { class: 'muted', text: String(c.y) })
         ])
       ]);
       cell.appendChild(monthGridEl(c.y, c.m, state, annotate, {

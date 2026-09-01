@@ -39,19 +39,5 @@
   <p>That page does not exist — it may have moved, or the link may be mistyped.</p>
   <p><a class="btn" href="/">Back to the printables</a></p>
 </main>
-<script>
-  /* On a GitHub Pages project site the root is the first path segment
-     (/<repo>/); on a custom domain or user site it is /. */
-  (function () {
-    var root = '/';
-    if (/\.github\.io$/.test(location.hostname)) {
-      var seg = location.pathname.split('/')[1];
-      if (seg) root = '/' + seg + '/';
-    }
-    Array.prototype.forEach.call(document.querySelectorAll('a[href="/"]'), function (a) {
-      a.setAttribute('href', root);
-    });
-  })();
-</script>
 </body>
 </html>
