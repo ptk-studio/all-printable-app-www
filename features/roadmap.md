@@ -1,7 +1,7 @@
 # Roadmap
 
 Ordered by how often people search for the thing and how badly the free
-alternatives handle it. Registry ids match `public/assets/js/registry.js`.
+alternatives handle it. Registry ids match `docs/assets/js/registry.js`.
 
 ## Next
 

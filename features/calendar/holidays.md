@@ -1,6 +1,6 @@
 # Holiday coverage
 
-`public/printables/calendar/holidays.js`
+`docs/printables/calendar/holidays.js`
 
 ## Why rules, not tables
 

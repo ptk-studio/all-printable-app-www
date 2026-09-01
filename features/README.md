@@ -2,7 +2,7 @@
 
 This directory holds the product specification for All Printable: what each
 printable does, why it is built the way it is, and what is planned next.
-Code lives in `public/`; nothing here is served.
+Code lives in `docs/`; nothing here is served.
 
 ```
 features/
@@ -19,9 +19,9 @@ features/
 
 1. Write a spec under `features/<name>/README.md` first — options, paper
    behaviour, and what the printed sheet must look like.
-2. Add an entry to `public/assets/js/registry.js` with `status: 'soon'`.
+2. Add an entry to `docs/assets/js/registry.js` with `status: 'soon'`.
    The home page picks it up automatically.
-3. Build under `public/printables/<name>/`, reusing
+3. Build under `docs/printables/<name>/`, reusing
    `assets/js/core/*` and the platform contract in `platform.md`.
 4. Flip the registry entry to `status: 'live'` with an `href` and `bullets`.
 

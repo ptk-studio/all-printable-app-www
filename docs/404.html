@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found · All Printable</title>
+<!-- Styles are inlined: this page is served for missing paths at any depth,
+     where a relative stylesheet link would not resolve. -->
+<style>
+  :root { color-scheme: light dark; --paper:#f4f1ea; --ink:#16150f; --muted:#7c7668;
+          --line:#e4dfd2; --surface:#fff; --accent:#b4472e; --accent-ink:#8d3722; }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper:#17171a; --ink:#f0eee8; --muted:#918c81; --line:#33333a;
+            --surface:#1f1f23; --accent:#e2795a; --accent-ink:#f0a48c; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--paper); color: var(--ink);
+         font: 15px/1.55 ui-sans-serif, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  header { display:flex; align-items:center; gap:9px; height:56px; padding:0 20px;
+           background: var(--surface); border-bottom:1px solid var(--line); }
+  .mark { width:24px; height:24px; border:1.75px solid var(--accent); border-radius:5px;
+          position:relative; }
+  .mark::before { content:""; position:absolute; inset:3px 3px auto 3px; height:4px;
+                  border-bottom:1.75px solid var(--accent); }
+  .brand { font-weight:600; color: var(--ink); text-decoration:none; }
+  main { max-width:560px; margin:0 auto; padding:88px 24px; }
+  h1 { font: 600 2.4rem/1.15 "Iowan Old Style", Palatino, Georgia, serif; margin:0 0 .4em;
+       letter-spacing:-.01em; }
+  p { color: var(--muted); margin:0 0 1.4em; }
+  a.btn { display:inline-block; padding:10px 18px; border-radius:8px; text-decoration:none;
+          background: var(--accent); color:#fff; font-weight:500; }
+  a.btn:hover { background: var(--accent-ink); }
+</style>
+</head>
+<body>
+<header><span class="mark"></span><a class="brand" href="/">All Printable</a></header>
+<main>
+  <h1>Nothing printed here.</h1>
+  <p>That page does not exist — it may have moved, or the link may be mistyped.</p>
+  <p><a class="btn" href="/">Back to the printables</a></p>
+</main>
+<script>
+  /* On a GitHub Pages project site the root is the first path segment
+     (/<repo>/); on a custom domain or user site it is /. */
+  (function () {
+    var root = '/';
+    if (/\.github\.io$/.test(location.hostname)) {
+      var seg = location.pathname.split('/')[1];
+      if (seg) root = '/' + seg + '/';
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('a[href="/"]'), function (a) {
+      a.setAttribute('href', root);
+    });
+  })();
+</script>
+</body>
+</html>

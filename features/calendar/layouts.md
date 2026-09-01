@@ -1,6 +1,6 @@
 # Layout engines
 
-`public/printables/calendar/layouts.js`. All seven share one annotation
+`docs/printables/calendar/layouts.js`. All seven share one annotation
 pipeline — holidays, moon phases and user events are resolved once per date —
 so every option behaves the same way in every layout.
 

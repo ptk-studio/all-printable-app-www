@@ -1,6 +1,6 @@
 # Calendar maker
 
-Status: **live** — `public/printables/calendar/`
+Status: **live** — `docs/printables/calendar/`
 
 The reference point is print-a-calendar.com's "make a calendar" page. It offers
 five layouts, two paper sizes, and a handful of toggles. This does more, and
