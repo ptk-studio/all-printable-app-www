@@ -229,3 +229,5 @@
 
 /* The price on /pro/, before anyone is asked to sign in for it. */
 .pro-price { font-size: 1.3rem; font-weight: 600; color: var(--ink); margin: 0 0 .4em; }
+/* Takes no space until the price arrives, so nothing jumps. */
+.pro-price:empty { display: none; }

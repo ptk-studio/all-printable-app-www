@@ -62,14 +62,21 @@
        was missing. Sessions are per-origin, so arriving from
        all-printable.com signed in there counts for nothing here. */
     if (!user) {
-      var line = h('p', { text:
+      /* Show the price before asking anyone to sign in for it.
+
+         The element is put in place now and filled when the price arrives,
+         rather than inserted relative to a sibling later: render() runs more
+         than once (directly, and again from onChange), so a node captured by
+         an async callback can be detached by the time it resolves — and
+         insertBefore against a detached sibling throws. Setting textContent on
+         a stale node is merely invisible, which is the failure worth having. */
+      var priceEl = h('p', { class: 'pro-price' });
+      box.appendChild(priceEl);
+      box.appendChild(h('p', { text:
         'Pro is tied to your account, so sign in first. Signing in on ' +
-        'all-printable.com does not carry over — this is a different site.' });
-      box.appendChild(line);
-      /* Show the price before asking anyone to sign in for it. */
+        'all-printable.com does not carry over — this is a different site.' }));
       AP.account.price().then(function (p) {
-        var t = AP.account.formatPrice(p);
-        if (t) box.insertBefore(h('p', { class: 'pro-price', text: t }), line);
+        priceEl.textContent = AP.account.formatPrice(p) || '';
       });
       box.appendChild(h('p', { class: 'lp-cta' }, [
         h('button', { class: 'btn btn-primary', type: 'button',
