@@ -5,11 +5,13 @@ printable does, why it is built the way it is, and what is planned next.
 Code lives in `docs/`; nothing here is served.
 
 ```
+tools/               maintenance scripts; output is committed, nothing runs at request time
 features/
   README.md          this file
   platform.md        conventions every printable follows
   analytics.md       what is measured, and the consent model
   branding.md        the printed sheet credit, and the paid-removal seam
+  landing.md         per-printable pages, and how they avoid being doorways
   roadmap.md         what is planned, in priority order
   calendar/
     README.md        the calendar maker's full feature spec

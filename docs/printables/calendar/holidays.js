@@ -360,6 +360,123 @@ window.AP = window.AP || {};
       fx(6, 12, 'День России'), fx(11, 4, 'День народного единства')
     ]},
 
+    HU: { label: 'Hungary', sub: null, rules: [
+      fx(1, 1, 'Újév'), fx(3, 15, 'Nemzeti ünnep'),
+      ea(-2, 'Nagypéntek'), ea(0, 'Húsvét'), ea(1, 'Húsvéthétfő'),
+      fx(5, 1, 'A munka ünnepe'), ea(49, 'Pünkösd'), ea(50, 'Pünkösdhétfő'),
+      fx(8, 20, 'Az államalapítás ünnepe'), fx(10, 23, 'Nemzeti ünnep'),
+      fx(11, 1, 'Mindenszentek'), fx(12, 25, 'Karácsony'), fx(12, 26, 'Karácsony másnapja')
+    ]},
+
+    SK: { label: 'Slovakia', sub: null, rules: [
+      fx(1, 1, 'Deň vzniku SR'), fx(1, 6, 'Zjavenie Pána'),
+      ea(-2, 'Veľký piatok'), ea(1, 'Veľkonočný pondelok'),
+      fx(5, 1, 'Sviatok práce'), fx(5, 8, 'Deň víťazstva nad fašizmom'),
+      fx(7, 5, 'Sv. Cyrila a Metoda'), fx(8, 29, 'Výročie SNP'),
+      fx(9, 1, 'Deň Ústavy SR'), fx(9, 15, 'Sedembolestná Panna Mária'),
+      fx(11, 1, 'Sviatok všetkých svätých'), fx(11, 17, 'Deň boja za slobodu'),
+      fx(12, 24, 'Štedrý deň'), fx(12, 25, 'Prvý sviatok vianočný'),
+      fx(12, 26, 'Druhý sviatok vianočný')
+    ]},
+
+    SI: { label: 'Slovenia', sub: null, rules: [
+      fx(1, 1, 'Novo leto'), fx(1, 2, 'Novo leto'), fx(2, 8, 'Prešernov dan'),
+      ea(0, 'Velika noč'), ea(1, 'Velikonočni ponedeljek'),
+      fx(4, 27, 'Dan upora proti okupatorju'), fx(5, 1, 'Praznik dela'),
+      fx(5, 2, 'Praznik dela'), ea(49, 'Binkošti'),
+      fx(6, 25, 'Dan državnosti'), fx(8, 15, 'Marijino vnebovzetje'),
+      fx(10, 31, 'Dan reformacije'), fx(11, 1, 'Dan spomina na mrtve'),
+      fx(12, 25, 'Božič'), fx(12, 26, 'Dan samostojnosti')
+    ]},
+
+    HR: { label: 'Croatia', sub: null, rules: [
+      fx(1, 1, 'Nova godina'), fx(1, 6, 'Bogojavljenje'),
+      ea(0, 'Uskrs'), ea(1, 'Uskrsni ponedjeljak'),
+      fx(5, 1, 'Praznik rada'), ea(60, 'Tijelovo'),
+      fx(5, 30, 'Dan državnosti'), fx(6, 22, 'Dan antifašističke borbe'),
+      fx(8, 5, 'Dan pobjede'), fx(8, 15, 'Velika Gospa'),
+      fx(11, 1, 'Svi sveti'), fx(11, 18, 'Dan sjećanja'),
+      fx(12, 25, 'Božić'), fx(12, 26, 'Sveti Stjepan')
+    ]},
+
+    RO: { label: 'Romania', note: 'Orthodox Easter dates', sub: null, rules: [
+      fx(1, 1, 'Anul Nou'), fx(1, 2, 'Anul Nou'), fx(1, 24, 'Unirea Principatelor'),
+      oe(-2, 'Vinerea Mare'), oe(0, 'Paștele'), oe(1, 'Paștele'),
+      fx(5, 1, 'Ziua Muncii'), fx(6, 1, 'Ziua Copilului'),
+      oe(49, 'Rusaliile'), oe(50, 'Rusaliile'),
+      fx(8, 15, 'Adormirea Maicii Domnului'), fx(11, 30, 'Sfântul Andrei'),
+      fx(12, 1, 'Ziua Națională'), fx(12, 25, 'Crăciunul'), fx(12, 26, 'Crăciunul')
+    ]},
+
+    BG: { label: 'Bulgaria', note: 'Orthodox Easter dates', sub: null, rules: [
+      fx(1, 1, 'Нова година'), fx(3, 3, 'Ден на Освобождението'),
+      oe(-2, 'Разпети петък'), oe(0, 'Великден'), oe(1, 'Великден'),
+      fx(5, 1, 'Ден на труда'), fx(5, 6, 'Гергьовден'),
+      fx(5, 24, 'Ден на българската просвета'), fx(9, 6, 'Ден на Съединението'),
+      fx(9, 22, 'Ден на Независимостта'),
+      fx(12, 24, 'Бъдни вечер'), fx(12, 25, 'Коледа'), fx(12, 26, 'Коледа')
+    ]},
+
+    LU: { label: 'Luxembourg', sub: null, rules: [
+      fx(1, 1, 'Neijoerschdag'), ea(1, 'Ouschterméindeg'),
+      fx(5, 1, 'Dag vun der Aarbecht'), fx(5, 9, 'Europadag'),
+      ea(39, 'Christi Himmelfaart'), ea(50, 'Péngschtméindeg'),
+      fx(6, 23, 'Nationalfeierdag'), fx(8, 15, 'Mariä Himmelfaart'),
+      fx(11, 1, 'Allerhellegen'), fx(12, 25, 'Chrëschtdag'), fx(12, 26, 'Stiefesdag')
+    ]},
+
+    EE: { label: 'Estonia', sub: null, rules: [
+      fx(1, 1, 'Uusaasta'), fx(2, 24, 'Iseseisvuspäev'),
+      ea(-2, 'Suur reede'), ea(0, 'Ülestõusmispühade 1. püha'),
+      fx(5, 1, 'Kevadpüha'), ea(49, 'Nelipühade 1. püha'),
+      fx(6, 23, 'Võidupüha'), fx(6, 24, 'Jaanipäev'),
+      fx(8, 20, 'Taasiseseisvumispäev'),
+      fx(12, 24, 'Jõululaupäev'), fx(12, 25, 'Esimene jõulupüha'),
+      fx(12, 26, 'Teine jõulupüha')
+    ]},
+
+    LV: { label: 'Latvia', sub: null, rules: [
+      fx(1, 1, 'Jaunais gads'), ea(-2, 'Lielā Piektdiena'),
+      ea(0, 'Lieldienas'), ea(1, 'Otrās Lieldienas'),
+      fx(5, 1, 'Darba svētki'), fx(5, 4, 'Neatkarības deklarācija'),
+      fx(6, 23, 'Līgo diena'), fx(6, 24, 'Jāņi'),
+      fx(11, 18, 'Proklamēšanas diena'),
+      fx(12, 24, 'Ziemassvētku vakars'), fx(12, 25, 'Ziemassvētki'),
+      fx(12, 26, 'Otrie Ziemassvētki'), fx(12, 31, 'Vecgada vakars')
+    ]},
+
+    LT: { label: 'Lithuania', sub: null, rules: [
+      fx(1, 1, 'Naujieji metai'), fx(2, 16, 'Valstybės atkūrimo diena'),
+      fx(3, 11, 'Nepriklausomybės atkūrimo diena'),
+      ea(0, 'Velykos'), ea(1, 'Antroji Velykų diena'),
+      fx(5, 1, 'Darbo diena'), fx(6, 24, 'Joninės'),
+      fx(7, 6, 'Valstybės diena'), fx(8, 15, 'Žolinė'),
+      fx(11, 1, 'Visų šventųjų diena'), fx(11, 2, 'Vėlinės'),
+      fx(12, 24, 'Kūčios'), fx(12, 25, 'Kalėdos'), fx(12, 26, 'Kalėdos')
+    ]},
+
+    IS: { label: 'Iceland', sub: null, rules: [
+      fx(1, 1, 'Nýársdagur'), ea(-3, 'Skírdagur'), ea(-2, 'Föstudagurinn langi'),
+      ea(0, 'Páskadagur'), ea(1, 'Annar í páskum'),
+      rg(4, THU, 19, 25, 'Sumardagurinn fyrsti'),
+      fx(5, 1, 'Verkalýðsdagurinn'), ea(39, 'Uppstigningardagur'),
+      ea(49, 'Hvítasunnudagur'), ea(50, 'Annar í hvítasunnu'),
+      fx(6, 17, 'Þjóðhátíðardagurinn'),
+      nw(8, MON, 1, 'Frídagur verslunarmanna'),
+      fx(12, 25, 'Jóladagur'), fx(12, 26, 'Annar í jólum')
+    ]},
+
+    CL: { label: 'Chile', sub: null, rules: [
+      fx(1, 1, 'Año Nuevo'), ea(-2, 'Viernes Santo'), ea(-1, 'Sábado Santo'),
+      fx(5, 1, 'Día del Trabajo'), fx(5, 21, 'Día de las Glorias Navales'),
+      fx(6, 29, 'San Pedro y San Pablo'), fx(7, 16, 'Virgen del Carmen'),
+      fx(8, 15, 'Asunción de la Virgen'),
+      fx(9, 18, 'Independencia Nacional'), fx(9, 19, 'Día de las Glorias del Ejército'),
+      fx(10, 12, 'Encuentro de Dos Mundos'), fx(10, 31, 'Iglesias Evangélicas'),
+      fx(11, 1, 'Día de Todos los Santos'), fx(12, 8, 'Inmaculada Concepción'),
+      fx(12, 25, 'Navidad')
+    ]},
+
     GR: { label: 'Greece', sub: null, rules: [
       fx(1, 1, 'Πρωτοχρονιά'), fx(1, 6, 'Θεοφάνεια'),
       oe(-48, 'Καθαρά Δευτέρα'), fx(3, 25, 'Ευαγγελισμός'),

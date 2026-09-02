@@ -13,7 +13,7 @@ holidays, their own dates, and a sheet that fits their planner.
 |---|---|---|
 | Layouts | Month, 2/4/6-up, year | Those, plus year grid, agenda list, week planner, photo |
 | Paper | Letter + a poster size | 18 sizes: US, ISO A2–A6, B5, squares, posters, planner inserts |
-| Holidays | — | 30 countries, computed from rules for any year |
+| Holidays | — | 42 countries, computed from rules for any year |
 | Own events | — | One-off, annual and monthly repeats; CSV import |
 | Language | English | 25 locales via `Intl` |
 | Extras | Weekend shading, grid lines | Moon phases, ISO/US week numbers, day-of-year, equinoxes, mini months, ink saver |

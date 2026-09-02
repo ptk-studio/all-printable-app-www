@@ -6,6 +6,7 @@ browser and prints at true paper size.
 ```
 docs/        the site — open docs/index.html, or serve the folder
 features/    product specs: what each printable does and why
+tools/       maintenance scripts (landing-page generation); output is committed
 ```
 
 The site folder is named `docs/` because GitHub Pages can serve a project
@@ -26,7 +27,7 @@ be deployed as-is to any static host.
 ## What's here
 
 - **Calendar maker** (`docs/printables/calendar/`) — seven layouts, 18 paper
-  sizes, holidays for 30 countries computed for any year, moon phases, custom
+  sizes, holidays for 42 countries computed for any year, moon phases, custom
   events, 25 languages. See `features/calendar/README.md`.
 - **Paper & grids** (`docs/printables/paper/`) — graph, dot grid, ruled,
   isometric, hexagon, music manuscript and handwriting sheets, drawn as vectors
@@ -52,6 +53,18 @@ All seven run on the shared studio shell in `docs/assets/js/core/studio.js`,
 which owns state, controls, preview, printing and export. Sheet geometry for
 the small formats lives in `docs/assets/js/core/impose.js`, and rows-and-columns
 sheets are built from `docs/assets/js/core/table.js`.
+
+## Landing pages
+
+Each printable has its own indexable page at `/<slug>/`, generated from the
+registry and per-sheet copy:
+
+```sh
+node tools/build-landing.mjs
+```
+
+The output is committed — the site stays buildless to serve. See
+`features/landing.md`.
 
 ## Sheet credit
 

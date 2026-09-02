@@ -24,10 +24,10 @@ AP.PRINTABLES = [
   /* ---- live ---- */
   { id: 'calendar', cat: 'calendars', status: 'live',
     name: 'Calendar',
-    tagline: 'Seven layouts, thirty countries of holidays, any paper size',
+    tagline: 'Seven layouts, 42 countries of holidays, any paper size',
     href: 'printables/calendar/index.html',
     bullets: ['Month, multi-month, year, year grid, agenda, weekly, photo',
-              'Holidays computed for any year — no stale data',
+              'Holidays for 42 countries, computed for any year — no stale data',
               'Moon phases, week numbers, your own recurring events'],
     art: 'calendar' },
 

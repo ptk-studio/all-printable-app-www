@@ -32,24 +32,28 @@
     label:    '<rect class="stroke" x="6" y="8" width="26" height="16" rx="2"/><rect class="stroke" x="38" y="8" width="26" height="16" rx="2"/><rect class="stroke" x="6" y="32" width="26" height="16" rx="2"/><rect class="stroke" x="38" y="32" width="26" height="16" rx="2"/>'
   };
 
+  /* Two links per card: the card itself opens the printable's page, and a
+     separate link goes straight to the maker. The overlay is the stretched-link
+     pattern, so the whole card is clickable without nesting anchors — which
+     is invalid HTML and breaks keyboard navigation. */
   function card(p) {
     var live = p.status === 'live';
-    var node = el(live ? 'a' : 'div', {
-      class: 'card' + (live ? '' : ' is-soon'),
-      href: live ? p.href : null
-    }, [
+    var title = live
+      ? el('a', { class: 'card-link', href: p.id + '/' }, [el('h3', { text: p.name })])
+      : el('h3', { text: p.name });
+
+    return el('div', { class: 'card' + (live ? '' : ' is-soon') }, [
       el('div', { class: 'card-art', html: AP.svg('0 0 72 60', ART[p.art] || ART.calendar) }),
       el('div', { class: 'card-body' }, [
         el('div', { class: 'card-title' }, [
-          el('h3', { text: p.name }),
+          title,
           live ? null : el('span', { class: 'badge badge-soon', text: 'Planned' })
         ]),
         el('p', { text: p.tagline }),
         p.bullets ? el('ul', {}, p.bullets.map(function (b) { return el('li', { text: b }); })) : null,
-        live ? el('div', { class: 'card-go', text: 'Open the maker →' }) : null
+        live ? el('a', { class: 'card-go', href: p.href, text: 'Open the maker →' }) : null
       ])
     ]);
-    return node;
   }
 
   function init() {

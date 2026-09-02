@@ -43,10 +43,16 @@ autumnal equinox.
 
 ## Countries
 
-Argentina, Australia, Austria, Belgium, Brazil, Canada, Czechia, Denmark,
-Finland, France, Germany, Greece, India, Ireland, Italy, Japan, Mexico,
-Netherlands, New Zealand, Norway, Poland, Portugal, Russia, South Africa,
-South Korea, Spain, Sweden, Switzerland, United Kingdom, United States.
+Argentina, Australia, Austria, Belgium, Brazil, Bulgaria, Canada, Chile,
+Croatia, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary,
+Iceland, India, Ireland, Italy, Japan, Latvia, Lithuania, Luxembourg, Mexico,
+Netherlands, New Zealand, Norway, Poland, Portugal, Romania, Russia, Slovakia,
+Slovenia, South Africa, South Korea, Spain, Sweden, Switzerland,
+United Kingdom, United States — 42 in all.
+
+Romania and Bulgaria use the Orthodox computus, which the engine already had
+for Greece; Iceland's first day of summer is the Thursday between 19 and 25
+April, expressed with the same date-window rule as Nordic midsummer.
 
 Regional caveats are shown in the sidebar as tooltips: Germany and Switzerland
 list nationwide holidays only, the UK list is England & Wales, Australia omits

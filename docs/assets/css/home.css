@@ -57,7 +57,17 @@
   text-decoration: none; color: inherit;
   transition: border-color .14s ease, transform .14s ease, box-shadow .14s ease;
 }
-a.card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-md); color: inherit; }
+.card { position: relative; }
+.card:has(.card-link:hover), .card:has(.card-link:focus-visible) {
+  border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-md);
+}
+.card:has(.card-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Stretched link: the title covers the card, so the whole tile opens the
+   printable's page — without nesting anchors. */
+.card-link { text-decoration: none; color: inherit; }
+.card-link::after { content: ""; position: absolute; inset: 0; z-index: 0; }
+.card-link:hover { color: inherit; }
 .card.is-soon { opacity: .72; }
 
 .card-art {
@@ -66,7 +76,7 @@ a.card:hover { border-color: var(--accent); transform: translateY(-2px); box-sha
   display: flex; align-items: center; justify-content: center;
   color: var(--muted);
 }
-a.card:hover .card-art { color: var(--accent); }
+.card:has(.card-link:hover) .card-art { color: var(--accent); }
 .card-art svg { width: 108px; height: 76px; }
 .card-art .stroke { fill: none; stroke: currentColor; stroke-width: 1.4; }
 .card-art .fill { fill: currentColor; opacity: .16; stroke: none; }
@@ -81,7 +91,12 @@ a.card:hover .card-art { color: var(--accent); }
   content: ""; position: absolute; left: 3px; top: .55em;
   width: 4px; height: 4px; border-radius: 50%; background: var(--accent);
 }
-.card-go { margin-top: auto; padding-top: 12px; font-size: 13.5px; font-weight: 600; color: var(--accent-ink); }
+.card-go {
+  margin-top: auto; padding-top: 12px; font-size: 13.5px; font-weight: 600;
+  color: var(--accent-ink); text-decoration: none;
+  position: relative; z-index: 1; align-self: flex-start;
+}
+.card-go:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 .compare { margin: 56px 0 8px; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); }
 .compare table { border-collapse: collapse; width: 100%; font-size: 14px; }
@@ -100,4 +115,59 @@ a.card:hover .card-art { color: var(--accent); }
 @media (max-width: 700px) {
   .hero { padding: 46px 0 34px; }
   .compare { overflow-x: auto; }
+}
+
+/* --- Landing pages -------------------------------------------------------- */
+.lp { max-width: 780px; padding-top: 34px; padding-bottom: 20px; }
+
+.lp-crumbs { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+.lp-crumbs a { color: var(--muted); text-decoration: none; }
+.lp-crumbs a:hover { color: var(--ink-soft); text-decoration: underline; }
+.lp-crumbs span { margin: 0 6px; opacity: .5; }
+
+.lp h1 { font-size: clamp(2rem, 4.6vw, 2.9rem); max-width: 20ch; margin-bottom: .3em; }
+.lp-intro { font-size: 1.06rem; color: var(--ink-soft); max-width: 62ch; }
+
+.lp-cta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 26px 0 8px; }
+.lp-cta .btn { padding: 11px 22px; font-size: 15px; }
+.lp-free { font-size: 13px; color: var(--muted); }
+.lp-cta-end { margin-top: 40px; padding-top: 26px; border-top: 1px solid var(--line); }
+
+.lp-cols {
+  display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 34px; margin-top: 40px;
+}
+.lp h2 { font-size: 1.22rem; margin-bottom: .55em; }
+.lp h3 { font-size: 1rem; margin-bottom: .25em; }
+.lp p { color: var(--ink-soft); font-size: 14.6px; line-height: 1.6; }
+
+.lp-points { margin: 0; padding: 0; list-style: none; }
+.lp-points li {
+  position: relative; padding-left: 18px; margin-bottom: 9px;
+  font-size: 14.6px; color: var(--ink-soft); line-height: 1.55;
+}
+.lp-points li::before {
+  content: ""; position: absolute; left: 2px; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+}
+
+.lp-specs { border-collapse: collapse; width: 100%; font-size: 14px; }
+.lp-specs th, .lp-specs td { padding: 7px 0; border-bottom: 1px solid var(--line-soft); text-align: left; }
+.lp-specs th { font-weight: 400; color: var(--muted); }
+.lp-specs td { text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.lp-print, .lp-faq, .lp-related { margin-top: 40px; }
+.lp-print p { max-width: 66ch; }
+.lp-faq > div { margin-bottom: 18px; max-width: 66ch; }
+
+.lp-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.lp-links a {
+  font-size: 13.5px; padding: 6px 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink-soft); text-decoration: none;
+}
+.lp-links a:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+@media (max-width: 720px) {
+  .lp-cols { grid-template-columns: 1fr; gap: 26px; }
 }

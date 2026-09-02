@@ -15,7 +15,7 @@ generators.
   asserted rather than eyeballed.
 - **The table engine** — `core/table.js`: blocks, ruled space, checklists and
   rows. Turned the four form sheets into about 130 lines of layout.
-- **calendar** — seven layouts, 30 countries of holidays, moon phases.
+- **calendar** — seven layouts, 42 countries of holidays, moon phases.
 - **paper** — graph, dot, ruled, isometric, hex, manuscript, handwriting,
   drawn to measured millimetre scale.
 - **tracker** — habit tracker, chore chart, reward chart.
@@ -23,23 +23,29 @@ generators.
 - **puzzles** — sudoku, word search, mazes, bingo, seeded, with answer keys.
 - **forms** — budget, packing list, meal plan, day planner.
 - **worksheets** — times tables and maths drills, seeded, with answer keys.
+- **Landing pages** — one indexable page per printable at its own URL, generated
+  from the registry by `tools/build-landing.mjs`, with copy written per sheet
+  rather than templated.
+- **Twelve more holiday countries** — Bulgaria, Chile, Croatia, Estonia,
+  Hungary, Iceland, Latvia, Lithuania, Luxembourg, Romania, Slovakia and
+  Slovenia, taking the total to 42.
 
 ## Next
 
 The catalogue is complete, so what is left is depth rather than breadth.
 
-1. **Per-printable landing pages.** One home page is doing all the SEO work for
-   26 printables. Each generator wants static, indexable copy — "printable 2027
-   calendar A4", "free graph paper 5 mm" — rather than a query string.
-2. **A real PDF export.** The browser's print dialog is high quality and
+1. **A real PDF export.** The browser's print dialog is high quality and
    dependency-free, but it makes the user do two steps. A direct download needs
    a PDF writer with font embedding; worth the weight only once traffic
    justifies it.
-3. **More holiday countries**, and a way to express lunar-calendar festivals
-   without shipping a table that goes stale.
-4. **Saved designs across devices**, which is the first thing that would need
+2. **Lunar-calendar festivals** — Diwali, Eid, Seollal. Still deliberately
+   absent: they depend on sighting or on ephemeris tables that go stale, and a
+   wrong date on a printed wall calendar is worse than no date. Chinese New
+   Year is the one exception, offered from a bounded table, because it is
+   unambiguous. Anything further needs a real source, not a guess.
+3. **Saved designs across devices**, which is the first thing that would need
    accounts — and therefore the first thing worth charging for.
-5. **Removing the sheet credit for paying users.** The seam is already in
+4. **Removing the sheet credit for paying users.** The seam is already in
    place: `AP.brand.hidden()` in `core/brand.js` is the only line that changes.
    What is missing is accounts and an entitlement to read, and a place to check
    it that the user does not control.
