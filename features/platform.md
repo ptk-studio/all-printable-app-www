@@ -66,6 +66,18 @@ Controls are declared in markup, not wired in code:
 `?preset=<slug>` on the URL applies a named preset, which is how the catalogue
 deep-links to "College ruled" or "Chore chart".
 
+## Shared primitives
+
+Three modules carry the weight, and each was built because the roadmap said the
+next batch of printables needed it:
+
+- `core/studio.js` — state, controls, preview, printing, export.
+- `core/impose.js` — N-up layout, cut marks, label stock, duplex ordering.
+- `core/table.js` — rows and columns with headings and writing space.
+
+Plus `core/util.js` for dates, locale formatting and the seeded PRNG that
+content-generating printables share.
+
 ## Drawing to scale
 
 Sheets built from HTML boxes (calendar, tracker) size everything in `em` off a

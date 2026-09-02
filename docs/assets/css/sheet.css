@@ -93,3 +93,93 @@
   color: var(--ink-soft); margin-top: .5em; flex: 0 0 auto; }
 .legend .lg { white-space: nowrap; }
 .legend .lg b { color: var(--accent); font-weight: 600; margin-right: .3em; }
+
+/* ==========================================================================
+   Tables — shared by every form-shaped sheet. See core/table.js.
+   ========================================================================== */
+
+.tb-row { display: grid; gap: .9em; min-height: 0; }
+.tb-row.grow, .tb-block.grow { flex: 1 1 auto; min-height: 0; }
+.tb-block { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+
+.tb-title {
+  font-family: var(--face-head); font-size: .82em; margin: 0 0 .35em;
+  flex: 0 0 auto; display: flex; align-items: baseline; gap: .6em;
+  text-transform: var(--label-tf, none); letter-spacing: var(--label-ls, .06em);
+  color: var(--accent);
+  border-bottom: var(--rule-w) solid var(--rule); padding-bottom: .2em;
+}
+.tb-title em { font-style: normal; font-size: .8em; color: var(--ink-faint);
+  margin-left: auto; letter-spacing: .02em; text-transform: none; }
+
+.tb-grid {
+  flex: 1 1 auto; min-height: 0; display: grid;
+  grid-auto-rows: minmax(1.6em, auto);
+  border-top: var(--rule-w) solid var(--rule);
+  border-left: var(--rule-w) solid var(--rule);
+}
+.tb-grid.compact { grid-auto-rows: minmax(1.15em, auto); }
+.tb-grid > * {
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+  padding: .18em .4em; min-width: 0; overflow: hidden;
+  display: flex; align-items: center;
+}
+.tb-head {
+  font-family: var(--face-head); font-size: .68em; font-weight: 600;
+  text-transform: var(--label-tf, uppercase); letter-spacing: var(--label-ls, .1em);
+  color: var(--ink-faint); background: var(--shade);
+}
+.tb-cell { font-size: .78em; }
+.tb-cell.alt { background: color-mix(in srgb, var(--shade) 42%, #fff); }
+.tb-grid.zebra .tb-cell.alt { background: color-mix(in srgb, var(--shade) 55%, #fff); }
+.tb-cell.total {
+  border-top: max(0.35mm, 0.07em) solid var(--ink);
+  font-weight: 600; background: none;
+}
+.align-right { justify-content: flex-end; text-align: right; }
+.align-center { justify-content: center; text-align: center; }
+.tb-fixed { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.tb-check {
+  width: 1.05em; height: 1.05em; flex: 0 0 auto;
+  border: var(--rule-w) solid var(--rule); display: block;
+}
+.tb-check.circle { border-radius: 50%; }
+.tb-check.rounded { border-radius: .18em; }
+.tb-check.square { border-radius: 0; }
+.tb-dot { width: .32em; height: .32em; border-radius: 50%; background: var(--rule); }
+.tb-rule { flex: 1 1 auto; border-bottom: var(--rule-w) solid var(--rule); height: .9em; }
+
+/* ---- Ruled blocks -------------------------------------------------------- */
+.tb-lines { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.tb-lines .tb-line { flex: 1 1 auto; min-height: 1.5em;
+  border-bottom: var(--rule-w) solid var(--rule); }
+.tb-lines.fill {
+  background-image: linear-gradient(to bottom, transparent 0,
+    transparent calc(100% - var(--rule-w)), var(--rule) calc(100% - var(--rule-w)));
+  background-size: 100% 1.5em;
+}
+.tb-lines.dots.fill {
+  background-image: radial-gradient(circle at 1px 1px, var(--rule) .7px, transparent .75px);
+  background-size: 1.3em 1.3em;
+}
+.tb-lines.grid.fill {
+  background-image: linear-gradient(to right, var(--rule) var(--rule-w), transparent var(--rule-w)),
+                    linear-gradient(to bottom, var(--rule) var(--rule-w), transparent var(--rule-w));
+  background-size: 1.3em 1.3em;
+}
+.tb-lines.blank.fill { background-image: none; }
+
+/* ---- Checklists ---------------------------------------------------------- */
+.tb-checklist { flex: 1 1 auto; min-height: 0; column-gap: 1.4em; }
+.tb-item {
+  display: flex; align-items: center; gap: .5em;
+  font-size: .78em; padding: .22em 0;
+  break-inside: avoid;
+}
+.tb-item-text { flex: 0 0 auto; }
+.tb-item-rule { flex: 1 1 auto; border-bottom: var(--rule-w) solid var(--rule); height: .85em; }
+
+.page.ink-saver .tb-head { background: none; }
+.page.ink-saver .tb-cell.alt { background: none; }

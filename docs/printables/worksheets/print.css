@@ -1,0 +1,64 @@
+/* Maths worksheet styles. Page shell from assets/css/sheet.css. */
+
+.ws-body { flex: 1 1 auto; min-height: 0; display: flex; }
+.ws-body > * { flex: 1 1 auto; min-width: 0; min-height: 0; }
+
+/* ---- Drill grids --------------------------------------------------------- */
+.ws-grid { display: grid; gap: .6em 1em; align-content: start; }
+.ws-grid.vertical { gap: 1.2em 1em; align-content: space-around; }
+
+.ws-problem { display: flex; align-items: baseline; gap: .5em; min-width: 0; }
+.ws-n { font-size: .62em; color: var(--ink-faint); flex: 0 0 auto; min-width: 1.6em; }
+
+.ws-sum {
+  display: flex; align-items: baseline; gap: .38em;
+  font-family: var(--face-head); font-size: 1.05em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.ws-sum b { font-weight: 500; }
+.ws-sum i { font-style: normal; color: var(--ink-soft); }
+.ws-blank {
+  display: inline-block; min-width: 2.6em;
+  border-bottom: var(--rule-w) solid var(--rule); height: 1.05em;
+}
+.ws-answer { color: var(--accent); }
+
+/* Column arithmetic */
+.ws-problem.vert { align-items: flex-start; }
+.ws-stack {
+  font-family: var(--face-head); font-size: 1.05em; text-align: right;
+  min-width: 3.6em; font-variant-numeric: lining-nums tabular-nums;
+}
+.ws-stack .ws-top { padding-right: .1em; }
+.ws-stack .ws-bottom { display: flex; justify-content: space-between; gap: .6em; padding-right: .1em; }
+.ws-stack .ws-bottom i { font-style: normal; color: var(--ink-soft); }
+.ws-stack .ws-line { border-bottom: max(0.3mm, 0.06em) solid var(--ink); margin: .12em 0; }
+.ws-stack .ws-result { height: 1.15em; }
+.ws-stack .ws-result.filled { color: var(--accent); }
+
+/* ---- Times-table grid ---------------------------------------------------- */
+.ws-chart {
+  display: grid; aspect-ratio: 1;
+  width: 100cqmin; height: 100cqmin;
+  margin: auto;
+  border-top: max(0.4mm, .07em) solid var(--ink);
+  border-left: max(0.4mm, .07em) solid var(--ink);
+  font-family: var(--face-head);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.ws-body { container-type: size; }
+.ws-chart .ws-c {
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: calc(100cqmin / 26); min-width: 0; min-height: 0;
+}
+.ws-chart .ws-c.head {
+  background: var(--shade); font-weight: 700; color: var(--accent);
+}
+.ws-chart .ws-c.corner { background: var(--accent); color: #fff; font-weight: 700; }
+.ws-chart .ws-c.diag { background: color-mix(in srgb, var(--shade) 60%, #fff); }
+
+.page.ink-saver .ws-chart .ws-c.head,
+.page.ink-saver .ws-chart .ws-c.diag { background: none; }
+.page.ink-saver .ws-chart .ws-c.corner { background: none; color: var(--accent); }

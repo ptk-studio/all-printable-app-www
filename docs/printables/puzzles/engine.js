@@ -17,24 +17,8 @@ window.AP = window.AP || {};
     bingo:  { label: 'Bingo',       hint: 'Unique cards in one pass — numbers or your own words' }
   };
 
-  /* ---- Deterministic randomness ------------------------------------------- */
-  function rng(seed) {
-    var a = seed >>> 0;
-    return function () {
-      a |= 0; a = (a + 0x6D2B79F5) | 0;
-      var t = Math.imul(a ^ (a >>> 15), 1 | a);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-  function shuffle(arr, rand) {
-    for (var i = arr.length - 1; i > 0; i--) {
-      var j = Math.floor(rand() * (i + 1));
-      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
-    }
-    return arr;
-  }
-  function pick(arr, rand) { return arr[Math.floor(rand() * arr.length)]; }
+  /* Deterministic randomness lives in core/util.js — see AP.rng. */
+  var rng = AP.rng, shuffle = AP.shuffle, pick = AP.pick;
 
   /* ---- Sudoku ------------------------------------------------------------- */
   var PEERS = (function () {

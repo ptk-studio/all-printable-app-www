@@ -1,0 +1,19 @@
+/* Form sheet styles. Tables come from assets/css/sheet.css. */
+
+.form-body {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; gap: .9em;
+}
+.form-body > .tb-row, .form-body > .tb-block { min-height: 0; }
+
+/* The day planner's right-hand stack. */
+.page[data-layout="daily"] .tb-block.grow > .tb-block { margin-bottom: .9em; }
+.page[data-layout="daily"] .tb-block.grow > .tb-block:last-child { margin-bottom: 0; }
+
+/* Hour labels sit against the right edge of their narrow column. */
+.page[data-layout="daily"] .tb-cell:nth-child(odd) {
+  justify-content: flex-end; color: var(--ink-faint); font-size: .68em;
+}
+
+/* Meal plan day names are the row's label, not data. */
+.page[data-layout="meal"] .tb-cell:nth-child(n) .tb-fixed { font-weight: 500; }

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printable Times Tables &amp; Maths Drill Sheets — with answers · All Printable</title>
+<meta name="description" content="Printable times tables, addition, subtraction and division drill sheets with a separate answer key, plus the classic multiplication grid blank or filled. Free, nothing uploaded.">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/studio.css">
+<link rel="stylesheet" href="../../assets/css/sheet.css">
+<link rel="stylesheet" href="print.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M5 11h10M10 6v10M20 9l7 7M27 9l-7 7M5 24h10M20 21h7M20 26h7' stroke='%23b4472e' stroke-width='2.6' stroke-linecap='round'/></svg>">
+</head>
+<body class="app">
+
+<header class="site-header no-print">
+  <a class="brand" href="../../index.html"><span class="brand-mark"></span> All Printable</a>
+  <nav class="nav">
+    <a href="../../index.html">All printables</a>
+    <a href="../puzzles/index.html">Puzzles</a>
+    <a href="../paper/index.html">Paper</a>
+    <a href="index.html" aria-current="page">Maths</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="btn btn-sm" id="btn-share" title="Copy a link that restores these sheets">Copy link</button>
+  <button class="btn btn-sm" id="btn-html">Download HTML</button>
+  <button class="btn btn-sm btn-primary" id="btn-print">Print / Save PDF</button>
+</header>
+
+<div class="app-shell">
+  <aside class="sidebar no-print">
+    <div class="sidebar-head">
+      <h1>Maths practice</h1>
+      <p>Drill sheets and times-table grids. The same link always makes the same sheet.</p>
+    </div>
+
+    <div class="presets" id="presets"></div>
+
+    <details class="panel" open>
+      <summary>Sheet</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Type</span>
+          <div class="tiles" id="type-tiles"></div>
+          <span class="field-hint" id="type-hint"></span>
+        </div>
+
+        <div data-when="type=drill">
+          <div class="field">
+            <span class="field-label">Operations</span>
+            <div id="op-list"></div>
+            <span class="field-hint">Tick more than one for mixed practice.</span>
+          </div>
+          <div class="grid-2">
+            <label class="field"><span class="field-label">First number from</span>
+              <input type="number" data-bind="aMin" min="0" max="9999"></label>
+            <label class="field"><span class="field-label">to</span>
+              <input type="number" data-bind="aMax" min="0" max="9999"></label>
+          </div>
+          <div class="grid-2">
+            <label class="field"><span class="field-label">Second number from</span>
+              <input type="number" data-bind="bMin" min="0" max="9999"></label>
+            <label class="field"><span class="field-label">to</span>
+              <input type="number" data-bind="bMax" min="0" max="9999"></label>
+          </div>
+          <span class="field-hint">Division is built from the answer upwards, so it always divides
+            exactly — no stray remainders.</span>
+          <label class="check" style="margin-top:8px"><input type="checkbox" data-bind="allowNegative"> Allow negative answers in subtraction</label>
+        </div>
+
+        <div data-when="type=chart">
+          <label class="field"><span class="field-label">Grid size</span>
+            <input type="number" data-bind="chartMax" min="2" max="20"></label>
+          <label class="check"><input type="checkbox" data-bind="chartBlank"> Leave the grid blank to fill in</label>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary>How many</summary>
+      <div class="panel-body">
+        <div class="grid-2" data-when="type=drill">
+          <label class="field"><span class="field-label">Problems each</span>
+            <input type="number" data-bind="count" min="1" max="200"></label>
+          <label class="field"><span class="field-label">Columns</span>
+            <input type="number" data-bind="columns" min="1" max="8"></label>
+        </div>
+        <label class="field"><span class="field-label">Sheets</span>
+          <input type="number" data-bind="sheets" min="1" max="20"></label>
+        <div class="field" data-when="type=drill">
+          <span class="field-label">Layout</span>
+          <div class="seg">
+            <label><input type="radio" name="format" data-bind="format" value="horizontal">In a row</label>
+            <label><input type="radio" name="format" data-bind="format" value="vertical">Column sums</label>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" data-bind="answers"> Answer key sheets</label>
+        <label class="check" data-when="type=drill"><input type="checkbox" data-bind="numbering"> Number the problems</label>
+        <p class="inline-note" id="count-readout"></p>
+        <div class="row-wrap" data-when="type=drill">
+          <button class="btn btn-sm btn-primary" id="btn-reroll">New problems</button>
+          <span class="field-hint" style="margin:0">Seed <span data-out="seed"></span></span>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Paper &amp; style</summary>
+      <div class="panel-body">
+        <div class="field">
+          <span class="field-label">Size</span>
+          <select data-bind="paper" id="sel-paper"></select>
+        </div>
+        <div class="field">
+          <span class="field-label">Orientation</span>
+          <div class="seg">
+            <label><input type="radio" name="orientation" data-bind="orientation" value="portrait">Portrait</label>
+            <label><input type="radio" name="orientation" data-bind="orientation" value="landscape">Landscape</label>
+          </div>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Margin <span data-out="margin" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="margin" min="6" max="30" step="1"></label>
+          <label class="field"><span class="field-label">Text size <span data-out="textScale" class="field-hint" style="display:inline"></span></span>
+            <input type="range" data-bind="textScale" min="0.7" max="1.6" step="0.05"></label>
+        </div>
+        <div class="field">
+          <span class="field-label">Theme</span>
+          <select data-bind="theme">
+            <option value="classic">Classic serif</option>
+            <option value="modern">Modern sans</option>
+            <option value="minimal">Minimal</option>
+            <option value="bold">Bold</option>
+            <option value="editorial">Editorial</option>
+            <option value="mono">Monospace</option>
+          </select>
+        </div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">Accent</span>
+            <input type="color" data-bind="accent"></label>
+          <label class="field"><span class="field-label">Lines</span>
+            <input type="color" data-bind="ruleColor"></label>
+        </div>
+        <div class="swatches" id="accent-swatches"></div>
+        <label class="check" style="margin-top:10px"><input type="checkbox" data-bind="accentTitle"> Colour the title</label>
+        <label class="check"><input type="checkbox" data-bind="inkSaver"> Ink saver</label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Wording</summary>
+      <div class="panel-body">
+        <label class="field"><span class="field-label">Title</span>
+          <input type="text" data-bind="title" placeholder="Times tables"></label>
+        <label class="field"><span class="field-label">Subtitle</span>
+          <input type="text" data-bind="subtitle"></label>
+        <label class="check"><input type="checkbox" data-bind="fields"> Name / date / score blanks</label>
+        <label class="field" data-when="fields=true"><span class="field-label">Blanks</span>
+          <input type="text" data-bind="fieldList"></label>
+        <label class="field"><span class="field-label">Footer</span>
+          <input type="text" data-bind="footer"></label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Saved settings</summary>
+      <div class="panel-body">
+        <div class="row-wrap">
+          <button class="btn btn-sm" id="btn-save">Save current</button>
+          <button class="btn btn-sm" id="btn-reset">Reset all</button>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <span class="field-label">Your saves</span>
+          <div id="saved-list"><span class="field-hint">Nothing saved yet.</span></div>
+        </div>
+      </div>
+    </details>
+
+    <div style="padding:16px 16px 40px">
+      <p class="field-hint">Everything is generated here in the browser. Your work is never uploaded.</p>
+      <p class="field-hint" id="privacy-slot" style="margin-top:8px"></p>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div class="toolbar no-print" id="toolbar"></div>
+    <div class="canvas" id="canvas"></div>
+  </main>
+</div>
+
+<script src="../../assets/js/core/util.js"></script>
+<script src="../../assets/js/core/analytics.js"></script>
+<script src="../../assets/js/core/paper.js"></script>
+<script src="../../assets/js/core/studio.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+<script>AP.analytics.init('worksheets');
+var slot=document.getElementById('privacy-slot');
+if (slot) slot.appendChild(AP.analytics.consentLink());</script>
+</body>
+</html>

@@ -40,6 +40,10 @@
     { name: 'Mood month', s: { layout: 'month', shape: 'square', listHeading: 'Mood',
         items: 'Great\nGood\nOK\nLow\nRough', orientation: 'landscape', paper: 'a4',
         theme: 'editorial', zebra: true, notesRows: 3 } },
+    { name: 'Reward chart', s: { layout: 'week', shape: 'star', listHeading: 'Who',
+        title: 'Reward chart', items: 'Ada\nJonah\nRosa', weeks: 4, goalColumn: true,
+        goalHeading: 'Prize', orientation: 'portrait', paper: 'letter', zebra: false,
+        theme: 'bold', rowFill: 'stretch', notesRows: 1, accentTitle: true } },
     { name: 'Pocket tracker', s: { layout: 'month', shape: 'circle', paper: 'a5',
         orientation: 'landscape', margin: 6, textScale: 0.85, notesRows: 0,
         showWeekday: false, theme: 'mono' } }

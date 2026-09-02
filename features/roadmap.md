@@ -5,39 +5,47 @@ alternatives handle it. Registry ids match `docs/assets/js/registry.js`.
 
 ## Done
 
-- **The studio shell** — state, binding, preview, print and export extracted to
-  `core/studio.js`; a new generator is now an engine plus a control panel.
-- **graph-paper, dot-grid, lined-paper, isometric, hex, manuscript,
-  handwriting** — all seven from one `paper` generator, drawn to measured scale.
-- **habit-tracker and chore-chart** — one `tracker` generator, three layouts.
+Everything in the original catalogue is live — 26 printables across seven
+generators.
+
+- **The studio shell** — `core/studio.js`: state, binding, preview, print and
+  export. A new generator is an engine plus a control panel.
 - **The imposition helper** — `core/impose.js`: N-up layout, crop and cut
   marks, Avery die-cut stock and duplex card ordering, with the flip geometry
   asserted rather than eyeballed.
-- **flashcards, gift-tags, bookmarks, place-cards, labels** — one `cards`
-  generator on top of it.
-- **sudoku, word-search, maze, bingo** — one `puzzles` generator, seeded so a
-  link reproduces the same puzzles, with answer keys.
+- **The table engine** — `core/table.js`: blocks, ruled space, checklists and
+  rows. Turned the four form sheets into about 130 lines of layout.
+- **calendar** — seven layouts, 30 countries of holidays, moon phases.
+- **paper** — graph, dot, ruled, isometric, hex, manuscript, handwriting,
+  drawn to measured millimetre scale.
+- **tracker** — habit tracker, chore chart, reward chart.
+- **cards** — flashcards, gift tags, bookmarks, place cards, Avery labels.
+- **puzzles** — sudoku, word search, mazes, bingo, seeded, with answer keys.
+- **forms** — budget, packing list, meal plan, day planner.
+- **worksheets** — times tables and maths drills, seeded, with answer keys.
 
 ## Next
 
-1. **times-tables** — drill sheets with a separate answer key page. The puzzles
-   generator's seed-and-answer-key shape carries over almost unchanged.
-2. **budget**, **packing-list**, **meal-planner** — form-shaped sheets; mostly
-   a table engine plus good typography.
-3. **daily-planner** — time-blocked day sheets; close to the calendar's week
-   layout but per-day.
-4. **reward-chart** — star grids; a variation on the tracker's grid.
+The catalogue is complete, so what is left is depth rather than breadth.
 
-## Platform work worth doing first
+1. **Per-printable landing pages.** One home page is doing all the SEO work for
+   26 printables. Each generator wants static, indexable copy — "printable 2027
+   calendar A4", "free graph paper 5 mm" — rather than a query string.
+2. **A real PDF export.** The browser's print dialog is high quality and
+   dependency-free, but it makes the user do two steps. A direct download needs
+   a PDF writer with font embedding; worth the weight only once traffic
+   justifies it.
+3. **More holiday countries**, and a way to express lunar-calendar festivals
+   without shipping a table that goes stale.
+4. **Saved designs across devices**, which is the first thing that would need
+   accounts — and therefore the first thing worth charging for.
 
-- **A table/form engine.** Half of what is left is "rows and columns with
-  headings and writing space". The tracker's grid is most of it already —
-  generalising it turns the budget, packing-list and meal-planner sheets into
-  configuration.
-- **A real PDF export.** Today the browser's print dialog does the conversion,
-  which is high quality and dependency-free but makes the user do two steps.
-  A direct download would need a PDF writer with font embedding — worth it only
-  once traffic justifies the weight.
-- **Per-printable SEO pages.** Each generator should have static, indexable
-  landing copy (e.g. "printable 2027 calendar A4") rather than relying on one
-  home page.
+## The pattern that worked
+
+Every batch went the same way: build the shared piece the roadmap identified,
+then the printables it unlocks fall out cheaply. The studio shell made five
+generators possible; the imposition helper turned five small formats into one
+generator; the table engine turned four form sheets into 130 lines of layout.
+
+Doing it in the other order — printables first, extract later — would have left
+five copies of the state-and-preview code to reconcile.

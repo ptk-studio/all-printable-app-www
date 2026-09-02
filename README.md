@@ -39,12 +39,19 @@ be deployed as-is to any static host.
 - **Puzzles** (`docs/printables/puzzles/`) — sudoku with a guaranteed unique
   solution, word searches, mazes and bingo, all seeded so a link reprints the
   same puzzles. See `features/puzzles/README.md`.
+- **Forms & planners** (`docs/printables/forms/`) — budget sheets, packing
+  lists, meal plans and day planners, on the shared table engine. See
+  `features/forms/README.md`.
+- **Maths worksheets** (`docs/printables/worksheets/`) — times tables and drill
+  sheets with answer keys, plus the multiplication grid. See
+  `features/worksheets/README.md`.
 - **Catalogue** (`docs/index.html`) — driven by
   `docs/assets/js/registry.js`; add an entry and a card appears.
 
-All five run on the shared studio shell in `docs/assets/js/core/studio.js`,
+All seven run on the shared studio shell in `docs/assets/js/core/studio.js`,
 which owns state, controls, preview, printing and export. Sheet geometry for
-the small formats lives in `docs/assets/js/core/impose.js`.
+the small formats lives in `docs/assets/js/core/impose.js`, and rows-and-columns
+sheets are built from `docs/assets/js/core/table.js`.
 
 ## Analytics
 

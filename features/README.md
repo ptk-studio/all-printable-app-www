@@ -22,6 +22,10 @@ features/
     README.md        flashcards, tags, bookmarks, place cards, labels
   puzzles/
     README.md        sudoku, word search, mazes, bingo
+  forms/
+    README.md        budget, packing list, meal plan, day planner
+  worksheets/
+    README.md        times tables and maths drills
 ```
 
 ## Adding a printable
