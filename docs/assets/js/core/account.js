@@ -38,19 +38,19 @@ window.AP = window.AP || {};
      Neither value is a secret. A Stripe Payment Link URL is public by design,
      and this file is public anyway.
 
-     Two modes, because Cloud Functions need the Blaze plan and this project is
-     on Spark:
+     Two modes. `useFunctions` is the live one and has been since 2026-09-02;
+     `paymentLink` is kept as the fallback for a project without deployed
+     functions, and as the way back if they ever have to come down.
 
-     paymentLink   Paste a Stripe Payment Link here and people can pay today.
-                   Their uid rides along as client_reference_id, so you can see
-                   who paid in the Stripe dashboard — but nothing grants Pro
-                   automatically. You set `pro: true` on their user document in
-                   the Firestore console.
+     useFunctions  IN USE. Checkout runs through createCheckoutSession and the
+                   webhook grants Pro on its own. Needs the functions deployed,
+                   which they are.
 
-     useFunctions  Flip to true after `firebase deploy --only functions`.
-                   Checkout then runs through createCheckoutSession and the
-                   webhook grants Pro on its own. The payment link stops being
-                   used; you can delete it in Stripe afterwards.
+     paymentLink   A Stripe Payment Link. People can pay, and their uid rides
+                   along as client_reference_id so you can see who paid — but
+                   nothing grants Pro automatically. You set `pro: true` on
+                   their user document in the Firestore console. Manual, and
+                   only worth it when the functions are unavailable.
 
      With both blank/false, /pro/ says Pro is not on sale, which is the truth
      rather than a form that goes nowhere. */

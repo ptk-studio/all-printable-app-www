@@ -1,9 +1,9 @@
 /* Deciding what a Stripe event means for a user's Pro flag.
  *
  * Kept pure and separate from index.js so it can be tested without Stripe,
- * without Firebase, and without deploying — which matters here, because this
- * project is on the Spark plan and the functions cannot be deployed yet. A
- * bug in this file either gives Pro away or takes it from someone who paid.
+ * without Firebase, and without deploying. That mattered before the functions
+ * were deployed and matters more now that they are: a bug in this file either
+ * gives Pro away or takes it from someone who paid, and it is live.
  *
  * The rule: entitlement follows the subscription's status, nothing else. Not
  * "a payment succeeded", not "a checkout completed" — those are moments, and
