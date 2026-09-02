@@ -24,6 +24,20 @@ Last reading: **2026-09-01**. Last reviewed: **2026-09-02**.
 **Analytics is opt-in.** Nothing loads and no cookie is set until a visitor agrees, so DAU
 counts *consenting* users — not visitors. It is a **floor**, not a headcount.
 
+**The baseline of 2 was measured on a narrower site than today's.** Until 2026-09-02 only
+the seven makers were instrumented: the 26 landing pages, 6 category pages, the catalogue
+home and `/pro/` recorded nothing, so a visitor who arrived from search and read a landing
+page was invisible unless they opened a maker. Every page now reports, which means:
+
+- **DAU should step up once, on measurement alone.** That step is not growth and must not
+  be reported as growth.
+- The baseline of **2 on 2026-09-01** is kept as the historical marker. Take a fresh
+  baseline once the new coverage has a full week behind it, and record it here as a second
+  baseline rather than overwriting the first.
+
+Page names are namespaced — `landing:<slug>`, `category:<slug>`, `home`, `pro`, and the
+maker's own id — so arrivals can be separated from maker sessions rather than pooled.
+
 Two consequences worth stating before anyone reads a chart:
 
 - The true number is higher by an unknown factor, and that factor is not stable.
@@ -62,7 +76,8 @@ until a reading says otherwise.
 
 1. **Search reach.** 26 landing pages exist to be found. Coverage, indexing and the queries
    they actually rank for are the largest lever at this volume — DAU of 2 is a discovery
-   problem far more than a product problem.
+   problem far more than a product problem. As of 2026-09-02 those pages finally report, so
+   this hypothesis is testable instead of merely plausible.
 2. **Return visits.** A generator's state lives in its URL (`#c=…`), so a saved link
    reopens a design exactly. That is a returning-user mechanic that is built and barely
    surfaced.

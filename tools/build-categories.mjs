@@ -182,6 +182,9 @@ ${items.map((p) => card(p, '../')).join('\n')}
   </div>
 </footer>
 
+<script src="../assets/js/core/analytics.js"></script>
+<script>AP.analytics.init('category:${cat.slug}');</script>
+
 </body>
 </html>
 `;
@@ -310,6 +313,9 @@ ${proSections(printables, '')}
 <script src="assets/js/core/util.js"></script>
 <script src="assets/js/core/analytics.js"></script>
 <script src="assets/js/core/account.js"></script>
+<!-- analytics.js was loaded here for a long time without this call, so the
+     catalogue recorded nothing and never even offered the consent choice. -->
+<script>AP.analytics.init('home');</script>
 
 </body>
 </html>

@@ -194,6 +194,14 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
   </div>
 </footer>
 
+<!-- These pages are the site's search entry points, so leaving them unmeasured
+     meant not seeing arrivals at all — only the visitors who got as far as a
+     maker. Same opt-in gate as everywhere else: nothing loads until someone
+     agrees. The name is prefixed rather than reusing the printable's id, so a
+     landing view is never confused with a maker session. -->
+<script src="../assets/js/core/analytics.js"></script>
+<script>AP.analytics.init('landing:${entry.id}');</script>
+
 </body>
 </html>
 `;
