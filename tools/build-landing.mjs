@@ -9,6 +9,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { SITE } from './site.mjs';
+import { loadPresets, makerOf, proPresets } from './presets.mjs';
 
 const require = createRequire(import.meta.url);
 const copy = require('../tools/landing-copy.js');
@@ -19,6 +20,8 @@ const sandbox = { window: { AP }, AP };
 new Function('window', 'AP', readFileSync('docs/assets/js/registry.js', 'utf8'))(sandbox.window, AP);
 const printables = sandbox.window.AP.PRINTABLES;
 const categories = sandbox.window.AP.CATEGORIES;
+
+const ALL_PRESETS = loadPresets();
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -36,6 +39,25 @@ function related(entry) {
   return printables
     .filter((p) => p.cat === entry.cat && p.id !== entry.id && copy[p.id])
     .slice(0, 4);
+}
+
+/* The Pro presets a visitor would find inside this printable's maker. Named
+   on the page rather than left to be discovered after paying — and only where
+   they exist, so a landing page for a maker with none says nothing. */
+function proBlock(entry, up) {
+  const list = proPresets(ALL_PRESETS, makerOf(entry) || '');
+  if (!list.length) return '';
+  return `
+  <section class="section">
+    <div class="section-head">
+      <h2>Pro presets in this maker</h2>
+      <p>Set up and ready to print, included with
+         <a href="${up}pro/">Pro</a>. Everything else on this page is free.</p>
+    </div>
+    <ul class="lp-points pro-list">
+${list.map((p) => `      <li><b>${esc(p.name)}</b> ${esc(p.note)}</li>`).join('\n')}
+    </ul>
+  </section>`;
 }
 
 function page(entry, c) {
@@ -146,6 +168,8 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
     <h2>Questions</h2>
     ${c.faq.map(([q, a]) => `<div><h3>${esc(q)}</h3><p>${esc(a)}</p></div>`).join('\n    ')}
   </section>
+
+  ${proBlock(entry, '../')}
 
   ${related(entry).length ? `<section class="lp-related">
     <h2>Also in ${esc(catName.toLowerCase())}</h2>

@@ -72,3 +72,16 @@ opens the printable's page, while a separate "Open the maker" link goes
 straight into the generator with the right preset. Two crawlable links per
 card, no nested anchors — which would be invalid and would break keyboard
 navigation.
+
+## Pro presets
+
+A landing page whose maker has Pro presets names them, near the foot, with a
+line each and a link to `/pro/`. Fourteen of the 26 pages carry the block; the
+other twelve open makers that have no Pro presets, and say nothing rather than
+advertising an empty shelf.
+
+The generator does not scrape `app.js` for them. `tools/presets.mjs` loads the
+file and stubs the one call it makes at load — `AP.studio()` — capturing the
+config it was handed, so the presets on the page are the exact objects the
+browser uses. A regex over that file would break the first time someone
+reformatted an entry, and would break silently.

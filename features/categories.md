@@ -83,3 +83,14 @@ It is generated, not hand-written, so it cannot fall behind the registry. It
 loads the same three scripts the old index did (`util`, `analytics`,
 `account`), minus the two that rendered cards in the browser, which the
 generator now does at build time.
+
+## Pro presets
+
+Category pages and the catalogue index list the Pro presets reachable from the
+printables on them, deduped by maker — six printables can share one engine, and
+listing its presets six times helps nobody. Four of the six categories carry
+the section; Home & life and Cards & labels open makers with no Pro presets, so
+they show nothing.
+
+The presets come from `tools/presets.mjs`, the same loader the landing pages
+use, so the two can never disagree about what Pro includes.

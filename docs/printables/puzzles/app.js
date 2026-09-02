@@ -47,7 +47,7 @@
         freeSquare: false, count: 8, perPage: 2, solutions: 'none', bingoHeader: '',
         words: 'cat\ndog\nhouse\ntree\nboat\nsun\nmoon\nstar\nfish\nbird\ncar\nbook\nshoe\nhat\ncup\nball\nkey\nleaf\nrock\ncloud' } },
     /* ---- Pro ---- */
-    { name: 'Expert sudoku pack', pro: true, s: { type: 'sudoku', difficulty: 'expert',
+    { name: 'Expert sudoku pack', pro: true, note: 'Twelve expert grids, two to a page, answers at the back.', s: { type: 'sudoku', difficulty: 'expert',
         count: 12, perPage: 2, solutions: 'end', paper: 'letter', theme: 'minimal' } }
   ];
 

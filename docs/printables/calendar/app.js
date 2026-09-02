@@ -57,11 +57,11 @@
     { name: 'Photo calendar', s: { layout: 'photo', paper: 'letter', orientation: 'portrait',
         photoSize: 48, theme: 'editorial', headerAlign: 'center', numberScale: .9 } },
     /* ---- Pro ---- */
-    { name: 'Moon year wall', pro: true, s: { layout: 'month', paper: 'a3',
+    { name: 'Moon year wall', pro: true, note: 'Every month on A3 with moon phases and the solstices marked.', s: { layout: 'month', paper: 'a3',
         orientation: 'portrait', theme: 'editorial', sixWeeks: true, moon: true,
         numberScale: 1.35, margin: 12, weekendStyle: 'tint',
         holiday: { seasons: true } } },
-    { name: 'Term wall chart', pro: true, s: { layout: 'multi', perPage: 4,
+    { name: 'Term wall chart', pro: true, note: 'Four months to a sheet of A3, ISO week numbers, seasons marked.', s: { layout: 'multi', perPage: 4,
         paper: 'a3', orientation: 'landscape', theme: 'modern', margin: 10,
         count: 12, weekendStyle: 'tint', weekNumbers: 'iso',
         holiday: { seasons: true } } }

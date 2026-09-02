@@ -13,6 +13,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { SITE } from './site.mjs';
+import { loadPresets, makerOf, proPresets } from './presets.mjs';
 
 const require = createRequire(import.meta.url);
 const copy = require('../tools/landing-copy.js');
@@ -26,6 +27,8 @@ function load(path) {
 const { PRINTABLES: printables, CATEGORIES: categories } = load('docs/assets/js/registry.js');
 const { ART } = load('docs/assets/js/art.js');
 
+const ALL_PRESETS = loadPresets();
+
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -34,6 +37,29 @@ const ICON = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox
 /* A printable is only linkable if it is built and has a landing page written. */
 const isLive = (p) => p.status === 'live' && !!p.href;
 const hasLanding = (p) => isLive(p) && !!copy[p.id];
+
+/* Pro presets reachable from a set of printables, grouped by the maker they
+   live in. Deduped by maker, because six printables can share one engine and
+   listing its presets six times helps nobody. */
+function proSections(entries, up) {
+  const makers = [...new Set(entries.map(makerOf).filter(Boolean))];
+  const rows = [];
+  for (const m of makers) {
+    for (const p of proPresets(ALL_PRESETS, m)) rows.push(p);
+  }
+  if (!rows.length) return '';
+  return `
+  <section class="section">
+    <div class="section-head">
+      <h2>Pro presets here</h2>
+      <p>Included with <a href="${up}pro/">Pro</a>. Everything above is free,
+         and stays free.</p>
+    </div>
+    <ul class="lp-points pro-list">
+${rows.map((p) => `      <li><b>${esc(p.name)}</b> ${esc(p.note)}</li>`).join('\n')}
+    </ul>
+  </section>`;
+}
 
 function card(p, up) {
   const art = `<svg viewBox="0 0 72 60" xmlns="http://www.w3.org/2000/svg">${ART[p.art] || ART.calendar}</svg>`;
@@ -131,6 +157,8 @@ function page(cat) {
   <div class="cards" style="margin-top:28px">
 ${items.map((p) => card(p, '../')).join('\n')}
   </div>
+
+  ${proSections(items, '../')}
 
   <section class="section">
     <div class="section-head">
@@ -262,6 +290,8 @@ ${items.map((p) => card(p, '')).join('\n')}
      setting lives in the link so you can come back to a sheet you liked.</p>
 
 ${sections}
+
+${proSections(printables, '')}
 </div>
 
 <footer class="site-footer">
