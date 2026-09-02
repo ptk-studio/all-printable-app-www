@@ -21,7 +21,6 @@ window.AP = window.AP || {};
   var SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
   var SEEN_KEY = 'ap.account.seen';     /* "this browser has signed in before" */
   var PRO_KEY  = 'ap.account.pro';      /* cached entitlement, not authority   */
-  var EMAIL_KEY = 'ap.account.email';   /* for completing an email link        */
 
   var CONFIG = {
     apiKey: 'AIzaSyDqgs48WXHijg0D0e14fjifzcyZ_cooOf4',
@@ -196,21 +195,11 @@ window.AP = window.AP || {};
     return code || (e && e.message) || 'Something went wrong.';
   }
 
+  /* Google is the only way in. There is no email or password field here, and
+     no email-link fallback: the provider is disabled in Firebase too, so this
+     is the only sign-in the project accepts rather than merely the only one
+     shown. */
   function signedOutPop() {
-    var input = h('input', { class: 'acct-input', type: 'email', name: 'email',
-      placeholder: 'you@example.com', autocomplete: 'email' });
-
-    var form = h('form', { class: 'acct-form', onsubmit: function (ev) {
-      ev.preventDefault();
-      var email = input.value.trim();
-      if (!email) { say('Enter an email address first.', 'warn'); return; }
-      say('Sending…');
-      AP.account.sendEmailLink(email).then(function () {
-        say('Link sent to ' + email + '. Open it on this device.', 'ok');
-        form.reset();
-      }, function (e) { say(readable(e), 'warn'); });
-    } }, [input, h('button', { class: 'btn btn-sm', type: 'submit', text: 'Email a link' })]);
-
     return [
       h('p', { class: 'acct-pop-title', text: 'Sign in to All Printable' }),
       h('p', { class: 'acct-pop-note', text:
@@ -222,11 +211,9 @@ window.AP = window.AP || {};
           AP.account.signInGoogle().then(function () { say(''); },
             function (e) { say(readable(e), 'warn'); });
         } }),
-      h('div', { class: 'acct-or' }, [h('span', { text: 'or' })]),
-      form,
       h('p', { class: 'acct-say' }),
       h('p', { class: 'acct-pop-fine', html:
-        'No password, ever. <a href="' + proHref() + '">What Pro includes</a>' })
+        'We never see a password. <a href="' + proHref() + '">What Pro includes</a>' })
     ];
   }
 
@@ -316,7 +303,6 @@ window.AP = window.AP || {};
       if (booted) return;
       booted = true;
       if (local(SEEN_KEY, false)) load();
-      if (AP.account.pendingEmailLink()) AP.account.completeEmailLink();
     },
 
     onChange: function (fn) { listeners.push(fn); fn(current); },
@@ -328,35 +314,6 @@ window.AP = window.AP || {};
       return load().then(function (m) {
         var provider = new m.auth.GoogleAuthProvider();
         return m.auth.signInWithPopup(auth, provider);
-      });
-    },
-
-    /* Passwordless: we send a link and never handle a password. */
-    sendEmailLink: function (email) {
-      return load().then(function (m) {
-        setLocal(EMAIL_KEY, email);
-        return m.auth.sendSignInLinkToEmail(auth, email, {
-          url: location.origin + location.pathname,
-          handleCodeInApp: true
-        });
-      });
-    },
-
-    pendingEmailLink: function () {
-      return /[?&](apiKey|oobCode)=/.test(location.search);
-    },
-
-    completeEmailLink: function () {
-      return load().then(function (m) {
-        if (!m.auth.isSignInWithEmailLink(auth, location.href)) return null;
-        var email = local(EMAIL_KEY, '') ||
-          window.prompt('Confirm the email address you used:');
-        if (!email) return null;
-        return m.auth.signInWithEmailLink(auth, email, location.href).then(function (res) {
-          delLocal(EMAIL_KEY);
-          history.replaceState(null, '', location.pathname + location.hash);
-          return res;
-        });
       });
     },
 

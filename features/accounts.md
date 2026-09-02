@@ -7,8 +7,11 @@ every option — is free and stays free. See `branding.md` for the credit itself
 
 ## The shape of it
 
-- **Firebase Auth** for identity. Google sign-in, and passwordless email links.
-  No passwords are handled by this site in either flow.
+- **Firebase Auth** for identity. **Google is the only provider**, and it is
+  the only one *enabled* — email/password and the email-link flow are turned
+  off in the project, so a hidden button is not the only thing stopping them.
+  `accounts:signUp` and `accounts:sendOobCode` both return
+  `OPERATION_NOT_ALLOWED`. This site never handles a password.
 - **Firestore** for the entitlement and for saved designs.
 - **No server of ours.** The site is still static files on GitHub Pages. The
   browser talks to Firebase directly.
@@ -67,8 +70,9 @@ Function, or a human in the console.
 The profile document is created by `syncProfile()`, which hangs off the auth
 state change rather than off a particular button — there is more than one way
 to arrive signed in, and an earlier version created the profile only in the
-Google button's click handler, so email-link sign-ups got no profile row at
-all. It writes only `email` and `created`, which is what lets a new profile
+Google button's click handler. That was a bug when the email-link flow still
+existed — those sign-ups got no profile row at all — and it would come back
+the moment a second provider is added. It writes only `email` and `created`, which is what lets a new profile
 pass the `create` rule, and it writes `created` once rather than on every
 sign-in.
 
@@ -113,3 +117,21 @@ except by editing the field in the console, and `docs/pro/` says so plainly
 rather than collecting interest in a product that cannot be bought.
 
 Also waiting on Blaze: scheduled Firestore backups.
+
+## Why only Google
+
+Two providers meant two code paths into the same profile-creation step, and the
+one that was not wired to a button is exactly the one that broke (see above).
+Google alone removes that class of bug, and removes the email-sending surface —
+`sendOobCode` is an unauthenticated endpoint that will mail anyone on request,
+which is a spam vector nobody was watching.
+
+The provider is disabled in Firebase rather than merely hidden in the popover.
+Hiding a button stops the honest path only; the REST endpoint stays open to
+anyone reading the public API key out of `account.js`, which is public by
+design.
+
+Turning it off was safe because no account had ever used it: the only user at
+the time was a `google.com` account. If email sign-in ever comes back, the
+thing to check first is that profile creation still hangs off the auth state
+change and not off a button.

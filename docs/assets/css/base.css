@@ -324,22 +324,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .acct-pop-fine { font-size: 11px; color: var(--ink-soft); margin: 0; }
 .acct-wide { width: 100%; justify-content: center; }
 
-.acct-or {
-  display: flex; align-items: center; gap: 9px;
-  font-size: 11px; color: var(--ink-soft); margin: 1px 0;
-}
-.acct-or::before, .acct-or::after {
-  content: ""; flex: 1 1 auto; height: 1px; background: var(--line);
-}
-.acct-form { display: flex; gap: 6px; }
-.acct-input {
-  flex: 1 1 auto; min-width: 0;
-  padding: 6px 9px; font: inherit; font-size: 13px;
-  color: var(--ink); background: var(--surface);
-  border: 1px solid var(--line); border-radius: 7px;
-}
-.acct-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-
 .acct-pop-id { display: flex; align-items: center; gap: 9px; }
 .acct-pop-mail {
   font-size: 13px; font-weight: 500; overflow: hidden;
