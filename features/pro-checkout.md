@@ -51,17 +51,82 @@ browsers, which is the point — see `accounts.md`.
 you set `pro: false` yourself. Watch Stripe's cancellation emails, or move to
 mode 2.
 
+## Where the three values come from
+
+Everything below is in the Stripe dashboard. **Do it all in Test mode first** —
+the toggle is top right, and test URLs contain `/test/`.
+
+Test and live are two separate worlds. Keys, products, prices, webhooks and
+customers created in one do not exist in the other. A `price_…` made in test
+mode will fail against a live key with "No such price", which is the single
+most common way this goes wrong. Going live later means redoing the product,
+the price and the webhook, and swapping all three secrets.
+
+### STRIPE_SECRET_KEY
+
+Developers → API keys. Two keys are listed: the **publishable** key
+(`pk_test_…`, safe in a browser, not used here) and the **secret** key
+(`sk_test_…`). Click *Reveal test key* and copy that one.
+
+It is the key that can move money and read every customer. It goes into Secret
+Manager and nowhere else — not this repo, not `account.js`, not a chat window.
+
+### STRIPE_PRICE_ID
+
+There is nothing to copy until a product exists.
+
+1. Products → **Add product**.
+2. Name it (`All Printable Pro`).
+3. Pricing: **Recurring**, billing period **Monthly**, set the amount and
+   currency. The code sends `mode: 'subscription'`, so a one-off price will be
+   rejected at checkout.
+4. Save, open the product, find the price row, copy its ID.
+
+It starts with **`price_`**. The product ID above it starts with `prod_` and is
+the wrong one — checkout fails with "No such price" if you take that.
+
+### STRIPE_WEBHOOK_SECRET
+
+This one cannot be fetched first: the signing secret belongs to a webhook
+endpoint, and the endpoint needs a URL that only exists after the functions
+deploy. Hence the order in the next section — placeholder, deploy, real value,
+redeploy.
+
+Once deployed: Developers → Webhooks → **Add endpoint**.
+
+- **URL**: what the deploy printed. It will be
+  `https://us-central1-ptk-studio-allprintable.cloudfunctions.net/stripeWebhook`
+  (gen-2 functions also answer on a `*.run.app` address; either works).
+- **Events**: exactly these three, and nothing else —
+
+      customer.subscription.created
+      customer.subscription.updated
+      customer.subscription.deleted
+
+  Anything else is answered 200 and ignored, so subscribing to more just makes
+  noise in the Stripe logs.
+
+Then open the endpoint and reveal the **Signing secret**: `whsec_…`.
+
+This is what proves a request really came from Stripe. Without it anyone who
+finds the URL can POST a fake "subscription created" and grant themselves Pro,
+which is why `stripeWebhook` rejects an unverified body before reading a single
+field.
+
 ## Mode 2 — Cloud Functions, once Blaze is on
 
-1. Enable Blaze on the Firebase project.
+1. Enable Blaze on the Firebase project. **Done** — billing is live, and the
+   cloudfunctions, run, cloudbuild, secretmanager, artifactregistry and
+   eventarc APIs are enabled.
 2. Set the three secrets. They never enter this repo:
 
        firebase functions:secrets:set STRIPE_SECRET_KEY
        firebase functions:secrets:set STRIPE_WEBHOOK_SECRET
        firebase functions:secrets:set STRIPE_PRICE_ID
 
-   `STRIPE_PRICE_ID` is the `price_…` of the monthly price. Use Stripe **test
-   mode** keys first.
+   For `STRIPE_WEBHOOK_SECRET` there is nothing real to set yet — put
+   `whsec_placeholder` in, deploy, then come back with the real one. The deploy
+   refuses to run while any of the three is unset.
 3. `firebase deploy --only functions`
 4. Stripe → Developers → Webhooks → add the `stripeWebhook` URL the deploy
    prints. Subscribe to exactly:
