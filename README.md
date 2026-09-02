@@ -1,7 +1,24 @@
-# All Printable
+# All Printable — app
 
 Static, dependency-free printable generators. Everything renders in the
 browser and prints at true paper size.
+
+**This repo publishes to `app.all-printable.com`.** It holds the whole
+catalogue: the seven makers, the six category pages, the 26 landing pages, and
+`/pro/`. Its sibling `all-printable-www` publishes the marketing home page at
+`all-printable.com`.
+
+The split exists so a dynamic version can grow under `app.` without disturbing
+the static site — the two are separate deployments, and this one is free to
+stop being buildless.
+
+Every absolute URL comes from one constant, `tools/site.mjs`. Change it and
+rerun the two generators and the canonicals, `og:url`, JSON-LD and sitemap all
+follow. The credit printed on each sheet is *not* a URL and does not follow: it
+is the brand `all-printable.com` whatever host serves the page.
+
+> This repo was copied from `all-printable-www` with its full history, so
+> commits before the split describe the combined site.
 
 ```
 docs/        the site — open docs/index.html, or serve the folder

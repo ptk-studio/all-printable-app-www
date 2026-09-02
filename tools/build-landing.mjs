@@ -8,6 +8,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { SITE } from './site.mjs';
 
 const require = createRequire(import.meta.url);
 const copy = require('../tools/landing-copy.js');
@@ -21,8 +22,6 @@ const categories = sandbox.window.AP.CATEGORIES;
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-const SITE = 'https://all-printable.com';
 
 /* Read a PNG's dimensions from its IHDR so the <img> can carry width and
    height and the page does not shift as the image loads. */

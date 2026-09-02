@@ -11,6 +11,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { SITE } from './site.mjs';
 
 const require = createRequire(import.meta.url);
 const copy = require('../tools/landing-copy.js');
@@ -24,7 +25,6 @@ function load(path) {
 const { PRINTABLES: printables, CATEGORIES: categories } = load('docs/assets/js/registry.js');
 const { ART } = load('docs/assets/js/art.js');
 
-const SITE = 'https://all-printable.com';
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
