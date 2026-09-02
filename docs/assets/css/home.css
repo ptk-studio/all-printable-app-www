@@ -171,3 +171,18 @@
 @media (max-width: 720px) {
   .lp-cols { grid-template-columns: 1fr; gap: 26px; }
 }
+
+/* Landing page hero: copy beside a real sheet. */
+.lp-hero { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 40px; align-items: start; }
+.lp-hero-copy h1 { margin-top: 0; }
+.lp-shot { margin: 4px 0 0; }
+.lp-shot img {
+  display: block; width: 100%; height: auto;
+  border: 1px solid var(--line); border-radius: 4px;
+  box-shadow: var(--shadow-md); background: #fff;
+}
+.lp-shot figcaption { font-size: 12px; color: var(--muted); margin-top: 8px; text-align: center; }
+@media (max-width: 720px) {
+  .lp-hero { grid-template-columns: 1fr; gap: 26px; }
+  .lp-shot { max-width: 260px; margin: 0 auto; }
+}

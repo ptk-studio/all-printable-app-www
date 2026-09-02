@@ -128,3 +128,23 @@ body.app { overflow: hidden; }
   border-radius: 8px; padding: 6px 8px; background: var(--surface-2);
 }
 .country-list .check { font-size: 13px; }
+
+/* --- Preview mode (?preview=1) --------------------------------------------
+   One sheet, no chrome, pinned top-left at a known size. Used by
+   tools/build-previews.mjs to photograph a real sheet from the real
+   generator, so landing-page images cannot drift from what the site makes. */
+body.preview-mode { overflow: hidden; background: #fff; }
+body.preview-mode .site-header,
+body.preview-mode .sidebar,
+body.preview-mode .toolbar,
+body.preview-mode .consent-bar,
+body.preview-mode .site-footer { display: none !important; }
+body.preview-mode .app-shell { display: block; height: auto; }
+body.preview-mode .workspace { display: block; height: auto; }
+body.preview-mode .canvas {
+  display: block; padding: 0; margin: 0; gap: 0; background: none;
+  overflow: visible; height: auto;
+}
+body.preview-mode .page-shell { margin: 0; }
+body.preview-mode .page-shell::after { display: none; }
+body.preview-mode .page-shell > .page { box-shadow: none; border-radius: 0; }

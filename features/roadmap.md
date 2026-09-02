@@ -25,7 +25,8 @@ generators.
 - **worksheets** — times tables and maths drills, seeded, with answer keys.
 - **Landing pages** — one indexable page per printable at its own URL, generated
   from the registry by `tools/build-landing.mjs`, with copy written per sheet
-  rather than templated.
+  rather than templated, and a picture of the sheet photographed from the real
+  generator by `tools/build-previews.mjs`. Open Graph metadata throughout.
 - **Twelve more holiday countries** — Bulgaria, Chile, Croatia, Estonia,
   Hungary, Iceland, Latvia, Lithuania, Luxembourg, Romania, Slovakia and
   Slovenia, taking the total to 42.

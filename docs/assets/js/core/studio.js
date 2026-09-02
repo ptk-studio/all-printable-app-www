@@ -37,6 +37,13 @@ AP.studio = function (config) {
 
   var state, pages = [], pageIndex = 0, zoom = null, viewAll = false;
 
+  /* Preview mode: one sheet, no app chrome, scaled so its long edge is a known
+     number of pixels. The landing-page build screenshots this, which means the
+     pictures on those pages are the real generator's output rather than a
+     mock-up that can drift. */
+  var PREVIEW = /[?&]preview=1/.test(location.search);
+  var PREVIEW_LONG_EDGE = 1000;
+
   /* ---- paths ------------------------------------------------------------- */
   function getPath(obj, path) {
     return path.split('.').reduce(function (o, k) { return o == null ? o : o[k]; }, obj);
@@ -208,9 +215,16 @@ AP.studio = function (config) {
     var z = zoom || fitZoom(dims);
     var show = viewAll ? pages : [pages[pageIndex]];
 
+    if (PREVIEW) {
+      z = PREVIEW_LONG_EDGE / (Math.max(dims.w, dims.h) * MM_PX);
+      show = [pages[0]];
+      document.body.dataset.sheet =
+        Math.round(dims.w * MM_PX * z) + 'x' + Math.round(dims.h * MM_PX * z);
+    }
+
     show.forEach(function (p, i) {
       var num = viewAll ? i + 1 : pageIndex + 1;
-      var s = viewAll ? Math.min(z, fitZoom(dims) * 0.42) : z;
+      var s = (viewAll && !PREVIEW) ? Math.min(z, fitZoom(dims) * 0.42) : z;
       var shell = el('div', { class: 'page-shell', 'data-num': 'Page ' + num + ' of ' + pages.length });
       shell.style.width = (dims.w * MM_PX * s) + 'px';
       shell.style.height = (dims.h * MM_PX * s) + 'px';
@@ -385,6 +399,7 @@ AP.studio = function (config) {
 
   /* ---- boot -------------------------------------------------------------- */
   function init() {
+    if (PREVIEW) document.body.classList.add('preview-mode');
     var bar = $('#toolbar');
     if (bar && !bar.children.length) bar.innerHTML = AP.toolbarHtml();
     if (config.buildControls) config.buildControls();

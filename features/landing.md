@@ -24,11 +24,28 @@ distinct).
 
 ## Structure
 
-Breadcrumb, H1 matching the phrase people search, a specific intro, "what you
-can change", an at-a-glance spec table, the print-at-100% instruction, two or
-three real questions, sibling links within the category, and a call to action
-at the top and bottom. Plus a `WebApplication` JSON-LD block and a canonical
-link.
+Breadcrumb, H1 matching the phrase people search, a specific intro beside a
+picture of the sheet, "what you can change", an at-a-glance spec table, the
+print-at-100% instruction, two or three real questions, sibling links within
+the category, and a call to action at the top and bottom. Plus a
+`WebApplication` JSON-LD block, a canonical link, and Open Graph / Twitter
+metadata so a shared link shows the sheet.
+
+## The pictures are real output
+
+`tools/build-previews.mjs` photographs one sheet per printable **from the
+actual generator**, not from a mock-up, so a landing page cannot show something
+the site no longer makes.
+
+It works through a `?preview=1` mode in the studio shell: one sheet, no app
+chrome, scaled so its long edge is a known number of pixels, with that pixel
+size written onto `<body data-sheet>`. The build then takes two passes per
+printable — read the size, then screenshot a window of exactly that size.
+Guessing the window size instead would letterbox every sheet in whitespace,
+and every sheet has a different aspect.
+
+26 images, about 1.6 MB, downscaled to a 700 px long edge. They double as the
+`og:image`, so a shared link previews the actual sheet.
 
 ## Generation, not a build step
 
@@ -37,8 +54,13 @@ maintenance tool whose **output is committed**; nothing runs at request time.
 Re-run it after editing the registry or the copy:
 
 ```sh
-node tools/build-landing.mjs
+cd docs && python3 -m http.server 8777 &   # previews need the site served
+node tools/build-previews.mjs               # photographs each sheet
+node tools/build-landing.mjs                # writes pages + sitemap
 ```
+
+`build-landing` reads each PNG's IHDR for its dimensions so the `<img>` carries
+width and height and the page does not shift as it loads.
 
 It also rewrites `docs/sitemap.xml` — home, the seven makers, and all 26
 landing pages.

@@ -60,11 +60,14 @@ Each printable has its own indexable page at `/<slug>/`, generated from the
 registry and per-sheet copy:
 
 ```sh
-node tools/build-landing.mjs
+cd docs && python3 -m http.server 8777 &
+node tools/build-previews.mjs    # photographs a real sheet per printable
+node tools/build-landing.mjs     # writes the pages and the sitemap
 ```
 
-The output is committed — the site stays buildless to serve. See
-`features/landing.md`.
+Previews come from the generators themselves via a `?preview=1` mode, so the
+pictures cannot drift from what the site makes. The output is committed — the
+site stays buildless to serve. See `features/landing.md`.
 
 ## Sheet credit
 
