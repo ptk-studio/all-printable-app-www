@@ -45,7 +45,10 @@
         numbering: true, bingoHeader: 'BINGO' } },
     { name: 'Bingo words', s: { type: 'bingo', bingoMode: 'words', bingoSize: 4,
         freeSquare: false, count: 8, perPage: 2, solutions: 'none', bingoHeader: '',
-        words: 'cat\ndog\nhouse\ntree\nboat\nsun\nmoon\nstar\nfish\nbird\ncar\nbook\nshoe\nhat\ncup\nball\nkey\nleaf\nrock\ncloud' } }
+        words: 'cat\ndog\nhouse\ntree\nboat\nsun\nmoon\nstar\nfish\nbird\ncar\nbook\nshoe\nhat\ncup\nball\nkey\nleaf\nrock\ncloud' } },
+    /* ---- Pro ---- */
+    { name: 'Expert sudoku pack', pro: true, s: { type: 'sudoku', difficulty: 'expert',
+        count: 12, perPage: 2, solutions: 'end', paper: 'letter', theme: 'minimal' } }
   ];
 
   var TYPE_ART = {

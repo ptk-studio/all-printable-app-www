@@ -55,7 +55,16 @@
     { name: 'Bullet journal', s: { layout: 'agenda', paper: 'a5', orientation: 'portrait',
         theme: 'mono', agendaCols: 1, margin: 8, weekendStyle: 'tint' } },
     { name: 'Photo calendar', s: { layout: 'photo', paper: 'letter', orientation: 'portrait',
-        photoSize: 48, theme: 'editorial', headerAlign: 'center', numberScale: .9 } }
+        photoSize: 48, theme: 'editorial', headerAlign: 'center', numberScale: .9 } },
+    /* ---- Pro ---- */
+    { name: 'Moon year wall', pro: true, s: { layout: 'month', paper: 'a3',
+        orientation: 'portrait', theme: 'editorial', sixWeeks: true, moon: true,
+        numberScale: 1.35, margin: 12, weekendStyle: 'tint',
+        holiday: { seasons: true } } },
+    { name: 'Term wall chart', pro: true, s: { layout: 'multi', perPage: 4,
+        paper: 'a3', orientation: 'landscape', theme: 'modern', margin: 10,
+        count: 12, weekendStyle: 'tint', weekNumbers: 'iso',
+        holiday: { seasons: true } } }
   ];
 
   var LAYOUT_ART = {

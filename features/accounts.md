@@ -1,9 +1,26 @@
 # Accounts and the paid tier
 
-Two features are reserved for Pro: printing without the `all-printable.com`
-sheet credit, and keeping saved designs against an account rather than one
-browser. Everything else — all 26 printables, every layout, every paper size,
-every option — is free and stays free. See `branding.md` for the credit itself.
+Three things are reserved for Pro:
+
+1. **The sheet footer** — print without the `all-printable.com` credit, or put
+   your own name there instead. See `branding.md`.
+2. **Designs saved to the account**, rather than to one browser.
+3. **Pro presets** — six so far, marked `pro: true` in each maker's `PRESETS`
+   array, shown to everyone and refused to non-subscribers.
+
+Everything that is free stays free: all 26 printables, every layout, every
+paper size, every option, and all 65 existing presets. Adding a Pro preset must
+never mean moving a free one — `/pro/` promises exactly that, so the promise
+and the code have to agree.
+
+Pro presets are shown rather than hidden. A chip nobody can see sells nothing,
+and a locked one is how someone learns Pro exists. `AP.fillPresets` marks them,
+`studio.js` refuses the click, and `AP.studioRefresh` re-renders the chips when
+entitlement changes so a fresh subscriber is not left looking at padlocks.
+
+All of it is gated in the browser, and the engine that draws a Pro preset ships
+to everyone — this is the same honest exchange as the sheet credit, and `/pro/`
+says so plainly under "Honest limits".
 
 ## The shape of it
 

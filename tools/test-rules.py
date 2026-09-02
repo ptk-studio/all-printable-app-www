@@ -94,6 +94,15 @@ CASES = [
     case('UPDATE own proUpdatedAt',                 'DENY',  'update', U, 'u1', dict(P, proUpdatedAt=9), P),
     case('UPDATE own stripeSubscriptionId',         'DENY',  'update', U, 'u1', dict(P, stripeSubscriptionId='sub_x'), P),
     case('CREATE own doc carrying proStatus',       'DENY',  'create', U, 'u1', dict(P, proStatus='active')),
+
+    # The custom sheet footer: the user's own text, bounded not forbidden.
+    case('Set a short sheet footer',                'ALLOW', 'update', U, 'u1', dict(P, sheetFooter='Mrs Patel - Room 12'), P),
+    case('Clear the sheet footer',                  'ALLOW', 'update', U, 'u1', dict(P, sheetFooter=''), dict(P, sheetFooter='x')),
+    case('A 64-char footer is the limit',           'ALLOW', 'update', U, 'u1', dict(P, sheetFooter='x'*64), P),
+    case('A 65-char footer is refused',             'DENY',  'update', U, 'u1', dict(P, sheetFooter='x'*65), P),
+    case('A novel as a footer is refused',          'DENY',  'update', U, 'u1', dict(P, sheetFooter='x'*5000), P),
+    case('A non-string footer is refused',          'DENY',  'update', U, 'u1', dict(P, sheetFooter=42), P),
+    case('CREATE carrying an oversized footer',     'DENY',  'create', U, 'u1', dict(P, sheetFooter='x'*200)),
     case('Pro user revokes own pro',                'DENY',  'update', U, 'u1', dict(P, pro=False), PRO),
     # syncProfile() writes with setDoc and no merge when it believes the doc is
     # missing. Two tabs signing in at once can race, and the loser's write would
@@ -155,12 +164,14 @@ def main():
         # Drop the locked-field guard. A suite worth trusting must fail here.
         mutant = local.replace(
             """      allow create: if signedInAs(uid)
-                    && !request.resource.data.keys().hasAny(locked());
+                    && !request.resource.data.keys().hasAny(locked())
+                    && footerOk();
       allow update: if signedInAs(uid)
                     && !request.resource.data.diff(resource.data)
-                          .affectedKeys().hasAny(locked());""",
-            """      allow create: if signedInAs(uid);
-      allow update: if signedInAs(uid);""")
+                          .affectedKeys().hasAny(locked())
+                    && footerOk();""",
+            """      allow create: if signedInAs(uid) && footerOk();
+      allow update: if signedInAs(uid) && footerOk();""")
         if mutant == local:
             sys.exit('Could not build the mutant: firestore.rules no longer '
                      'matches the text this check edits. Update --mutate.')

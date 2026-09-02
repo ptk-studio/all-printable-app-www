@@ -21,6 +21,7 @@ window.AP = window.AP || {};
   var SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
   var SEEN_KEY = 'ap.account.seen';     /* "this browser has signed in before" */
   var PRO_KEY  = 'ap.account.pro';      /* cached entitlement, not authority   */
+  var FOOTER_KEY = 'ap.account.footer'; /* cached custom sheet footer          */
 
   var CONFIG = {
     apiKey: 'AIzaSyDqgs48WXHijg0D0e14fjifzcyZ_cooOf4',
@@ -76,8 +77,19 @@ window.AP = window.AP || {};
     AP.entitlements = AP.entitlements || {};
     AP.entitlements.removeBranding = !!isPro;
     setLocal(PRO_KEY, !!isPro);
+    if (!isPro) AP.entitlements.sheetFooter = '';
+  }
+
+  /* The subscriber's own sheet footer. Cached like the entitlement so it does
+     not flash on load; the profile read is the authority. Only meaningful
+     while pro is true — brand.js ignores it otherwise. */
+  function applyFooter(text) {
+    AP.entitlements = AP.entitlements || {};
+    AP.entitlements.sheetFooter = text || '';
+    setLocal(FOOTER_KEY, text || '');
   }
   applyPro(local(PRO_KEY, false) && local(SEEN_KEY, false));
+  if (AP.entitlements.removeBranding) applyFooter(local(FOOTER_KEY, ''));
 
   function load() {
     if (loading) return loading;
@@ -125,6 +137,7 @@ window.AP = window.AP || {};
       if (snap.exists()) {
         var data = snap.data();
         applyPro(data.pro === true);
+        if (data.pro === true) applyFooter(data.sheetFooter || '');
         return data;
       }
       applyPro(false);
@@ -340,6 +353,25 @@ window.AP = window.AP || {};
         var provider = new m.auth.GoogleAuthProvider();
         return m.auth.signInWithPopup(auth, provider);
       });
+    },
+
+    /* The footer a subscriber prints instead of our credit. Stored on the
+       profile rather than in this browser, so it follows them to a phone.
+       `sheetFooter` is deliberately NOT a locked field: it is the user's own
+       text, and the rules cap its length rather than forbidding it. */
+    sheetFooter: function () {
+      return (AP.entitlements && AP.entitlements.sheetFooter) || '';
+    },
+
+    setSheetFooter: function (text) {
+      if (!current) return Promise.reject(new Error('not signed in'));
+      if (!AP.account.isPro()) return Promise.reject(new Error('Pro only'));
+      var clean = String(text || '').replace(/\s+/g, ' ').trim()
+        .slice(0, (AP.brand && AP.brand.MAX) || 64);
+      applyFooter(clean);
+      if (typeof AP.studioRefresh === 'function') AP.studioRefresh();
+      return mods.db.setDoc(mods.db.doc(db, 'users', current.uid),
+        { sheetFooter: clean }, { merge: true });
     },
 
     /* ---- buying Pro ------------------------------------------------------ */

@@ -3,7 +3,26 @@
 Status: **live** — `docs/assets/js/core/brand.js`
 
 A small `all-printable.com` prints in the bottom-right corner of every sheet,
-from every generator. It is intended to become removable for paying users.
+from every generator. Pro removes it — or replaces it.
+
+Three states, decided by one function, `brand.footerText()`:
+
+| | prints |
+|---|---|
+| free | `all-printable.com` |
+| Pro, no footer set | nothing |
+| Pro, footer set | whatever they typed |
+
+The third is the one people ask for: a teacher's name, a room number, a studio.
+Removing our credit only to leave a blank corner is less useful than letting
+them own it, and it costs one field. The custom mark also carries a
+`.brand-custom` class, because it is theirs and not a credit for us.
+
+The text lives on the user's profile (`sheetFooter`), not in the browser, so it
+follows them to a phone. It is deliberately **not** a locked field — it is
+their own text — but the rules cap it at 64 characters, because it lands on
+paper and an unbounded string is a way to make a mess of a sheet. `brand.js`
+trims and truncates too, so a stale cached value cannot overflow the corner.
 
 ## Where it is stamped
 

@@ -39,7 +39,14 @@
     { name: 'Guitar tab', s: { type: 'staff', staves: 8, staffGap: 3, staffKind: 'tab',
         staffBars: 4, paper: 'letter', color: '#3a3a3a' } },
     { name: 'Handwriting', s: { type: 'hand', unit: 'mm', size: 16, hwMid: 'dashed',
-        hwDescender: true, paper: 'letter', color: '#9bb0c4', theme: 'classic' } }
+        hwDescender: true, paper: 'letter', color: '#9bb0c4', theme: 'classic' } },
+    /* ---- Pro ---- */
+    { name: 'Cornell notes', pro: true, s: { type: 'lines', rulePreset: 'college',
+        marginLine: 'left', marginAt: 55, headerRule: true, paper: 'letter',
+        theme: 'minimal', color: '#9bb0c4' } },
+    { name: 'Storyboard', pro: true, s: { type: 'grid', unit: 'mm', size: 24,
+        major: 0, border: true, paper: 'a4', orientation: 'landscape',
+        weight: 0.35, color: '#a9a396', margin: 12 } }
   ];
 
   var TYPE_ART = {

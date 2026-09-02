@@ -31,14 +31,28 @@ service cloud.firestore {
               'stripeCustomerId', 'stripeSubscriptionId'];
     }
 
+    /* The footer a Pro subscriber prints instead of our credit. It is their
+       own text, so it is writable — but it lands on paper, and an unbounded
+       string is a way to make a mess of someone else's sheet or of our
+       storage. Bounded rather than forbidden. Entitlement is not checked
+       here: writing it while not Pro is harmless, because brand.js only
+       reads it when pro is true. */
+    function footerOk() {
+      return !('sheetFooter' in request.resource.data)
+             || (request.resource.data.sheetFooter is string
+                 && request.resource.data.sheetFooter.size() <= 64);
+    }
+
     match /users/{uid} {
       allow read:   if signedInAs(uid);
       allow delete: if signedInAs(uid);
       allow create: if signedInAs(uid)
-                    && !request.resource.data.keys().hasAny(locked());
+                    && !request.resource.data.keys().hasAny(locked())
+                    && footerOk();
       allow update: if signedInAs(uid)
                     && !request.resource.data.diff(resource.data)
-                          .affectedKeys().hasAny(locked());
+                          .affectedKeys().hasAny(locked())
+                    && footerOk();
 
       /* A user's saved designs. Only ever their own. */
       match /designs/{designId} {

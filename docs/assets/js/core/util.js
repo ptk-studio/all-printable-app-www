@@ -249,10 +249,16 @@ AP.fillSwatches = function (box, path, colours) {
   });
 };
 
+/* Preset chips. A preset marked `pro: true` still renders — hiding it would
+   sell nothing, and a locked chip is how someone learns Pro exists — but it
+   carries a mark and studio.js refuses to apply it without an entitlement. */
 AP.fillPresets = function (box, presets) {
   presets.forEach(function (p, i) {
+    var locked = !!p.pro && !(AP.entitlements && AP.entitlements.removeBranding);
     box.appendChild(AP.el('button', {
-      class: 'preset-chip', type: 'button', 'data-preset': i, text: p.name
+      class: 'preset-chip' + (p.pro ? ' is-pro' : '') + (locked ? ' is-locked' : ''),
+      type: 'button', 'data-preset': i, text: p.name,
+      title: locked ? 'A Pro preset' : (p.note || p.name)
     }));
   });
 };

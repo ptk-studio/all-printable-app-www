@@ -35,7 +35,11 @@
     { name: 'Division facts', s: { type: 'drill', operations: ['div'], aMin: 1, aMax: 12,
         bMin: 2, bMax: 12, count: 30, columns: 3, title: 'Division' } },
     { name: 'Mixed practice', s: { type: 'drill', operations: ['mul', 'add', 'sub', 'div'],
-        aMin: 1, aMax: 12, bMin: 1, bMax: 12, count: 30, columns: 3, title: 'Mixed practice' } }
+        aMin: 1, aMax: 12, bMin: 1, bMax: 12, count: 30, columns: 3, title: 'Mixed practice' } },
+    /* ---- Pro ---- */
+    { name: 'Mixed operations set', pro: true, s: { type: 'drill',
+        operations: ['add', 'sub', 'mul', 'div'], count: 40, columns: 4,
+        sheets: 4, answers: true, format: 'horizontal', paper: 'letter' } }
   ];
 
   var TYPE_ART = {

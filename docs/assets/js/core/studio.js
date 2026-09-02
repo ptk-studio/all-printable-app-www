@@ -120,9 +120,21 @@ AP.studio = function (config) {
       b.addEventListener('click', function () { setPath(state, parts.path, parts.value); changed(); });
     });
 
+    bindPresets();
+  }
+
+  function bindPresets() {
     $$('[data-preset]').forEach(function (b) {
       b.addEventListener('click', function () {
         var preset = config.presets[+b.dataset.preset];
+        /* A Pro preset is refused rather than hidden, and says where to get
+           it. The engine that draws it ships to everyone — this is the same
+           honest exchange as the sheet credit, and /pro/ says so. */
+        if (preset.pro && !(AP.entitlements && AP.entitlements.removeBranding)) {
+          AP.toast(preset.name + ' is a Pro preset — see all-printable.com/pro');
+          track('preset_locked', { preset: preset.name });
+          return;
+        }
         var next = freshState();
         (config.keepOnPreset || []).forEach(function (p) { setPath(next, p, getPath(state, p)); });
         merge(next, clone(preset.s));
@@ -346,9 +358,34 @@ AP.studio = function (config) {
     }
 
     /* Identity and sign-out live in the header control. What belongs here is
-       the part that is about this maker: saving and reopening its designs. */
+       the part that is about this maker: saving and reopening its designs,
+       and what prints in the corner of them. */
     var pro = AP.account.isPro();
-    box.appendChild(el('div', { class: 'row-wrap' }, [
+
+    if (pro) {
+      /* Pro removes our credit; this puts something of theirs there instead.
+         Applied as you type so the sheet shows it, saved on blur so the
+         profile is not written on every keystroke. */
+      var foot = el('input', { class: 'acct-input', type: 'text',
+        maxlength: String((AP.brand && AP.brand.MAX) || 64),
+        placeholder: 'Your name or class, or blank for none',
+        value: AP.account.sheetFooter() });
+      foot.addEventListener('input', function () {
+        AP.entitlements.sheetFooter = foot.value;
+        render();
+      });
+      foot.addEventListener('change', function () {
+        AP.account.setSheetFooter(foot.value)
+          .then(function () { AP.toast('Sheet footer saved'); },
+                function (e) { AP.toast('Could not save: ' + (e.code || e.message)); });
+      });
+      box.appendChild(el('label', { class: 'field-label', text: 'Sheet footer' }));
+      box.appendChild(foot);
+      box.appendChild(el('p', { class: 'field-hint',
+        text: 'Prints in the corner where the site credit used to be.' }));
+    }
+
+    box.appendChild(el('div', { class: 'row-wrap', style: { marginTop: '10px' } }, [
       el('button', { class: 'btn btn-sm', text: 'Save to account',
         onclick: function () {
           if (!pro) { AP.toast('Saving to your account is a Pro feature'); return; }
@@ -482,7 +519,17 @@ AP.studio = function (config) {
 
   /* An entitlement change (signing in, upgrading) has to re-render, because
      the sheet credit is stamped at build time rather than toggled in the DOM. */
-  AP.studioRefresh = function () { render(); };
+  /* Entitlement changes what the preset chips look like as well as what the
+     sheet carries, so a fresh subscriber does not keep seeing padlocks. */
+  AP.studioRefresh = function () {
+    var box = $('#presets');
+    if (box && config.presets) {
+      box.innerHTML = '';
+      AP.fillPresets(box, config.presets);
+      bindPresets();
+    }
+    render();
+  };
 
   return {
     get state() { return state; },

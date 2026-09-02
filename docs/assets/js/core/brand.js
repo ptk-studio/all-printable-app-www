@@ -27,23 +27,44 @@ window.AP = window.AP || {};
     return !!(AP.entitlements && AP.entitlements.removeBranding);
   }
 
+  /* What a Pro subscriber puts in the corner instead of our credit — their
+     own name, a class code, a studio. Empty means print nothing there, which
+     is what Pro meant before this existed. */
+  var MAX = 64;
+  function custom() {
+    var t = (AP.entitlements && AP.entitlements.sheetFooter) || '';
+    return String(t).replace(/\s+/g, ' ').trim().slice(0, MAX);
+  }
+
+  /* The text this sheet should carry, or '' for none. */
+  function footerText() {
+    return hidden() ? custom() : TEXT;
+  }
+
   /* Stamp one .page element. Safe to call twice — it replaces its own mark. */
   function stamp(page) {
     if (!page || !page.classList || !page.classList.contains('page')) return page;
     var existing = page.querySelector(':scope > .brand-credit');
     if (existing) existing.remove();
-    if (hidden()) return page;
+
+    var text = footerText();
+    if (!text) return page;
 
     var mark = document.createElement('span');
     mark.className = 'brand-credit';
-    mark.textContent = TEXT;
+    /* A subscriber's own footer is theirs, not a credit for us — mark it so
+       the stylesheet can treat it differently if it ever needs to. */
+    if (text !== TEXT) mark.className += ' brand-custom';
+    mark.textContent = text;
     page.appendChild(mark);
     return page;
   }
 
   AP.brand = {
     TEXT: TEXT,
+    MAX: MAX,
     hidden: hidden,
+    footerText: footerText,
     stamp: stamp,
     stampAll: function (pages) {
       (pages || []).forEach(stamp);
