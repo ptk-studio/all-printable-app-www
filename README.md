@@ -4,9 +4,10 @@ Static, dependency-free printable generators. Everything renders in the
 browser and prints at true paper size.
 
 **This repo publishes to `app.all-printable.com`.** It holds the whole
-catalogue: the seven makers, the six category pages, the 26 landing pages, and
-`/pro/`. Its sibling `all-printable-www` publishes the marketing home page at
-`all-printable.com`.
+catalogue: the index at `/` listing all 26 printables, the seven makers, the
+six category pages, the 26 landing pages, and `/pro/`. Its sibling
+`all-printable-www` publishes the marketing home page at `all-printable.com`,
+and redirects the old URLs here.
 
 The split exists so a dynamic version can grow under `app.` without disturbing
 the static site — the two are separate deployments, and this one is free to

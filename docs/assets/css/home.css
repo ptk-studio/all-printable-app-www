@@ -123,6 +123,13 @@
    width — 780px is a reading column, not a place to lay out cards. */
 .lp-wide { max-width: 1120px; }
 
+/* A heading that happens to be a link: it should read as the heading, and
+   only announce itself on hover. Used by the catalogue index's category
+   headings. */
+.section-head h2 a.plain { color: inherit; text-decoration: none; }
+.section-head h2 a.plain:hover { color: var(--accent-ink); text-decoration: underline;
+  text-underline-offset: 3px; }
+
 .lp-crumbs { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
 .lp-crumbs a { color: var(--muted); text-decoration: none; }
 .lp-crumbs a:hover { color: var(--ink-soft); text-decoration: underline; }

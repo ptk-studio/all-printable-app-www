@@ -1,10 +1,13 @@
 /* ==========================================================================
    Line-art thumbnails for the catalogue, drawn rather than shipped as images.
 
-   Kept apart from home.js because two things draw these cards now: the home
-   page renders category cards in the browser, and tools/build-categories.mjs
-   renders printable cards into static pages at build time. One copy, so a
-   tweak to a drawing cannot show up on one and not the other.
+   Read at build time by tools/build-categories.mjs, which inlines the drawings
+   into the catalogue index and the six category pages. No browser fetches this
+   file on this host — it is data for the generator, kept beside registry.js
+   because the two are the catalogue's source of truth.
+
+   The marketing home page at all-printable.com does load it, to draw its
+   category cards in the browser.
    ========================================================================== */
 window.AP = window.AP || {};
 

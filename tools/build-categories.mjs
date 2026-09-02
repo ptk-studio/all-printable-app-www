@@ -1,4 +1,5 @@
-/* Generates one page per category into docs/<slug>/index.html.
+/* Generates the catalogue: docs/index.html plus one page per category into
+ * docs/<slug>/index.html.
  *
  * The home page used to list all 26 printables at once, which made it long and
  * gave every printable the same weight. Each category now has its own page, and
@@ -34,7 +35,7 @@ const ICON = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox
 const isLive = (p) => p.status === 'live' && !!p.href;
 const hasLanding = (p) => isLive(p) && !!copy[p.id];
 
-function card(p) {
+function card(p, up) {
   const art = `<svg viewBox="0 0 72 60" xmlns="http://www.w3.org/2000/svg">${ART[p.art] || ART.calendar}</svg>`;
   const bullets = (p.bullets || [])
     .map((b) => `<li>${esc(b)}</li>`).join('');
@@ -42,7 +43,7 @@ function card(p) {
   /* The whole card is clickable via the stretched-link pattern rather than by
      nesting anchors, which is invalid and breaks keyboard navigation. */
   const title = hasLanding(p)
-    ? `<a class="card-link" href="../${p.id}/"><h3>${esc(p.name)}</h3></a>`
+    ? `<a class="card-link" href="${up}${p.id}/"><h3>${esc(p.name)}</h3></a>`
     : `<h3>${esc(p.name)}</h3>`;
 
   return `      <div class="card${isLive(p) ? '' : ' is-soon'}">
@@ -52,7 +53,7 @@ function card(p) {
             isLive(p) ? '' : '<span class="badge badge-soon">Planned</span>'}</div>
           <p>${esc(p.tagline)}</p>
           ${bullets ? `<ul>${bullets}</ul>` : ''}
-          ${isLive(p) ? `<a class="card-go" href="../${p.href}">Open the maker →</a>` : ''}
+          ${isLive(p) ? `<a class="card-go" href="${up}${p.href}">Open the maker →</a>` : ''}
         </div>
       </div>`;
 }
@@ -128,7 +129,7 @@ function page(cat) {
      paper size you pick, and nothing here asks you to sign up.</p>
 
   <div class="cards" style="margin-top:28px">
-${items.map(card).join('\n')}
+${items.map((p) => card(p, '../')).join('\n')}
   </div>
 
   <section class="section">
@@ -173,6 +174,118 @@ if (dupes.length) {
   console.error('Duplicate category slugs: ' + dupes.join(', '));
   process.exit(1);
 }
+
+/* The catalogue index at /.
+ *
+ * This host used to serve a copy of the marketing home page, which put the
+ * same hero, comparison table and FAQ on two live domains — duplicate content,
+ * and not what the 33 pages linking here as "All printables" are asking for.
+ * The marketing page stays at all-printable.com; this is the catalogue. It is
+ * also the only page that lists every printable at once. */
+function indexPage() {
+  const live = printables.filter(isLive);
+  const desc = `Every printable on the site — ${live.length} free generators, ` +
+    'each drawn in your browser and printed at true paper size, on any paper size.';
+  const url = `${SITE}/`;
+
+  const jsonld = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'All printables',
+    url,
+    description: desc,
+    isPartOf: { '@type': 'WebSite', name: 'All Printable', url },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: live.length,
+      itemListElement: live.map((p, i) => ({
+        '@type': 'ListItem', position: i + 1, name: p.name,
+        url: hasLanding(p) ? `${SITE}/${p.id}/`
+                           : `${SITE}/${p.href.replace(/index\.html.*$/, '')}`
+      }))
+    }
+  };
+
+  const sections = categories.map((cat) => {
+    const items = printables.filter((p) => p.cat === cat.id);
+    if (!items.length) return '';
+    return `  <section class="section" id="${esc(cat.id)}">
+    <div class="section-head">
+      <h2><a class="plain" href="${esc(cat.slug)}/">${esc(cat.label)}</a></h2>
+      <p>${esc(cat.blurb)}</p>
+    </div>
+    <div class="cards">
+${items.map((p) => card(p, '')).join('\n')}
+    </div>
+  </section>`;
+  }).join('\n\n');
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All printables — every generator, free and true to size</title>
+<meta name="description" content="${esc(desc)}">
+<link rel="canonical" href="${url}">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="All Printable">
+<meta property="og:title" content="All printables">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${url}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="All printables">
+<meta name="twitter:description" content="${esc(desc)}">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="icon" href="${ICON}">
+<script type="application/ld+json">${JSON.stringify(jsonld)}</script>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="./"><span class="brand-mark"></span> All Printable</a>
+  <nav class="nav">${categories.map((c) =>
+    `<a href="${c.slug}/">${esc(c.nav)}</a>`).join('')}</nav>
+  <span class="spacer"></span>
+  <a class="btn btn-sm btn-primary" href="printables/calendar/index.html">Make a calendar</a>
+</header>
+
+<div class="wrap lp lp-wide">
+  <nav class="lp-crumbs" aria-label="Breadcrumb">
+    <a href="https://all-printable.com/">all-printable.com</a> <span>/</span> All printables
+  </nav>
+
+  <h1>All printables</h1>
+  <p class="lp-intro">${esc(desc)} Nothing here asks you to sign up, and every
+     setting lives in the link so you can come back to a sheet you liked.</p>
+
+${sections}
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="row-wrap">
+      <span>All Printable — printable generators that respect the paper.</span>
+      <span class="spacer"></span>
+      <a href="https://all-printable.com/">all-printable.com</a>
+      <a href="pro/">Pro</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/core/util.js"></script>
+<script src="assets/js/core/analytics.js"></script>
+<script src="assets/js/core/account.js"></script>
+
+</body>
+</html>
+`;
+}
+
+writeFileSync('docs/index.html', indexPage());
+console.log('catalogue index written: docs/index.html');
 
 let made = 0;
 for (const cat of categories) {
