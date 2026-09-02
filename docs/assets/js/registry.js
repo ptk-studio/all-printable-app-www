@@ -5,18 +5,29 @@
    ========================================================================== */
 window.AP = window.AP || {};
 
+/* Each category has its own page at /<slug>/, listing the printables in it.
+   The slug is spelled out rather than reusing `id` because two ids make bad
+   public URLs: `labels` would collide with the /labels/ landing page, and
+   /home/ and /fun/ say nothing to someone reading the address bar.
+   `nav` is the short form for the header, where space is tight. */
 AP.CATEGORIES = [
-  { id: 'calendars', label: 'Calendars & planners',
+  { id: 'calendars', slug: 'calendars-and-planners', nav: 'Calendars',
+    label: 'Calendars & planners', art: 'calendar',
     blurb: 'Wall, desk, pocket and year-at-a-glance — on any paper size.' },
-  { id: 'paper', label: 'Paper & grids',
+  { id: 'paper', slug: 'paper-and-grids', nav: 'Paper',
+    label: 'Paper & grids', art: 'grid',
     blurb: 'The ruled, squared and dotted sheets you always run out of.' },
-  { id: 'home', label: 'Home & life',
+  { id: 'home', slug: 'home-and-life', nav: 'Home',
+    label: 'Home & life', art: 'chart',
     blurb: 'Charts and trackers for the fridge door.' },
-  { id: 'learning', label: 'Learning',
+  { id: 'learning', slug: 'learning', nav: 'Learning',
+    label: 'Learning', art: 'math',
     blurb: 'Practice sheets and drills for classrooms and kitchen tables.' },
-  { id: 'fun', label: 'Games & puzzles',
+  { id: 'fun', slug: 'games-and-puzzles', nav: 'Games',
+    label: 'Games & puzzles', art: 'sudoku',
     blurb: 'Something to print when the wifi goes down.' },
-  { id: 'labels', label: 'Cards & labels',
+  { id: 'labels', slug: 'cards-and-labels', nav: 'Cards',
+    label: 'Cards & labels', art: 'label',
     blurb: 'Small formats that need to line up exactly.' }
 ];
 
@@ -201,4 +212,8 @@ AP.PRINTABLES = [
 
 AP.byCategory = function (catId) {
   return AP.PRINTABLES.filter(function (p) { return p.cat === catId; });
+};
+
+AP.category = function (catId) {
+  return AP.CATEGORIES.filter(function (c) { return c.id === catId; })[0] || null;
 };

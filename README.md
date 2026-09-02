@@ -6,7 +6,7 @@ browser and prints at true paper size.
 ```
 docs/        the site — open docs/index.html, or serve the folder
 features/    product specs: what each printable does and why
-tools/       maintenance scripts (landing-page generation); output is committed
+tools/       maintenance scripts (category and landing-page generation); output is committed
 ```
 
 The site folder is named `docs/` because GitHub Pages can serve a project
@@ -61,8 +61,9 @@ registry and per-sheet copy:
 
 ```sh
 cd docs && python3 -m http.server 8777 &
-node tools/build-previews.mjs    # photographs a real sheet per printable
-node tools/build-landing.mjs     # writes the pages and the sitemap
+node tools/build-previews.mjs     # photographs a real sheet per printable
+node tools/build-categories.mjs  # the six category pages
+node tools/build-landing.mjs     # landing pages, and the sitemap
 ```
 
 Previews come from the generators themselves via a `?preview=1` mode, so the

@@ -13,6 +13,7 @@ features/
   accounts.md        sign-in, the paid tier, and how entitlement is protected
   branding.md        the printed sheet credit, and the paid-removal seam
   landing.md         per-printable pages, and how they avoid being doorways
+  categories.md      the six category pages, and the home page that points at them
   roadmap.md         what is planned, in priority order
   calendar/
     README.md        the calendar maker's full feature spec

@@ -119,6 +119,9 @@
 
 /* --- Landing pages -------------------------------------------------------- */
 .lp { max-width: 780px; padding-top: 34px; padding-bottom: 20px; }
+/* Category pages reuse the landing-page header block but need the full grid
+   width — 780px is a reading column, not a place to lay out cards. */
+.lp-wide { max-width: 1120px; }
 
 .lp-crumbs { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
 .lp-crumbs a { color: var(--muted); text-decoration: none; }
@@ -186,3 +189,17 @@
   .lp-hero { grid-template-columns: 1fr; gap: 26px; }
   .lp-shot { max-width: 260px; margin: 0 auto; }
 }
+
+/* Category pages: the "other categories" row at the foot of each one. */
+.cat-links { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
+.cat-links a {
+  display: inline-block; padding: 7px 13px;
+  border: 1px solid var(--line); border-radius: 999px;
+  font-size: 13.5px; color: var(--ink-soft); text-decoration: none;
+  background: var(--surface);
+}
+.cat-links a:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+/* "and N more" closes the list of examples on a home-page category card. */
+.card ul li.more { color: var(--muted); font-style: italic; }
+.card ul li.more::before { content: none; }

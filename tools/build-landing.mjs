@@ -40,7 +40,10 @@ function related(entry) {
 }
 
 function page(entry, c) {
-  const catName = (categories.find((x) => x.id === entry.cat) || {}).label || '';
+  /* The home page no longer lists every printable, so the crumb and the nav
+     point at the category's own page rather than an anchor on the home page. */
+  const cat = categories.find((x) => x.id === entry.cat) || {};
+  const catName = cat.label || '';
   const maker = '../' + entry.href;
   const title = `${c.h1} — free, true to size · All Printable`;
   const desc = c.intro.replace(/\s+/g, ' ');
@@ -88,7 +91,8 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
 
 <header class="site-header">
   <a class="brand" href="../index.html"><span class="brand-mark"></span> All Printable</a>
-  <nav class="nav"><a href="../index.html">All printables</a></nav>
+  <nav class="nav"><a href="../index.html">All printables</a>${
+    cat.slug ? `<a href="../${cat.slug}/">${esc(cat.label)}</a>` : ''}</nav>
   <span class="spacer"></span>
   <a class="btn btn-sm btn-primary" href="${esc(maker)}">Open the maker</a>
 </header>
@@ -96,7 +100,7 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
 <div class="wrap lp">
   <nav class="lp-crumbs" aria-label="Breadcrumb">
     <a href="../index.html">All printables</a> <span>/</span>
-    <a href="../index.html#${esc(entry.cat)}">${esc(catName)}</a>
+    <a href="../${esc(cat.slug || '')}/">${esc(catName)}</a>
   </nav>
 
   <div class="lp-hero">
@@ -181,10 +185,12 @@ for (const entry of printables) {
   made++;
 }
 
-/* Sitemap covers the home page, the makers and every landing page. */
+/* Sitemap covers the home page, the six category pages, the makers and every
+   landing page. */
 const makers = ['calendar', 'paper', 'tracker', 'cards', 'puzzles', 'forms', 'worksheets'];
 const urls = [
   { loc: `${SITE}/`, pri: '1.0' },
+  ...categories.map((c) => ({ loc: `${SITE}/${c.slug}/`, pri: '0.8' })),
   ...makers.map((m) => ({ loc: `${SITE}/printables/${m}/`, pri: '0.7' })),
   ...printables.filter((p) => copy[p.id] && p.status === 'live')
     .map((p) => ({ loc: `${SITE}/${p.id}/`, pri: '0.9' }))
