@@ -57,10 +57,23 @@
       return;
     }
 
+    /* Signed out. Pointing at the header button is worse than being one: the
+       first person to hit this read "sign in first" and reported that Get Pro
+       was missing. Sessions are per-origin, so arriving from
+       all-printable.com signed in there counts for nothing here. */
     if (!user) {
       box.appendChild(h('p', { text:
-        'Pro is tied to your account, so sign in first — the button is in the ' +
-        'top right of this page.' }));
+        'Pro is tied to your account, so sign in first. Signing in on ' +
+        'all-printable.com does not carry over — this is a different site.' }));
+      box.appendChild(h('p', { class: 'lp-cta' }, [
+        h('button', { class: 'btn btn-primary', type: 'button',
+          text: 'Sign in with Google', onclick: function () {
+            say('Opening Google…');
+            AP.account.signInGoogle().then(function () { say(''); },
+              function (e) { say((e && e.code) || e.message, 'warn'); });
+          } })
+      ]));
+      box.appendChild(h('p', { class: 'pro-say' }));
       return;
     }
 
