@@ -2,6 +2,7 @@
 
 How `all-printable-app-www` is put together, and why. The README says what the site is;
 this says how it works and which decisions are load-bearing.
+[`METRICS.md`](METRICS.md) says what it is trying to move.
 
 Written 2026-09-02 against `5c2944f`.
 
