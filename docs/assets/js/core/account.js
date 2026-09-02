@@ -73,6 +73,12 @@ window.AP = window.AP || {};
     listeners.forEach(function (fn) { try { fn(current); } catch (e) {} });
   }
 
+  /* Analytics is not loaded on every page that loads this file, and it is
+     absent entirely for anyone who declined. Both are normal. */
+  function track(name, params) {
+    if (AP.analytics && AP.analytics.track) AP.analytics.track(name, params);
+  }
+
   /* Entitlement is mirrored onto AP.entitlements, which core/brand.js reads. */
   function applyPro(isPro) {
     AP.entitlements = AP.entitlements || {};
@@ -137,7 +143,14 @@ window.AP = window.AP || {};
     return mods.db.getDoc(ref).then(function (snap) {
       if (snap.exists()) {
         var data = snap.data();
+        /* The one place the client learns it has become Pro. Fired on the
+           transition only, from the server's answer rather than the cached
+           flag, so it counts activations and not page loads by a subscriber.
+           This is the closest the browser gets to "a subscription started" —
+           Stripe is still the authority for how many exist. */
+        var was = local(PRO_KEY, false);
         applyPro(data.pro === true);
+        if (data.pro === true && !was) track('pro_activated');
         if (data.pro === true) applyFooter(data.sheetFooter || '');
         return data;
       }
