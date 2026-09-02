@@ -31,7 +31,7 @@
   <aside class="sidebar no-print" id="sidebar">
     <div class="sidebar-head">
       <h1>Calendar maker</h1>
-      <p>Everything updates as you type. Nothing leaves your browser.</p>
+      <p>Everything updates as you type. Your work stays in your browser.</p>
     </div>
 
     <div class="presets" id="presets"></div>
@@ -391,6 +391,7 @@
 
     <div style="padding:16px 16px 40px">
       <p class="field-hint">Made something good? It never left this browser — no account, no upload.</p>
+      <p class="field-hint" id="privacy-slot" style="margin-top:8px"></p>
     </div>
   </aside>
 
@@ -402,11 +403,15 @@
 </div>
 
 <script src="../../assets/js/core/util.js"></script>
+<script src="../../assets/js/core/analytics.js"></script>
 <script src="../../assets/js/core/paper.js"></script>
 <script src="../../assets/js/core/studio.js"></script>
 <script src="astro.js"></script>
 <script src="holidays.js"></script>
 <script src="layouts.js"></script>
 <script src="app.js"></script>
+<script>AP.analytics.init('calendar');
+var slot=document.getElementById('privacy-slot');
+if (slot) slot.appendChild(AP.analytics.consentLink());</script>
 </body>
 </html>

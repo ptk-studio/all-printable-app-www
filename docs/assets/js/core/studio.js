@@ -121,6 +121,7 @@ AP.studio = function (config) {
         merge(next, clone(preset.s));
         state = next; zoom = null; pageIndex = 0;
         changed();
+        track('preset_applied', { preset: preset.name });
         AP.toast(preset.name + ' applied');
       });
     });
@@ -235,6 +236,21 @@ AP.studio = function (config) {
     render();
   }
 
+  /* ---- analytics --------------------------------------------------------- */
+  /* Only the shape of what was made — never the contents of any text field. */
+  function track(name, params) {
+    if (AP.analytics) AP.analytics.track(name, params);
+  }
+  function sheetFacts() {
+    return {
+      layout: String(state.layout || state.type || ''),
+      paper: String(state.paper || state.stock || ''),
+      orientation: String(state.orientation || ''),
+      theme: String(state.theme || ''),
+      pages: pages.length
+    };
+  }
+
   /* ---- toolbar ----------------------------------------------------------- */
   function wireToolbar() {
     $('#prev-page').addEventListener('click', function () { pageIndex--; render(); });
@@ -250,12 +266,14 @@ AP.studio = function (config) {
     $('#zoom-fit').addEventListener('click', function () { zoom = null; render(); });
 
     $('#btn-print').addEventListener('click', function () {
+      track('print', sheetFacts());
       var wasAll = viewAll;
       viewAll = true; render();
       setTimeout(function () { window.print(); viewAll = wasAll; render(); }, 260);
     });
 
     $('#btn-share').addEventListener('click', function () {
+      track('copy_link', sheetFacts());
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(location.href).then(
           function () { AP.toast('Link copied — it restores every setting'); },
@@ -263,7 +281,10 @@ AP.studio = function (config) {
       } else AP.toast('The address bar holds your shareable link');
     });
 
-    $('#btn-html').addEventListener('click', exportHtml);
+    $('#btn-html').addEventListener('click', function () {
+      track('download_html', sheetFacts());
+      exportHtml();
+    });
 
     $('#btn-reset').addEventListener('click', function () {
       state = freshState(); zoom = null; pageIndex = 0; changed(); AP.toast('Reset');

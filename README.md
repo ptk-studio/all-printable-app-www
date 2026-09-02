@@ -46,6 +46,12 @@ All five run on the shared studio shell in `docs/assets/js/core/studio.js`,
 which owns state, controls, preview, printing and export. Sheet geometry for
 the small formats lives in `docs/assets/js/core/impose.js`.
 
+## Analytics
+
+Firebase / GA4, opt-in only: nothing loads and no cookie is set until a visitor
+agrees, and only interface choices are recorded — never the content of any
+field. See `features/analytics.md`.
+
 ## Printing
 
 Choose **Print / Save PDF**, then in the browser dialog set scale to **100%**

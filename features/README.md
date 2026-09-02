@@ -8,6 +8,7 @@ Code lives in `docs/`; nothing here is served.
 features/
   README.md          this file
   platform.md        conventions every printable follows
+  analytics.md       what is measured, and the consent model
   roadmap.md         what is planned, in priority order
   calendar/
     README.md        the calendar maker's full feature spec

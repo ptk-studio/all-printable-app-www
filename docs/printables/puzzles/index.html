@@ -219,7 +219,8 @@
     </details>
 
     <div style="padding:16px 16px 40px">
-      <p class="field-hint">Everything is generated here in the browser. Nothing is uploaded.</p>
+      <p class="field-hint">Everything is generated here in the browser. Your work is never uploaded.</p>
+      <p class="field-hint" id="privacy-slot" style="margin-top:8px"></p>
     </div>
   </aside>
 
@@ -230,9 +231,13 @@
 </div>
 
 <script src="../../assets/js/core/util.js"></script>
+<script src="../../assets/js/core/analytics.js"></script>
 <script src="../../assets/js/core/paper.js"></script>
 <script src="../../assets/js/core/studio.js"></script>
 <script src="engine.js"></script>
 <script src="app.js"></script>
+<script>AP.analytics.init('puzzles');
+var slot=document.getElementById('privacy-slot');
+if (slot) slot.appendChild(AP.analytics.consentLink());</script>
 </body>
 </html>
