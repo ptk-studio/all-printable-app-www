@@ -38,7 +38,12 @@ function entitlementUpdate(sub, nowMs) {
     proStatus: sub.status,
     proUpdatedAt: nowMs,
     stripeCustomerId: sub.customerId,
-    stripeSubscriptionId: sub.subscriptionId
+    stripeSubscriptionId: sub.subscriptionId,
+    /* Which Stripe world these ids belong to. Test and live share no objects,
+       so a customer id created in one is meaningless in the other — and
+       passing a test customer to a live checkout fails the session outright.
+       Recording the mode is what lets checkout notice. */
+    stripeLivemode: !!sub.livemode
   };
   /* proSince marks when Pro *began*, so it is written on the grant and left
      alone afterwards; the caller drops it if the doc already has one. */

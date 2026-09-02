@@ -62,9 +62,15 @@
        was missing. Sessions are per-origin, so arriving from
        all-printable.com signed in there counts for nothing here. */
     if (!user) {
-      box.appendChild(h('p', { text:
+      var line = h('p', { text:
         'Pro is tied to your account, so sign in first. Signing in on ' +
-        'all-printable.com does not carry over — this is a different site.' }));
+        'all-printable.com does not carry over — this is a different site.' });
+      box.appendChild(line);
+      /* Show the price before asking anyone to sign in for it. */
+      AP.account.price().then(function (p) {
+        var t = AP.account.formatPrice(p);
+        if (t) box.insertBefore(h('p', { class: 'pro-price', text: t }), line);
+      });
       box.appendChild(h('p', { class: 'lp-cta' }, [
         h('button', { class: 'btn btn-primary', type: 'button',
           text: 'Sign in with Google', onclick: function () {
@@ -77,14 +83,22 @@
       return;
     }
 
+    /* The price comes from Stripe, so what is shown here and what gets charged
+       cannot disagree. Until it arrives the line says the shape of the deal
+       without inventing a number. */
+    var priceLine = h('span', { class: 'lp-free', text: 'Cancel any time.' });
     box.appendChild(h('p', { class: 'lp-cta' }, [
       h('button', { class: 'btn btn-primary', type: 'button', text: 'Get Pro',
         onclick: function () {
           say('Opening Stripe…');
           AP.account.startCheckout().catch(function (e) { say(e.message, 'warn'); });
         } }),
-      h('span', { class: 'lp-free', text: 'Monthly, cancel any time.' })
+      priceLine
     ]));
+    AP.account.price().then(function (p) {
+      var t = AP.account.formatPrice(p);
+      if (t) priceLine.textContent = t + ', cancel any time.';
+    });
 
     /* Say plainly that a person has to flip the switch, rather than letting
        someone pay and wonder why nothing happened. */

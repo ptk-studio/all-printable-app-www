@@ -93,6 +93,7 @@ CASES = [
     case('UPDATE own proStatus',                    'DENY',  'update', U, 'u1', dict(P, proStatus='active'), P),
     case('UPDATE own proUpdatedAt',                 'DENY',  'update', U, 'u1', dict(P, proUpdatedAt=9), P),
     case('UPDATE own stripeSubscriptionId',         'DENY',  'update', U, 'u1', dict(P, stripeSubscriptionId='sub_x'), P),
+    case('UPDATE own stripeLivemode',               'DENY',  'update', U, 'u1', dict(P, stripeLivemode=True), P),
     case('CREATE own doc carrying proStatus',       'DENY',  'create', U, 'u1', dict(P, proStatus='active')),
 
     # The custom sheet footer: the user's own text, bounded not forbidden.

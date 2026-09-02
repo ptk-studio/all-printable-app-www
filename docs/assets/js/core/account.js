@@ -22,6 +22,7 @@ window.AP = window.AP || {};
   var SEEN_KEY = 'ap.account.seen';     /* "this browser has signed in before" */
   var PRO_KEY  = 'ap.account.pro';      /* cached entitlement, not authority   */
   var FOOTER_KEY = 'ap.account.footer'; /* cached custom sheet footer          */
+  var PRICE_KEY  = 'ap.account.price';  /* cached price, refreshed daily       */
 
   var CONFIG = {
     apiKey: 'AIzaSyDqgs48WXHijg0D0e14fjifzcyZ_cooOf4',
@@ -381,6 +382,41 @@ window.AP = window.AP || {};
       if (CHECKOUT.useFunctions) return 'functions';
       if (CHECKOUT.paymentLink) return 'link';
       return 'none';
+    },
+
+    /* What Pro costs, from Stripe. Cached for a day: the price changes about
+       never, and this is otherwise a function call on every /pro/ view. */
+    price: function () {
+      var cached = local(PRICE_KEY, null);
+      if (cached && cached.at && (Date.now() - cached.at) < 864e5) {
+        return Promise.resolve(cached.v);
+      }
+      if (!CHECKOUT.useFunctions) return Promise.resolve(null);
+      return load().then(function () {
+        return import(SDK + 'firebase-functions.js');
+      }).then(function (fns) {
+        return fns.httpsCallable(fns.getFunctions(app, 'us-central1'), 'getPrice')({});
+      }).then(function (res) {
+        var v = res && res.data;
+        if (v) setLocal(PRICE_KEY, { at: Date.now(), v: v });
+        return v || null;
+      }).catch(function () { return null; });
+    },
+
+    /* "$4.00 a month", from whatever Stripe actually charges. */
+    formatPrice: function (p) {
+      if (!p || typeof p.amount !== 'number' || !p.currency) return '';
+      var money;
+      try {
+        money = new Intl.NumberFormat(undefined, {
+          style: 'currency', currency: p.currency.toUpperCase(),
+          minimumFractionDigits: p.amount % 100 === 0 ? 0 : 2
+        }).format(p.amount / 100);
+      } catch (e) { money = (p.amount / 100) + ' ' + p.currency.toUpperCase(); }
+      if (!p.interval) return money;
+      var every = p.intervalCount > 1 ? (' every ' + p.intervalCount + ' ' + p.interval + 's')
+                                      : (' a ' + p.interval);
+      return money + every;
     },
 
     /* Sends the browser to Stripe. Resolves only if something went wrong —

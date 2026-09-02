@@ -55,13 +55,26 @@ exports.createCheckoutSession = onCall(
       throw new HttpsError('failed-precondition', 'You already have Pro.');
     }
 
+    /* Reuse the customer we made before, so a second subscription does not
+       create a second Stripe customer for the same person — but only if it
+       belongs to the Stripe world this key opens. Test and live share no
+       objects, so handing a test customer id to a live checkout fails the
+       session outright with "No such customer". Anyone who subscribed while
+       the project was in test mode has exactly such an id on their profile,
+       and would otherwise be unable to buy on the first day of live mode. */
+    const liveKey = STRIPE_SECRET_KEY.value().startsWith('sk_live_');
+    const sameWorld = data.stripeCustomerId && (!!data.stripeLivemode === liveKey);
+    const customer = sameWorld ? data.stripeCustomerId : undefined;
+    if (data.stripeCustomerId && !sameWorld) {
+      logger.info('ignoring a stripe customer from the other mode', {
+        uid, storedLivemode: !!data.stripeLivemode, keyIsLive: liveKey });
+    }
+
     const session = await stripe().checkout.sessions.create({
       mode: 'subscription',
       line_items: [{ price: STRIPE_PRICE_ID.value(), quantity: 1 }],
-      /* Reuse the customer if we have made one, so a second subscription does
-         not create a second Stripe customer for the same person. */
-      customer: data.stripeCustomerId || undefined,
-      customer_email: data.stripeCustomerId ? undefined : email,
+      customer,
+      customer_email: customer ? undefined : email,
       client_reference_id: uid,
       /* The webhook reads uid from the *subscription*, so it has to be set
          here — a session's metadata does not carry over to the subscription. */
@@ -76,6 +89,29 @@ exports.createCheckoutSession = onCall(
   }
 );
 
+/* What Pro costs, read from Stripe rather than written into the page.
+ *
+ * A price typed into the site is a price that can disagree with the one being
+ * charged, and the first person to notice is a customer who has just been
+ * charged something else. This cannot drift.
+ *
+ * No auth: the price is public, and the point is to show it to someone who has
+ * not signed in yet. The client caches it for a day so this is not invoked on
+ * every page view. */
+exports.getPrice = onCall(
+  { region: REGION, secrets: [STRIPE_SECRET_KEY, STRIPE_PRICE_ID], cors: true },
+  async () => {
+    const price = await stripe().prices.retrieve(STRIPE_PRICE_ID.value());
+    return {
+      amount: price.unit_amount,
+      currency: price.currency,
+      interval: price.recurring ? price.recurring.interval : null,
+      intervalCount: price.recurring ? price.recurring.interval_count : 1,
+      livemode: price.livemode
+    };
+  }
+);
+
 exports.createPortalSession = onCall(
   { region: REGION, secrets: [STRIPE_SECRET_KEY], cors: true },
   async (req) => {
@@ -83,7 +119,10 @@ exports.createPortalSession = onCall(
     if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
 
     const snap = await db.doc(`users/${uid}`).get();
-    const customer = snap.exists && snap.data().stripeCustomerId;
+    const d = snap.exists ? snap.data() : {};
+    const liveKey = STRIPE_SECRET_KEY.value().startsWith('sk_live_');
+    const customer = (d.stripeCustomerId && !!d.stripeLivemode === liveKey)
+      ? d.stripeCustomerId : null;
     if (!customer) throw new HttpsError('failed-precondition', 'No subscription to manage.');
 
     const session = await stripe().billingPortal.sessions.create({
@@ -132,7 +171,8 @@ exports.stripeWebhook = onRequest(
       status: s.status,
       customerId: typeof s.customer === 'string' ? s.customer : (s.customer && s.customer.id),
       subscriptionId: s.id,
-      metadata: s.metadata || {}
+      metadata: s.metadata || {},
+      livemode: !!event.livemode
     };
 
     const uid = await resolveUid(sub);

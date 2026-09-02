@@ -28,7 +28,7 @@ service cloud.firestore {
        fails the test rather than quietly opening a hole. */
     function locked() {
       return ['pro', 'proSince', 'proSource', 'proStatus', 'proUpdatedAt',
-              'stripeCustomerId', 'stripeSubscriptionId'];
+              'stripeCustomerId', 'stripeSubscriptionId', 'stripeLivemode'];
     }
 
     /* The footer a Pro subscriber prints instead of our credit. It is their

@@ -33,7 +33,7 @@ t('every status is classified exactly once', () => {
 });
 
 console.log('\nThe update written to Firestore');
-const sub = { status: 'active', customerId: 'cus_1', subscriptionId: 'sub_1' };
+const sub = { status: 'active', customerId: 'cus_1', subscriptionId: 'sub_1', livemode: false };
 t('granting sets pro and the stripe ids', () => {
   const u = E.entitlementUpdate(sub, 1000);
   assert.equal(u.pro, true);
@@ -51,10 +51,20 @@ t('the update never contains a field the rules do not lock', () => {
   /* If this fails, firestore.rules must lock the new field too, or a browser
      could write it. */
   const locked = ['pro','proSince','proSource','proStatus','proUpdatedAt',
-                  'stripeCustomerId','stripeSubscriptionId'];
+                  'stripeCustomerId','stripeSubscriptionId','stripeLivemode'];
   for (const k of Object.keys(E.entitlementUpdate(sub, 1))) {
     assert.ok(locked.includes(k), 'unlocked field in update: ' + k);
   }
+});
+
+t('records which Stripe world the ids came from', () => {
+  assert.equal(E.entitlementUpdate({ ...sub, livemode: false }, 1).stripeLivemode, false);
+  assert.equal(E.entitlementUpdate({ ...sub, livemode: true }, 1).stripeLivemode, true);
+});
+t('a missing livemode is treated as test, not live', () => {
+  /* Erring towards "test" means checkout discards the customer id and makes a
+     new one. Erring the other way would send a test id to a live checkout. */
+  assert.equal(E.entitlementUpdate({ status: 'active' }, 1).stripeLivemode, false);
 });
 
 console.log('\nOut-of-order and replayed webhooks');

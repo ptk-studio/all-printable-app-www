@@ -226,3 +226,6 @@
   border: 1px solid currentColor; border-radius: 3px; padding: 0 3px;
   vertical-align: 1.5px;
 }
+
+/* The price on /pro/, before anyone is asked to sign in for it. */
+.pro-price { font-size: 1.3rem; font-weight: 600; color: var(--ink); margin: 0 0 .4em; }
