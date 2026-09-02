@@ -22,6 +22,13 @@
 
   var box = null;
 
+  /* The subscription funnel. Only fixed words are ever sent — see the
+     whitelist in core/analytics.js — and nothing fires until a visitor has
+     opted in, same as everywhere else on the site. */
+  function track(name, params) {
+    if (window.AP && AP.analytics && AP.analytics.track) AP.analytics.track(name, params);
+  }
+
   function say(msg, kind) {
     var slot = box && box.querySelector('.pro-say');
     if (slot) { slot.textContent = msg; slot.className = 'pro-say' + (kind ? ' pro-say-' + kind : ''); }
@@ -47,6 +54,9 @@
         box.appendChild(h('button', { class: 'btn', type: 'button', text: 'Manage billing',
           onclick: function () {
             say('Opening Stripe…');
+            /* Opening the portal is the clearest cancellation signal we get
+               before Stripe tells us; most people who open it are leaving. */
+            track('billing_portal');
             AP.account.manageBilling().catch(function (e) { say(e.message, 'warn'); });
           } }));
       } else {
@@ -82,6 +92,10 @@
         h('button', { class: 'btn btn-primary', type: 'button',
           text: 'Sign in with Google', onclick: function () {
             say('Opening Google…');
+            /* On /pro/ this is a funnel step, not housekeeping: sign-in is
+               the wall between wanting Pro and being able to buy it, and the
+               drop here is worth seeing separately. */
+            track('pro_signin_start');
             AP.account.signInGoogle().then(function () { say(''); },
               function (e) { say((e && e.code) || e.message, 'warn'); });
           } })
@@ -98,7 +112,13 @@
       h('button', { class: 'btn btn-primary', type: 'button', text: 'Get Pro',
         onclick: function () {
           say('Opening Stripe…');
-          AP.account.startCheckout().catch(function (e) { say(e.message, 'warn'); });
+          track('checkout_start', { mode: AP.account.checkoutMode() });
+          AP.account.startCheckout().catch(function (e) {
+            /* A checkout that never reached Stripe is not a cancellation, and
+               counting it as one would flatter the funnel. */
+            track('checkout_error');
+            say(e.message, 'warn');
+          });
         } }),
       priceLine
     ]));
@@ -123,12 +143,24 @@
     var m = /[?&]checkout=(done|cancelled)/.exec(location.search);
     if (!m) return;
     history.replaceState(null, '', location.pathname);
+
+    /* Stripe sent them back, so this pair is the conversion rate of the
+       checkout itself. It is NOT the subscription count: `done` means the
+       payment page finished, and the subscription only exists once the
+       webhook has written it. Stripe remains the authority; this measures
+       the funnel, not the revenue. */
+    track('checkout_return', { result: m[1] });
+
     if (m[1] === 'cancelled') { say('Checkout cancelled — nothing was charged.'); return; }
     say('Thanks. Checking your account…');
     if (AP.account.refresh) {
       AP.account.refresh().then(function () {
         render();
         if (!AP.account.isPro()) {
+          /* The webhook has not landed yet. Worth counting, because a lot of
+             these means the grant path is slow or broken, and the person who
+             just paid is the last one who should have to notice. */
+          track('pro_pending');
           say('Payment received. Pro will appear here shortly — reload in a moment.', 'ok');
         }
       });

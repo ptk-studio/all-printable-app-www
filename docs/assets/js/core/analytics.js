@@ -35,7 +35,11 @@ window.AP = window.AP || {};
      whitelist, so a careless call site cannot leak a user's own text. */
   var ALLOWED = [
     'maker', 'preset', 'layout', 'type', 'paper', 'orientation', 'theme',
-    'pages', 'action', 'stock', 'difficulty', 'countries'
+    'pages', 'action', 'stock', 'difficulty', 'countries',
+    /* Subscription funnel. Every one of these is a fixed word chosen in code
+       — 'done', 'cancelled', 'functions' — never anything a user typed, and
+       never an amount, an email or a Stripe id. */
+    'result', 'mode'
   ];
 
   var queue = [], ready = false, logEventFn = null, analyticsRef = null;
