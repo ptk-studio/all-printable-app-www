@@ -53,6 +53,13 @@ which owns state, controls, preview, printing and export. Sheet geometry for
 the small formats lives in `docs/assets/js/core/impose.js`, and rows-and-columns
 sheets are built from `docs/assets/js/core/table.js`.
 
+## Sheet credit
+
+Every printed sheet carries a small `all-printable.com` in the corner, stamped
+in one place (`core/brand.js`, applied from `core/studio.js`). Removing it is
+meant to become a paid feature; the seam is a single predicate. See
+`features/branding.md`.
+
 ## Analytics
 
 Firebase / GA4, opt-in only: nothing loads and no cookie is set until a visitor

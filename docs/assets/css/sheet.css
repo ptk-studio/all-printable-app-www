@@ -183,3 +183,15 @@
 
 .page.ink-saver .tb-head { background: none; }
 .page.ink-saver .tb-cell.alt { background: none; }
+
+/* --- Sheet credit --------------------------------------------------------- */
+/* Absolutely placed so it can never take space from a layout — see
+   core/brand.js. Sits in the sheet's own margin, aligned to the content edge. */
+.brand-credit {
+  position: absolute;
+  right: var(--pad); bottom: calc(var(--pad) / 3);
+  font-family: var(--face-body);
+  font-size: .52em; letter-spacing: .06em;
+  color: var(--ink-faint);
+  pointer-events: none;
+}

@@ -39,6 +39,10 @@ The catalogue is complete, so what is left is depth rather than breadth.
    without shipping a table that goes stale.
 4. **Saved designs across devices**, which is the first thing that would need
    accounts — and therefore the first thing worth charging for.
+5. **Removing the sheet credit for paying users.** The seam is already in
+   place: `AP.brand.hidden()` in `core/brand.js` is the only line that changes.
+   What is missing is accounts and an entitlement to read, and a place to check
+   it that the user does not control.
 
 ## The pattern that worked
 

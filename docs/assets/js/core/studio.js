@@ -179,11 +179,19 @@ AP.studio = function (config) {
   }
 
   /* ---- preview ----------------------------------------------------------- */
+  /* Every route to paper goes through here, so the sheet credit is stamped
+     once and cannot be missed by the export path. */
+  function buildPages() {
+    var built = config.render(state);
+    if (AP.brand) AP.brand.stampAll(built);
+    return built;
+  }
+
   var render = AP.debounce(function () {
     var canvas = $('#canvas');
     canvas.innerHTML = '';
     try {
-      pages = config.render(state);
+      pages = buildPages();
     } catch (err) {
       canvas.appendChild(el('p', { class: 'empty', text: 'Could not render: ' + err.message }));
       if (window.console) console.error(err);
@@ -347,7 +355,7 @@ AP.studio = function (config) {
     function finish(cssText) {
       var wasAll = viewAll, prevZoom = zoom;
       viewAll = true; zoom = 1;
-      var body = config.render(state).map(function (p) { return p.outerHTML; }).join('\n');
+      var body = buildPages().map(function (p) { return p.outerHTML; }).join('\n');
       viewAll = wasAll; zoom = prevZoom; render();
 
       var name = config.filename(state);

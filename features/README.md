@@ -9,6 +9,7 @@ features/
   README.md          this file
   platform.md        conventions every printable follows
   analytics.md       what is measured, and the consent model
+  branding.md        the printed sheet credit, and the paid-removal seam
   roadmap.md         what is planned, in priority order
   calendar/
     README.md        the calendar maker's full feature spec
