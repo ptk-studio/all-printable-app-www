@@ -19,7 +19,11 @@
 const { onCall, onRequest, HttpsError } = require('firebase-functions/v2/https');
 const { defineSecret } = require('firebase-functions/params');
 const logger = require('firebase-functions/logger');
-const admin = require('firebase-admin');
+/* The modular imports, not `require('firebase-admin')` — firebase-admin v14
+   dropped the namespaced admin.firestore(), and the old form fails at module
+   load, which the deploy's analyse step catches before anything ships. */
+const { initializeApp } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
 const E = require('./entitlement.js');
 
 const STRIPE_SECRET_KEY = defineSecret('STRIPE_SECRET_KEY');
@@ -29,8 +33,8 @@ const STRIPE_PRICE_ID = defineSecret('STRIPE_PRICE_ID');
 const SITE = 'https://app.all-printable.com';
 const REGION = 'us-central1';
 
-admin.initializeApp();
-const db = admin.firestore();
+initializeApp();
+const db = getFirestore();
 
 function stripe() {
   return require('stripe')(STRIPE_SECRET_KEY.value());

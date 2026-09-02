@@ -1,2 +1,4 @@
-.DS_Store
+# Installed by `npm install` in functions/ and rebuilt on deploy.
+functions/node_modules/
 *.log
+.DS_Store

@@ -3,15 +3,17 @@
   "description": "Stripe checkout and webhook for the Pro tier",
   "private": true,
   "main": "index.js",
-  "engines": { "node": "20" },
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
     "test": "node test-entitlement.js",
     "serve": "firebase emulators:start --only functions",
     "deploy": "firebase deploy --only functions"
   },
   "dependencies": {
-    "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.1.0",
-    "stripe": "^17.4.0"
+    "firebase-admin": "^14.3.0",
+    "firebase-functions": "^7.3.2",
+    "stripe": "^22.6.1"
   }
 }
