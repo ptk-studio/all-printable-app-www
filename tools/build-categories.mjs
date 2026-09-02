@@ -177,6 +177,7 @@ ${items.map((p) => card(p, '../')).join('\n')}
       <span class="spacer"></span>
       <a href="../index.html">All printables</a>
       <a href="../pro/">Pro</a>
+      <a href="https://ptk-studio.com/" target="_blank" rel="noopener noreferrer">Made by PTK Studio</a>
     </div>
   </div>
 </footer>
@@ -301,6 +302,7 @@ ${proSections(printables, '')}
       <span class="spacer"></span>
       <a href="https://all-printable.com/">all-printable.com</a>
       <a href="pro/">Pro</a>
+      <a href="https://ptk-studio.com/" target="_blank" rel="noopener noreferrer">Made by PTK Studio</a>
     </div>
   </div>
 </footer>
