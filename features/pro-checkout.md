@@ -1,7 +1,21 @@
 # Buying Pro
 
-Status: **built, not live.** The code is here and tested as far as it can be.
-Nothing is on sale until you do the steps below, and `/pro/` says so.
+Status: **deployed, not yet switched on.** The three functions are live on
+Node 22 in us-central1. Nothing is on sale: `useFunctions` is still `false`
+because `STRIPE_WEBHOOK_SECRET` is a placeholder, and turning checkout on
+before the real one is set would let someone pay and never receive Pro.
+
+    createCheckoutSession   https://createcheckoutsession-4hpnnniyeq-uc.a.run.app
+    createPortalSession     https://createportalsession-4hpnnniyeq-uc.a.run.app
+    stripeWebhook           https://us-central1-ptk-studio-allprintable.cloudfunctions.net/stripeWebhook
+
+Verified against the deployed endpoints, not locally:
+
+- an unsigned POST forging `customer.subscription.created` for a real uid is
+  refused with 400, and the user's document was checked afterwards — still no
+  `pro` field
+- a bogus `Stripe-Signature` header and an empty body are refused the same way
+- both callables answer 401 `UNAUTHENTICATED` without a signed-in user
 
 Pro is a **monthly subscription**. Entitlement follows the Stripe
 subscription's status and nothing else — see `functions/entitlement.js`.
@@ -137,7 +151,9 @@ field.
 
    The signing secret it shows you is `STRIPE_WEBHOOK_SECRET`; set it and
    redeploy.
-5. Set `useFunctions: true` in `account.js`, commit, push.
+5. Set `useFunctions: true` in `account.js`, commit, push. **Not before**:
+   until the real signing secret is in, every Stripe event fails verification,
+   so a purchase would take the money and grant nothing.
 6. Test the whole path in Stripe test mode with card `4242 4242 4242 4242`,
    then cancel the subscription and check `pro` goes false.
 7. Deactivate the payment link so nobody takes the unmonitored path.
