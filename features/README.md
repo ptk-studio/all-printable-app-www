@@ -11,6 +11,7 @@ features/
   platform.md        conventions every printable follows
   analytics.md       what is measured, and the consent model
   accounts.md        sign-in, the paid tier, and how entitlement is protected
+  pro-checkout.md    buying Pro: Stripe, the webhook, and the two modes
   branding.md        the printed sheet credit, and the paid-removal seam
   landing.md         per-printable pages, and how they avoid being doorways
   categories.md      the six category pages, and the home page that points at them

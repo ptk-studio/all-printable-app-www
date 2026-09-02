@@ -90,6 +90,10 @@ CASES = [
     case('UPDATE own proSince',                     'DENY',  'update', U, 'u1', dict(P, proSince=1), P),
     case('UPDATE own proSource',                    'DENY',  'update', U, 'u1', dict(P, proSource='x'), P),
     case('UPDATE own stripeCustomerId',             'DENY',  'update', U, 'u1', dict(P, stripeCustomerId='cus_x'), P),
+    case('UPDATE own proStatus',                    'DENY',  'update', U, 'u1', dict(P, proStatus='active'), P),
+    case('UPDATE own proUpdatedAt',                 'DENY',  'update', U, 'u1', dict(P, proUpdatedAt=9), P),
+    case('UPDATE own stripeSubscriptionId',         'DENY',  'update', U, 'u1', dict(P, stripeSubscriptionId='sub_x'), P),
+    case('CREATE own doc carrying proStatus',       'DENY',  'create', U, 'u1', dict(P, proStatus='active')),
     case('Pro user revokes own pro',                'DENY',  'update', U, 'u1', dict(P, pro=False), PRO),
     # syncProfile() writes with setDoc and no merge when it believes the doc is
     # missing. Two tabs signing in at once can race, and the loser's write would

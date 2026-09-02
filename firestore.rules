@@ -21,9 +21,14 @@ service cloud.firestore {
       return request.auth != null && request.auth.uid == uid;
     }
 
-    /* Fields only a trusted server may set. */
+    /* Fields only a trusted server may set — the Stripe webhook, through the
+       Admin SDK, which bypasses these rules. Every field the webhook writes
+       must appear here; functions/test-entitlement.js asserts that from the
+       other side, so adding a field to the webhook without adding it here
+       fails the test rather than quietly opening a hole. */
     function locked() {
-      return ['pro', 'proSince', 'proSource', 'stripeCustomerId'];
+      return ['pro', 'proSince', 'proSource', 'proStatus', 'proUpdatedAt',
+              'stripeCustomerId', 'stripeSubscriptionId'];
     }
 
     match /users/{uid} {

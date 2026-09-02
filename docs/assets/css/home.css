@@ -210,3 +210,10 @@
 /* "and N more" closes the list of examples on a home-page category card. */
 .card ul li.more { color: var(--muted); font-style: italic; }
 .card ul li.more::before { content: none; }
+
+/* The buy area on /pro/, rendered by assets/js/pro.js. */
+#pro-cta .lp-cta { margin: 18px 0 8px; }
+.pro-say { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+.pro-say:empty { display: none; }
+.pro-say-ok { color: var(--accent-ink); }
+.pro-say-warn { color: #a3341f; }

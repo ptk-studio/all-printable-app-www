@@ -1,0 +1,114 @@
+/* The buy area on /pro/.
+ *
+ * Rendered rather than hard-coded because what it should say depends on three
+ * things the HTML cannot know: whether checkout is configured at all, whether
+ * you are signed in, and whether you already have Pro. The static markup in
+ * the page is the no-JavaScript answer — "not on sale here yet" — which is
+ * also the honest answer when nothing is configured.
+ */
+(function () {
+  function h(tag, props, kids) {
+    var n = document.createElement(tag);
+    Object.keys(props || {}).forEach(function (k) {
+      if (k === 'class') n.className = props[k];
+      else if (k === 'text') n.textContent = props[k];
+      else if (k === 'html') n.innerHTML = props[k];
+      else if (k.slice(0, 2) === 'on') n.addEventListener(k.slice(2), props[k]);
+      else n.setAttribute(k, props[k]);
+    });
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+
+  var box = null;
+
+  function say(msg, kind) {
+    var slot = box && box.querySelector('.pro-say');
+    if (slot) { slot.textContent = msg; slot.className = 'pro-say' + (kind ? ' pro-say-' + kind : ''); }
+  }
+
+  function render() {
+    if (!box || !window.AP || !AP.account) return;
+    box.innerHTML = '';
+    var mode = AP.account.checkoutMode();
+    var user = AP.account.user();
+    var pro  = AP.account.isPro();
+
+    if (mode === 'none') {
+      box.appendChild(h('p', { text:
+        'Checkout is not connected yet, so Pro cannot be bought at the moment. ' +
+        'When it opens, this is where it will happen.' }));
+      return;
+    }
+
+    if (pro) {
+      box.appendChild(h('p', { text: 'You have Pro. Your sheets print without the credit.' }));
+      if (mode === 'functions') {
+        box.appendChild(h('button', { class: 'btn', type: 'button', text: 'Manage billing',
+          onclick: function () {
+            say('Opening Stripe…');
+            AP.account.manageBilling().catch(function (e) { say(e.message, 'warn'); });
+          } }));
+      } else {
+        box.appendChild(h('p', { class: 'lp-free', text:
+          'To cancel, reply to your receipt and we will sort it out.' }));
+      }
+      box.appendChild(h('p', { class: 'pro-say' }));
+      return;
+    }
+
+    if (!user) {
+      box.appendChild(h('p', { text:
+        'Pro is tied to your account, so sign in first — the button is in the ' +
+        'top right of this page.' }));
+      return;
+    }
+
+    box.appendChild(h('p', { class: 'lp-cta' }, [
+      h('button', { class: 'btn btn-primary', type: 'button', text: 'Get Pro',
+        onclick: function () {
+          say('Opening Stripe…');
+          AP.account.startCheckout().catch(function (e) { say(e.message, 'warn'); });
+        } }),
+      h('span', { class: 'lp-free', text: 'Monthly, cancel any time.' })
+    ]));
+
+    /* Say plainly that a person has to flip the switch, rather than letting
+       someone pay and wonder why nothing happened. */
+    if (mode === 'link') {
+      box.appendChild(h('p', { class: 'lp-free', text:
+        'Activation is manual while we finish the automatic version, so Pro ' +
+        'appears on your account within a day of paying — not instantly.' }));
+    }
+    box.appendChild(h('p', { class: 'pro-say' }));
+  }
+
+  /* Coming back from Stripe. The webhook may not have landed yet, so re-read
+     the profile rather than trusting the cached flag. */
+  function afterCheckout() {
+    var m = /[?&]checkout=(done|cancelled)/.exec(location.search);
+    if (!m) return;
+    history.replaceState(null, '', location.pathname);
+    if (m[1] === 'cancelled') { say('Checkout cancelled — nothing was charged.'); return; }
+    say('Thanks. Checking your account…');
+    if (AP.account.refresh) {
+      AP.account.refresh().then(function () {
+        render();
+        if (!AP.account.isPro()) {
+          say('Payment received. Pro will appear here shortly — reload in a moment.', 'ok');
+        }
+      });
+    }
+  }
+
+  function init() {
+    box = document.getElementById('pro-cta');
+    if (!box || !window.AP || !AP.account) return;
+    AP.account.onChange(render);
+    render();
+    afterCheckout();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();

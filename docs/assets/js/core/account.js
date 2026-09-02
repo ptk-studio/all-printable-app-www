@@ -32,6 +32,31 @@ window.AP = window.AP || {};
     measurementId: 'G-8KW8B8XRSJ'
   };
 
+  /* ---- how Pro is bought --------------------------------------------------
+     Neither value is a secret. A Stripe Payment Link URL is public by design,
+     and this file is public anyway.
+
+     Two modes, because Cloud Functions need the Blaze plan and this project is
+     on Spark:
+
+     paymentLink   Paste a Stripe Payment Link here and people can pay today.
+                   Their uid rides along as client_reference_id, so you can see
+                   who paid in the Stripe dashboard — but nothing grants Pro
+                   automatically. You set `pro: true` on their user document in
+                   the Firestore console.
+
+     useFunctions  Flip to true after `firebase deploy --only functions`.
+                   Checkout then runs through createCheckoutSession and the
+                   webhook grants Pro on its own. The payment link stops being
+                   used; you can delete it in Stripe afterwards.
+
+     With both blank/false, /pro/ says Pro is not on sale, which is the truth
+     rather than a form that goes nowhere. */
+  var CHECKOUT = {
+    paymentLink: '',
+    useFunctions: false
+  };
+
   var mods = null, app = null, auth = null, db = null;
   var current = null, listeners = [], loading = null, booted = false;
 
@@ -314,6 +339,63 @@ window.AP = window.AP || {};
       return load().then(function (m) {
         var provider = new m.auth.GoogleAuthProvider();
         return m.auth.signInWithPopup(auth, provider);
+      });
+    },
+
+    /* ---- buying Pro ------------------------------------------------------ */
+
+    /* What the page should offer: 'functions', 'link', or 'none'. */
+    checkoutMode: function () {
+      if (CHECKOUT.useFunctions) return 'functions';
+      if (CHECKOUT.paymentLink) return 'link';
+      return 'none';
+    },
+
+    /* Sends the browser to Stripe. Resolves only if something went wrong —
+       on success the page has already navigated away. */
+    startCheckout: function () {
+      if (!current) return Promise.reject(new Error('not signed in'));
+      var mode = AP.account.checkoutMode();
+
+      if (mode === 'link') {
+        /* client_reference_id is how a payment is tied back to an account.
+           Without it a payment is an email address and a guess. */
+        var url = CHECKOUT.paymentLink +
+          (CHECKOUT.paymentLink.indexOf('?') === -1 ? '?' : '&') +
+          'client_reference_id=' + encodeURIComponent(current.uid) +
+          (current.email ? '&prefilled_email=' + encodeURIComponent(current.email) : '');
+        location.assign(url);
+        return Promise.resolve();
+      }
+
+      if (mode !== 'functions') return Promise.reject(new Error('checkout not configured'));
+
+      return load().then(function () {
+        return import(SDK + 'firebase-functions.js');
+      }).then(function (fns) {
+        var call = fns.httpsCallable(fns.getFunctions(app, 'us-central1'),
+                                     'createCheckoutSession');
+        return call({});
+      }).then(function (res) {
+        if (!res || !res.data || !res.data.url) throw new Error('no checkout url');
+        location.assign(res.data.url);
+      });
+    },
+
+    /* Stripe's billing portal — where someone cancels without emailing you.
+       Only exists once the functions are deployed. */
+    manageBilling: function () {
+      if (!current) return Promise.reject(new Error('not signed in'));
+      if (!CHECKOUT.useFunctions) return Promise.reject(new Error('portal needs the functions'));
+      return load().then(function () {
+        return import(SDK + 'firebase-functions.js');
+      }).then(function (fns) {
+        var call = fns.httpsCallable(fns.getFunctions(app, 'us-central1'),
+                                     'createPortalSession');
+        return call({});
+      }).then(function (res) {
+        if (!res || !res.data || !res.data.url) throw new Error('no portal url');
+        location.assign(res.data.url);
       });
     },
 

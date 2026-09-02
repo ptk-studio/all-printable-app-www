@@ -66,11 +66,17 @@
   </section>
 
   <section class="lp-print" id="status">
-    <h2>Not on sale yet</h2>
+    <h2>Getting Pro</h2>
     <p>Accounts work today — sign in from the top right of this page or any
-       maker, and your entitlement is read from your account. Checkout is not
-       connected yet, so Pro cannot be bought at the moment. When it opens, this
-       page is where it will happen.</p>
+       maker, and your entitlement is read from your account.</p>
+    <!-- Replaced by assets/js/pro.js, which knows whether checkout is
+         configured, whether you are signed in, and whether you already pay.
+         This is the no-JavaScript answer, and the honest one until a
+         payment link or the Cloud Functions are wired up. -->
+    <div id="pro-cta">
+      <p>Checkout is not connected yet, so Pro cannot be bought at the moment.
+         When it opens, this is where it will happen.</p>
+    </div>
   </section>
 
   <p class="lp-cta lp-cta-end">
@@ -90,6 +96,7 @@
 </footer>
 
 <script src="../assets/js/core/account.js"></script>
+<script src="../assets/js/pro.js"></script>
 
 </body>
 </html>

@@ -108,13 +108,14 @@ have quietly passed while proving nothing:
    `hasAny(locked())` does not break the suite, the suite is decorative. It
    currently flips exactly the six escalation cases and nothing else.
 
-## Not yet built
+## Buying it
 
-Checkout. Cloud Functions and the Stripe extension both require the Blaze
-plan, which requires billing details — the account owner's action, not
-something to be automated. Until that exists there is no way to become Pro
-except by editing the field in the console, and `docs/pro/` says so plainly
-rather than collecting interest in a product that cannot be bought.
+Built, not live — see `pro-checkout.md`. Pro is a monthly Stripe subscription;
+the webhook in `functions/` is the only thing that grants it, and it is the
+only thing that can, because the rules refuse those fields to browsers.
+
+Until the Blaze plan is enabled the functions cannot deploy, so there is a
+payment-link mode that takes money today and leaves activation to a human.
 
 Also waiting on Blaze: scheduled Firestore backups.
 

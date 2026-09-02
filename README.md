@@ -24,6 +24,7 @@ is the brand `all-printable.com` whatever host serves the page.
 ```
 docs/        the site — open docs/index.html, or serve the folder
 features/    product specs: what each printable does and why
+functions/   Stripe checkout and webhook for Pro (built, not deployed)
 tools/       maintenance scripts (category and landing-page generation); output is committed
 ```
 
