@@ -166,8 +166,6 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
   </div>
 </footer>
 
-<script src="../assets/js/core/account.js"></script>
-
 </body>
 </html>
 `;

@@ -119,12 +119,15 @@ window.AP = window.AP || {};
 
   /* ---- the header control -------------------------------------------------
      Sign-in belongs to the site, not to one maker's sidebar, so it sits in the
-     top-right of every header. This mounts itself: any page that loads
-     account.js and has a .site-header gets the control, with no per-page
-     markup to keep in sync.
+     top-right of the header on the pages where an account means something: the
+     makers, the home page and /pro/. This mounts itself, so any page that
+     loads account.js and has a .site-header gets it with no per-page markup to
+     keep in sync. The 26 landing pages deliberately do not load this file —
+     they ship no JavaScript at all.
 
      Messages appear inside the popover rather than through AP.toast, because
-     landing pages load this file without util.js. --------------------------- */
+     /pro/ loads this file as its only script — there is no toast helper to
+     call there. ------------------------------------------------------------ */
 
   function h(tag, props, kids) {
     var n = document.createElement(tag);

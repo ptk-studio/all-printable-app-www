@@ -22,11 +22,11 @@ requests to Google, which is the same bargain `analytics.js` makes.
 
 ## Where sign-in lives
 
-The control sits in the top right of every page's header. `core/account.js`
-mounts it itself into `.site-header`, so the home page, the 26 landing pages,
-`/pro/` and the seven makers all get it with no per-page markup to drift. The
-maker sidebar keeps only what is about that maker — saving and reopening its
-designs — and points at the header for identity.
+The control sits in the top right of the header on the pages where an account
+means something: the seven makers, the home page, and `/pro/`. `core/account.js`
+mounts it itself into `.site-header`, so those pages need no per-page markup
+that could drift. The maker sidebar keeps only what is about that maker —
+saving and reopening its designs — and points at the header for identity.
 
 Two things the header made necessary. The popover is placed in viewport
 coordinates by JavaScript, not anchored to the trigger, because below 760px the
@@ -36,12 +36,14 @@ collapses to just the avatar below 900px, because the maker header already
 carries three action buttons and the account control was the sixth item.
 
 Its messages appear inside the popover rather than through `AP.toast`, because
-landing pages load `account.js` without `util.js`.
+`/pro/` loads `account.js` without `util.js` — the toast helper is not there to
+call.
 
-This is the one place landing pages gained JavaScript. They previously shipped
-none. `account.js` is small and fetches nothing until someone clicks, so the
-cost is one cached request; the benefit is that the header means the same thing
-everywhere.
+The 26 landing pages deliberately do **not** load it. They ship no JavaScript
+at all, and that is worth more than a sign-in button on a page whose job is to
+answer a search and hand the visitor to a maker. Their headers carry the same
+"Open the maker" call to action they always did. If you add a script to a
+landing page, this is the property you are spending.
 
 ## Where entitlement lives, and why
 
