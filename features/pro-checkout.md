@@ -1,9 +1,12 @@
 # Buying Pro
 
-Status: **deployed, not yet switched on.** The three functions are live on
-Node 22 in us-central1. Nothing is on sale: `useFunctions` is still `false`
-because `STRIPE_WEBHOOK_SECRET` is a placeholder, and turning checkout on
-before the real one is set would let someone pay and never receive Pro.
+Status: **live in Stripe test mode.** All three functions are deployed on
+Node 22 in us-central1, the webhook is verifying against a real signing secret,
+and `useFunctions` is `true`, so `/pro/` offers checkout to signed-in visitors.
+
+The Stripe key in Secret Manager is `sk_test_…`. Nothing here can move real
+money until that is swapped for a live key — and doing that means redoing the
+product, price and webhook in live mode, because test and live share nothing.
 
     createCheckoutSession   https://createcheckoutsession-4hpnnniyeq-uc.a.run.app
     createPortalSession     https://createportalsession-4hpnnniyeq-uc.a.run.app
@@ -16,6 +19,27 @@ Verified against the deployed endpoints, not locally:
   `pro` field
 - a bogus `Stripe-Signature` header and an empty body are refused the same way
 - both callables answer 401 `UNAUTHENTICATED` without a signed-in user
+
+**Still unproven:** a real purchase. Nothing has yet run through
+`createCheckoutSession`, and no genuine Stripe event has reached the webhook.
+See "First real test" below.
+
+## First real test
+
+In Stripe test mode, on app.all-printable.com:
+
+1. Sign in, go to `/pro/`, press **Get Pro**.
+2. Card `4242 4242 4242 4242`, any future expiry, any CVC.
+3. Back on `/pro/`, the sheet credit should vanish within seconds — the webhook
+   writes `pro: true` and the page re-reads the profile.
+4. Check `users/<uid>` in Firestore: `pro`, `proSince`, `proStatus: active`,
+   `stripeCustomerId`, `stripeSubscriptionId`.
+5. In Stripe, cancel the subscription immediately. `pro` should go false and
+   the credit should come back on the next load.
+
+If step 3 does not happen, Stripe → Developers → Webhooks → the endpoint shows
+every delivery and its response. A 400 there means the signing secret does not
+match; a 200 saying `no user` means the subscription had no `uid` metadata.
 
 Pro is a **monthly subscription**. Entitlement follows the Stripe
 subscription's status and nothing else — see `functions/entitlement.js`.

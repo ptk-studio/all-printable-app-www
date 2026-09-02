@@ -54,7 +54,7 @@ window.AP = window.AP || {};
      rather than a form that goes nowhere. */
   var CHECKOUT = {
     paymentLink: '',
-    useFunctions: false
+    useFunctions: true
   };
 
   var mods = null, app = null, auth = null, db = null;
