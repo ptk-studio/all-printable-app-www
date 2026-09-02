@@ -44,12 +44,15 @@ The catalogue is complete, so what is left is depth rather than breadth.
    wrong date on a printed wall calendar is worse than no date. Chinese New
    Year is the one exception, offered from a bounded table, because it is
    unambiguous. Anything further needs a real source, not a guess.
-3. **Saved designs across devices**, which is the first thing that would need
-   accounts — and therefore the first thing worth charging for.
-4. **Removing the sheet credit for paying users.** The seam is already in
-   place: `AP.brand.hidden()` in `core/brand.js` is the only line that changes.
-   What is missing is accounts and an entitlement to read, and a place to check
-   it that the user does not control.
+3. **Checkout.** Accounts, entitlement and both Pro features are built and
+   verified — see `accounts.md`. Signing in works, `pro` is read from Firestore,
+   the sheet credit disappears when it is true, and the security rules refuse
+   any attempt by a browser to set it. What is missing is the ability to *buy*
+   it: Cloud Functions and the Stripe extension need the Blaze plan, which needs
+   billing details from the account owner. Until then `docs/pro/` says the thing
+   is not on sale rather than collecting interest in a product with no cart.
+
+   Also waiting on the same unblock: scheduled Firestore backups.
 
 ## The pattern that worked
 

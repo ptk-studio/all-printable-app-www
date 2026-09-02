@@ -1,0 +1,81 @@
+# Accounts and the paid tier
+
+Two features are reserved for Pro: printing without the `all-printable.com`
+sheet credit, and keeping saved designs against an account rather than one
+browser. Everything else — all 26 printables, every layout, every paper size,
+every option — is free and stays free. See `branding.md` for the credit itself.
+
+## The shape of it
+
+- **Firebase Auth** for identity. Google sign-in, and passwordless email links.
+  No passwords are handled by this site in either flow.
+- **Firestore** for the entitlement and for saved designs.
+- **No server of ours.** The site is still static files on GitHub Pages. The
+  browser talks to Firebase directly.
+
+## Nothing loads for people who do not use it
+
+`core/account.js` does not fetch the Firebase SDK on page load. It imports the
+SDK only when someone signs in, or when `ap.account.seen` in localStorage says
+this browser has a session to restore. A visitor who never signs in makes zero
+requests to Google, which is the same bargain `analytics.js` makes.
+
+## Where entitlement lives, and why
+
+`pro` is a field on `users/{uid}` in Firestore. The browser reads it; the
+browser may never write it. `core/account.js` caches the last known value in
+localStorage so the sheet credit does not flash on load, and that cache is
+explicitly *not* the authority — `readProfile()` overwrites it from the
+database on every sign-in.
+
+This matters because the alternative does not work. If the browser decided its
+own entitlement, "paid tier" would mean nothing: anyone could open devtools and
+set a flag. So `firestore.rules` refuses client writes to four fields:
+
+    pro, proSince, proSource, stripeCustomerId
+
+They are refused on `create` (a new profile may not arrive carrying `pro`) and
+on `update` (an existing profile may not gain, lose, or change it). Entitlement
+can therefore only be set by something holding admin credentials — a Cloud
+Function, or a human in the console.
+
+`ensureProfile()` writes only `email` and `created`, which is what lets a new
+profile pass the `create` rule at all.
+
+## Verifying the rule that the money rests on
+
+`tools/test-rules.py` runs 18 cases against the Security Rules test API. It
+needs `firebase login` and writes nothing to the database.
+
+    python3 tools/test-rules.py              # test firestore.rules
+    python3 tools/test-rules.py --deployed   # test what is actually live
+    python3 tools/test-rules.py --mutate     # prove the suite has teeth
+
+Three habits are deliberate here, each of them fixing a way this check could
+have quietly passed while proving nothing:
+
+1. **Half the cases expect ALLOW.** A suite of nothing but DENY assertions
+   passes perfectly against a rule that denies everything. The Firebase
+   console's own Rules Playground did exactly this to us: it cannot populate
+   `request.resource.data` for a `create`, so *every* simulation failed with
+   "Property data is undefined" — and the attack case looked like it was being
+   correctly refused. It was not being evaluated at all.
+2. **`--deployed` tests the live ruleset, not the file.** The console holds the
+   rules on one line; the repo holds them formatted with commentary. Passing
+   locally says nothing about production, so `--deployed` fetches the released
+   ruleset, runs the same suite against it, and reports drift from
+   `firestore.rules` (comparing with comments and whitespace normalised, so
+   reformatting does not read as a change).
+3. **`--mutate` removes the guard and expects failure.** If deleting
+   `hasAny(locked())` does not break the suite, the suite is decorative. It
+   currently flips exactly the six escalation cases and nothing else.
+
+## Not yet built
+
+Checkout. Cloud Functions and the Stripe extension both require the Blaze
+plan, which requires billing details — the account owner's action, not
+something to be automated. Until that exists there is no way to become Pro
+except by editing the field in the console, and `docs/pro/` says so plainly
+rather than collecting interest in a product that cannot be bought.
+
+Also waiting on Blaze: scheduled Firestore backups.

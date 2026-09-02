@@ -10,6 +10,7 @@ features/
   README.md          this file
   platform.md        conventions every printable follows
   analytics.md       what is measured, and the consent model
+  accounts.md        sign-in, the paid tier, and how entitlement is protected
   branding.md        the printed sheet credit, and the paid-removal seam
   landing.md         per-printable pages, and how they avoid being doorways
   roadmap.md         what is planned, in priority order

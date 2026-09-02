@@ -18,8 +18,11 @@ window.AP = window.AP || {};
 (function () {
   var TEXT = 'all-printable.com';
 
-  /* The single place entitlement will be read. Until accounts exist there is
-     nothing to read, so this is false for everyone. */
+  /* The single place entitlement is read. core/account.js mirrors the `pro`
+     field from Firestore onto AP.entitlements.removeBranding; if nobody is
+     signed in, AP.entitlements is absent and this is false. There is
+     deliberately no URL or UI override — a switch here would make the paid
+     feature free to anyone who found it. */
   function hidden() {
     return !!(AP.entitlements && AP.entitlements.removeBranding);
   }

@@ -1,0 +1,44 @@
+/* Firestore security rules — the readable source of truth.
+ *
+ * The console holds the same rules on a single line, because its editor
+ * auto-closes braces and fights multi-line typing. This file is what to edit
+ * and review; paste it into the console (or `firebase deploy --only
+ * firestore:rules`) when it changes.
+ *
+ * The property that matters: a signed-in client can read and write its own
+ * document and its own designs, but can NEVER set the fields that grant Pro.
+ * Those are refused on create and on update, so entitlement can only come
+ * from a trusted server — a Cloud Function with the Admin SDK, or a human in
+ * the console. Without that, "paid tier" would mean nothing: anyone could
+ * write pro: true from the browser console.
+ */
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedInAs(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    /* Fields only a trusted server may set. */
+    function locked() {
+      return ['pro', 'proSince', 'proSource', 'stripeCustomerId'];
+    }
+
+    match /users/{uid} {
+      allow read:   if signedInAs(uid);
+      allow delete: if signedInAs(uid);
+      allow create: if signedInAs(uid)
+                    && !request.resource.data.keys().hasAny(locked());
+      allow update: if signedInAs(uid)
+                    && !request.resource.data.diff(resource.data)
+                          .affectedKeys().hasAny(locked());
+
+      /* A user's saved designs. Only ever their own. */
+      match /designs/{designId} {
+        allow read, write: if signedInAs(uid);
+      }
+    }
+  }
+}

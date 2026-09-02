@@ -328,6 +328,89 @@ AP.studio = function (config) {
     });
   }
 
+  /* ---- account ----------------------------------------------------------- */
+  function renderAccount() {
+    var box = $('#account-box');
+    if (!box || !AP.account) return;
+    box.innerHTML = '';
+    var user = AP.account.user();
+
+    if (!user) {
+      box.appendChild(el('p', { class: 'field-hint',
+        text: 'Sign in to keep your designs against your account, on any device.' }));
+      box.appendChild(el('div', { class: 'row-wrap', style: { marginTop: '8px' } }, [
+        el('button', { class: 'btn btn-sm btn-primary', text: 'Sign in with Google',
+          onclick: function () {
+            AP.account.signInGoogle()
+              .then(function () { return AP.account.ensureProfile(); })
+              .then(renderAccount)
+              .catch(function (e) { AP.toast('Sign-in failed: ' + (e.code || e.message)); });
+          } }),
+        el('button', { class: 'btn btn-sm', text: 'Email me a link',
+          onclick: function () {
+            var email = prompt('Email address:');
+            if (!email) return;
+            AP.account.sendEmailLink(email)
+              .then(function () { AP.toast('Link sent — check your inbox'); })
+              .catch(function (e) { AP.toast('Could not send: ' + (e.code || e.message)); });
+          } })
+      ]));
+      return;
+    }
+
+    var pro = AP.account.isPro();
+    box.appendChild(el('div', { class: 'acct-row' }, [
+      el('span', { class: 'acct-email', text: user.email || 'Signed in' }),
+      el('span', { class: 'badge' + (pro ? '' : ' badge-soon'), text: pro ? 'Pro' : 'Free' })
+    ]));
+    box.appendChild(el('div', { class: 'row-wrap', style: { marginTop: '8px' } }, [
+      el('button', { class: 'btn btn-sm', text: 'Save to account',
+        onclick: function () {
+          if (!pro) { AP.toast('Saving to your account is a Pro feature'); return; }
+          var name = prompt('Name this design:',
+            config.saveName ? config.saveName(state) : config.key);
+          if (!name) return;
+          AP.account.saveDesign(config.key, name, state)
+            .then(function () { AP.toast('Saved to your account'); renderAccount(); })
+            .catch(function (e) { AP.toast('Save failed: ' + (e.code || e.message)); });
+        } }),
+      el('button', { class: 'btn btn-sm btn-ghost', text: 'Sign out',
+        onclick: function () { AP.account.signOut().then(renderAccount); } })
+    ]));
+
+    if (!pro) {
+      box.appendChild(el('p', { class: 'inline-note', html:
+        'Pro removes the <b>all-printable.com</b> credit from every sheet and keeps your ' +
+        'designs against your account. <a href="/pro/">What Pro includes</a>' }));
+      return;
+    }
+
+    var list = el('div', { style: { marginTop: '10px' } });
+    box.appendChild(list);
+    AP.account.listDesigns(config.key).then(function (items) {
+      if (!items.length) {
+        list.appendChild(el('span', { class: 'field-hint', text: 'No saved designs yet.' }));
+        return;
+      }
+      items.forEach(function (d) {
+        list.appendChild(el('div', { class: 'row', style: { marginBottom: '6px' } }, [
+          el('button', { class: 'btn btn-sm',
+            style: { flex: '1 1 auto', justifyContent: 'flex-start' }, text: d.name,
+            onclick: function () {
+              try { state = merge(freshState(), JSON.parse(d.state)); zoom = null; changed(); }
+              catch (e) { AP.toast('That design could not be opened'); }
+            } }),
+          el('button', { class: 'btn btn-sm btn-ghost', text: '✕', title: 'Delete',
+            onclick: function () {
+              AP.account.deleteDesign(d.id).then(renderAccount);
+            } })
+        ]));
+      });
+    }).catch(function () {
+      list.appendChild(el('span', { class: 'field-hint', text: 'Could not load your designs.' }));
+    });
+  }
+
   function renderSaves() {
     var box = $('#saved-list');
     if (!box) return;
@@ -407,11 +490,16 @@ AP.studio = function (config) {
     bind();
     wireToolbar();
     renderSaves();
+    if (AP.account) { AP.account.init(); AP.account.onChange(renderAccount); }
     changed();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
+
+  /* An entitlement change (signing in, upgrading) has to re-render, because
+     the sheet credit is stamped at build time rather than toggled in the DOM. */
+  AP.studioRefresh = function () { render(); };
 
   return {
     get state() { return state; },
