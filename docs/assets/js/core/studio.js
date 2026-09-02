@@ -341,8 +341,9 @@ AP.studio = function (config) {
       box.appendChild(el('div', { class: 'row-wrap', style: { marginTop: '8px' } }, [
         el('button', { class: 'btn btn-sm btn-primary', text: 'Sign in with Google',
           onclick: function () {
+            /* The profile is created by account.js on the auth state change,
+               so every sign-in route gets one — not just this button. */
             AP.account.signInGoogle()
-              .then(function () { return AP.account.ensureProfile(); })
               .then(renderAccount)
               .catch(function (e) { AP.toast('Sign-in failed: ' + (e.code || e.message)); });
           } }),

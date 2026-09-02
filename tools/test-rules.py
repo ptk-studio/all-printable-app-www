@@ -91,6 +91,10 @@ CASES = [
     case('UPDATE own proSource',                    'DENY',  'update', U, 'u1', dict(P, proSource='x'), P),
     case('UPDATE own stripeCustomerId',             'DENY',  'update', U, 'u1', dict(P, stripeCustomerId='cus_x'), P),
     case('Pro user revokes own pro',                'DENY',  'update', U, 'u1', dict(P, pro=False), PRO),
+    # syncProfile() writes with setDoc and no merge when it believes the doc is
+    # missing. Two tabs signing in at once can race, and the loser's write would
+    # drop `pro` off an entitled profile. The rules must refuse that too.
+    case('Profile overwrite that drops pro',        'DENY',  'update', U, 'u1', P, PRO),
 
     # The ordinary things that must keep working. Without these the suite
     # would pass just as well against a rule that denies everything.

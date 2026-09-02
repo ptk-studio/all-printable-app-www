@@ -68,7 +68,7 @@ window.AP = window.AP || {};
       db = mods.db.getFirestore(app);
       mods.auth.onAuthStateChanged(auth, function (u) {
         current = u || null;
-        if (u) { setLocal(SEEN_KEY, true); readProfile(); }
+        if (u) { setLocal(SEEN_KEY, true); syncProfile(); }
         else { applyPro(false); delLocal(SEEN_KEY); }
         emit();
         if (AP.brand && AP.studio) redrawSheets();
@@ -84,16 +84,37 @@ window.AP = window.AP || {};
     if (typeof AP.studioRefresh === 'function') AP.studioRefresh();
   }
 
-  function readProfile() {
+  /* Read the profile, creating it if this is the first sign-in.
+
+     This hangs off the auth state change rather than off a particular button,
+     because there is more than one way to arrive signed in: the Google popup,
+     an email link, or a restored session. Hanging it off the Google button
+     meant email-link sign-ups never got a profile row at all.
+
+     The write never includes `pro` — the rules refuse it, and entitlement is
+     not the browser's to assert. `created` is written once, on creation, so
+     signing in again does not reset the sign-up date. */
+  function syncProfile() {
     if (!current) return Promise.resolve(null);
     var ref = mods.db.doc(db, 'users', current.uid);
     return mods.db.getDoc(ref).then(function (snap) {
-      var data = snap.exists() ? snap.data() : null;
-      applyPro(data && data.pro === true);
+      if (snap.exists()) {
+        var data = snap.data();
+        applyPro(data.pro === true);
+        return data;
+      }
+      applyPro(false);
+      return mods.db.setDoc(ref, {
+        email: current.email || '', created: Date.now()
+      }).then(function () { return null; });
+    }).catch(function () {
+      applyPro(false);
+      return null;
+    }).then(function (data) {
       emit();
       redrawSheets();
       return data;
-    }).catch(function () { applyPro(false); return null; });
+    });
   }
 
   AP.account = {
@@ -173,14 +194,16 @@ window.AP = window.AP || {};
       return mods.db.deleteDoc(mods.db.doc(db, 'users', current.uid, 'designs', id));
     },
 
-    /* Written on first sign-in so the account exists. Never includes `pro` —
-       the rules would reject it. */
+    /* The profile is created automatically on the first sign-in, whichever
+       route it came in by — see syncProfile(). This stays as a way to force
+       that check, and is safe to call more than once. */
     ensureProfile: function () {
-      if (!current) return Promise.resolve();
-      var ref = mods.db.doc(db, 'users', current.uid);
-      return mods.db.setDoc(ref, {
-        email: current.email || '', created: Date.now()
-      }, { merge: true }).catch(function () {});
+      return current ? syncProfile() : Promise.resolve(null);
+    },
+
+    /* Re-read entitlement from the database, e.g. after a purchase lands. */
+    refresh: function () {
+      return current ? syncProfile() : Promise.resolve(null);
     }
   };
 })();

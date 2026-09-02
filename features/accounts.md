@@ -39,12 +39,21 @@ on `update` (an existing profile may not gain, lose, or change it). Entitlement
 can therefore only be set by something holding admin credentials — a Cloud
 Function, or a human in the console.
 
-`ensureProfile()` writes only `email` and `created`, which is what lets a new
-profile pass the `create` rule at all.
+The profile document is created by `syncProfile()`, which hangs off the auth
+state change rather than off a particular button — there is more than one way
+to arrive signed in, and an earlier version created the profile only in the
+Google button's click handler, so email-link sign-ups got no profile row at
+all. It writes only `email` and `created`, which is what lets a new profile
+pass the `create` rule, and it writes `created` once rather than on every
+sign-in.
+
+Two tabs signing in at once can both decide the document is missing and both
+write it. The loser's write would drop `pro` from an entitled profile — so the
+rules refuse that too, and there is a test for exactly that shape.
 
 ## Verifying the rule that the money rests on
 
-`tools/test-rules.py` runs 18 cases against the Security Rules test API. It
+`tools/test-rules.py` runs 19 cases against the Security Rules test API. It
 needs `firebase login` and writes nothing to the database.
 
     python3 tools/test-rules.py              # test firestore.rules
