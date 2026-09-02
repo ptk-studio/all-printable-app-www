@@ -149,11 +149,8 @@ body.preview-mode .page-shell { margin: 0; }
 body.preview-mode .page-shell::after { display: none; }
 body.preview-mode .page-shell > .page { box-shadow: none; border-radius: 0; }
 
-/* --- Account panel -------------------------------------------------------- */
-.acct-row { display: flex; align-items: center; gap: 8px; }
-.acct-email {
-  font-size: 13px; color: var(--ink); overflow: hidden;
-  text-overflow: ellipsis; white-space: nowrap; flex: 1 1 auto; min-width: 0;
-}
+/* --- Account panel --------------------------------------------------------
+   Identity and sign-in moved to the header control (see base.css); what is
+   left here is saving and reopening this maker's designs. */
 #account-box .inline-note { margin-top: 10px; }
 #account-box .inline-note a { color: var(--accent-ink); }

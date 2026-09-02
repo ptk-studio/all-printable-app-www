@@ -20,6 +20,29 @@ SDK only when someone signs in, or when `ap.account.seen` in localStorage says
 this browser has a session to restore. A visitor who never signs in makes zero
 requests to Google, which is the same bargain `analytics.js` makes.
 
+## Where sign-in lives
+
+The control sits in the top right of every page's header. `core/account.js`
+mounts it itself into `.site-header`, so the home page, the 26 landing pages,
+`/pro/` and the seven makers all get it with no per-page markup to drift. The
+maker sidebar keeps only what is about that maker — saving and reopening its
+designs — and points at the header for identity.
+
+Two things the header made necessary. The popover is placed in viewport
+coordinates by JavaScript, not anchored to the trigger, because below 760px the
+header wraps and the trigger can land anywhere on a second row; right-anchoring
+pushed the popover off the left edge of the screen. And the signed-in address
+collapses to just the avatar below 900px, because the maker header already
+carries three action buttons and the account control was the sixth item.
+
+Its messages appear inside the popover rather than through `AP.toast`, because
+landing pages load `account.js` without `util.js`.
+
+This is the one place landing pages gained JavaScript. They previously shipped
+none. `account.js` is small and fetches nothing until someone clicks, so the
+cost is one cached request; the benefit is that the header means the same thing
+everywhere.
+
 ## Where entitlement lives, and why
 
 `pro` is a field on `users/{uid}` in Firestore. The browser reads it; the

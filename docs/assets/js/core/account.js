@@ -34,7 +34,7 @@ window.AP = window.AP || {};
   };
 
   var mods = null, app = null, auth = null, db = null;
-  var current = null, listeners = [], loading = null;
+  var current = null, listeners = [], loading = null, booted = false;
 
   function local(k, fallback) {
     try { var v = localStorage.getItem(k); return v === null ? fallback : JSON.parse(v); }
@@ -117,9 +117,201 @@ window.AP = window.AP || {};
     });
   }
 
+  /* ---- the header control -------------------------------------------------
+     Sign-in belongs to the site, not to one maker's sidebar, so it sits in the
+     top-right of every header. This mounts itself: any page that loads
+     account.js and has a .site-header gets the control, with no per-page
+     markup to keep in sync.
+
+     Messages appear inside the popover rather than through AP.toast, because
+     landing pages load this file without util.js. --------------------------- */
+
+  function h(tag, props, kids) {
+    var n = document.createElement(tag);
+    Object.keys(props || {}).forEach(function (k) {
+      if (k === 'class') n.className = props[k];
+      else if (k === 'text') n.textContent = props[k];
+      else if (k === 'html') n.innerHTML = props[k];
+      else if (k.slice(0, 2) === 'on') n.addEventListener(k.slice(2), props[k]);
+      else n.setAttribute(k, props[k]);
+    });
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+
+  var host = null, pop = null, trigger = null;
+
+  function closePop() {
+    if (!pop) return;
+    pop.hidden = true;
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  /* Place the popover in viewport coordinates rather than anchoring it to the
+     trigger's right edge. Below 760px the header wraps, so the trigger can sit
+     anywhere on a second row — right-anchoring pushed the popover off the left
+     edge of the screen. Clamping to the viewport handles wrapping, narrow
+     phones and long addresses with one rule. */
+  function placePop() {
+    var t = trigger.getBoundingClientRect();
+    var w = pop.offsetWidth || 288;
+    var gap = 8;
+    var left = Math.min(Math.max(gap, t.right - w), window.innerWidth - w - gap);
+    pop.style.left = Math.max(gap, left) + 'px';
+    pop.style.top = (t.bottom + gap) + 'px';
+  }
+
+  function openPop() {
+    if (!pop) return;
+    pop.hidden = false;
+    placePop();
+    trigger.setAttribute('aria-expanded', 'true');
+    var first = pop.querySelector('input, button');
+    if (first) first.focus();
+  }
+
+  function say(msg, kind) {
+    var slot = pop && pop.querySelector('.acct-say');
+    if (slot) {
+      slot.textContent = msg;
+      slot.className = 'acct-say' + (kind ? ' acct-say-' + kind : '');
+    }
+  }
+
+  /* Errors from Firebase are codes like "auth/popup-closed-by-user". Say the
+     handful people actually hit in words, and show the code for the rest. */
+  function readable(e) {
+    var code = (e && e.code) || '';
+    if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request')
+      return 'Sign-in window closed.';
+    if (code === 'auth/popup-blocked')
+      return 'Your browser blocked the sign-in window. Allow popups and try again.';
+    if (code === 'auth/network-request-failed')
+      return 'Network problem — check your connection and try again.';
+    if (code === 'auth/invalid-email') return 'That does not look like an email address.';
+    if (code === 'auth/too-many-requests') return 'Too many attempts. Try again shortly.';
+    return code || (e && e.message) || 'Something went wrong.';
+  }
+
+  function signedOutPop() {
+    var input = h('input', { class: 'acct-input', type: 'email', name: 'email',
+      placeholder: 'you@example.com', autocomplete: 'email' });
+
+    var form = h('form', { class: 'acct-form', onsubmit: function (ev) {
+      ev.preventDefault();
+      var email = input.value.trim();
+      if (!email) { say('Enter an email address first.', 'warn'); return; }
+      say('Sending…');
+      AP.account.sendEmailLink(email).then(function () {
+        say('Link sent to ' + email + '. Open it on this device.', 'ok');
+        form.reset();
+      }, function (e) { say(readable(e), 'warn'); });
+    } }, [input, h('button', { class: 'btn btn-sm', type: 'submit', text: 'Email a link' })]);
+
+    return [
+      h('p', { class: 'acct-pop-title', text: 'Sign in to All Printable' }),
+      h('p', { class: 'acct-pop-note', text:
+        'Free, and it takes a moment. Your saved designs follow you to any ' +
+        'device instead of living in one browser.' }),
+      h('button', { class: 'btn btn-sm btn-primary acct-wide', type: 'button',
+        text: 'Continue with Google', onclick: function () {
+          say('Opening Google…');
+          AP.account.signInGoogle().then(function () { say(''); },
+            function (e) { say(readable(e), 'warn'); });
+        } }),
+      h('div', { class: 'acct-or' }, [h('span', { text: 'or' })]),
+      form,
+      h('p', { class: 'acct-say' }),
+      h('p', { class: 'acct-pop-fine', html:
+        'No password, ever. <a href="' + proHref() + '">What Pro includes</a>' })
+    ];
+  }
+
+  function signedInPop(user, pro) {
+    return [
+      h('div', { class: 'acct-pop-id' }, [
+        h('span', { class: 'acct-avatar acct-avatar-lg', text: initial(user) }),
+        h('span', { class: 'acct-pop-mail', text: user.email || 'Signed in' })
+      ]),
+      h('p', { class: 'acct-pop-plan' }, [
+        h('span', { class: 'badge' + (pro ? '' : ' badge-soon'), text: pro ? 'Pro' : 'Free' }),
+        h('span', { class: 'acct-pop-note', text: pro
+          ? 'Sheets print without the site credit.'
+          : 'Sheets carry a small all-printable.com credit.' })
+      ]),
+      h('a', { class: 'btn btn-sm acct-wide', href: proHref(),
+        text: pro ? 'What Pro includes' : 'See what Pro changes' }),
+      h('p', { class: 'acct-say' }),
+      h('button', { class: 'btn btn-sm btn-ghost acct-wide', type: 'button',
+        text: 'Sign out', onclick: function () {
+          say('Signing out…');
+          AP.account.signOut().then(function () { closePop(); },
+            function (e) { say(readable(e), 'warn'); });
+        } })
+    ];
+  }
+
+  /* Root-relative, because this control appears at three directory depths.
+     Firebase auth needs a real origin anyway, so file:// is already out. */
+  function proHref() { return '/pro/'; }
+
+  function initial(user) {
+    return ((user.email || '?').trim().charAt(0) || '?').toUpperCase();
+  }
+
+  function renderHeader() {
+    if (!host) return;
+    host.innerHTML = '';
+    var user = current;
+    var pro = !!(AP.entitlements && AP.entitlements.removeBranding);
+
+    trigger = h('button', {
+      class: 'btn btn-sm acct-trigger' + (user ? ' acct-trigger-in' : ''),
+      type: 'button', 'aria-haspopup': 'true', 'aria-expanded': 'false',
+      'aria-label': user ? 'Account menu' : 'Sign in',
+      onclick: function (ev) {
+        ev.stopPropagation();
+        if (pop.hidden) openPop(); else closePop();
+      }
+    }, user
+      ? [h('span', { class: 'acct-avatar', text: initial(user) }),
+         h('span', { class: 'acct-who', text: user.email || 'Account' }),
+         pro ? h('span', { class: 'badge acct-badge', text: 'Pro' }) : null]
+      : [h('span', { text: 'Sign in' })]);
+
+    pop = h('div', { class: 'acct-pop', role: 'dialog', 'aria-label': 'Account' },
+      user ? signedInPop(user, pro) : signedOutPop());
+    pop.hidden = true;
+
+    host.appendChild(trigger);
+    host.appendChild(pop);
+  }
+
+  function mountHeader() {
+    var header = document.querySelector('.site-header');
+    if (!header || header.querySelector('.acct')) return;
+    host = h('div', { class: 'acct' });
+    header.appendChild(host);
+    document.addEventListener('click', function (ev) {
+      if (host && !host.contains(ev.target)) closePop();
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape') closePop();
+    });
+    ['resize', 'scroll'].forEach(function (ev) {
+      window.addEventListener(ev, function () {
+        if (pop && !pop.hidden) placePop();
+      }, { passive: true });
+    });
+    renderHeader();
+  }
+
   AP.account = {
-    /* Restore a session only for browsers that have signed in before. */
+    /* Restore a session only for browsers that have signed in before.
+       Safe to call twice: account.js boots itself, and studio.js calls it too. */
     init: function () {
+      if (booted) return;
+      booted = true;
       if (local(SEEN_KEY, false)) load();
       if (AP.account.pendingEmailLink()) AP.account.completeEmailLink();
     },
@@ -206,4 +398,16 @@ window.AP = window.AP || {};
       return current ? syncProfile() : Promise.resolve(null);
     }
   };
+
+  /* Mount the header control on every page that loads this file, then restore
+     any existing session. Runs itself so landing pages and the home page need
+     no extra wiring. */
+  function boot() {
+    mountHeader();
+    AP.account.init();
+    AP.account.onChange(renderHeader);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else boot();
 })();

@@ -335,36 +335,20 @@ AP.studio = function (config) {
     box.innerHTML = '';
     var user = AP.account.user();
 
+    /* Signing in happens in the header control, which is on every page. This
+       panel points at it rather than carrying a second set of buttons that
+       could drift out of step with the first. */
     if (!user) {
       box.appendChild(el('p', { class: 'field-hint',
-        text: 'Sign in to keep your designs against your account, on any device.' }));
-      box.appendChild(el('div', { class: 'row-wrap', style: { marginTop: '8px' } }, [
-        el('button', { class: 'btn btn-sm btn-primary', text: 'Sign in with Google',
-          onclick: function () {
-            /* The profile is created by account.js on the auth state change,
-               so every sign-in route gets one — not just this button. */
-            AP.account.signInGoogle()
-              .then(renderAccount)
-              .catch(function (e) { AP.toast('Sign-in failed: ' + (e.code || e.message)); });
-          } }),
-        el('button', { class: 'btn btn-sm', text: 'Email me a link',
-          onclick: function () {
-            var email = prompt('Email address:');
-            if (!email) return;
-            AP.account.sendEmailLink(email)
-              .then(function () { AP.toast('Link sent — check your inbox'); })
-              .catch(function (e) { AP.toast('Could not send: ' + (e.code || e.message)); });
-          } })
-      ]));
+        text: 'Sign in from the top right to keep your designs against your ' +
+              'account, on any device.' }));
       return;
     }
 
+    /* Identity and sign-out live in the header control. What belongs here is
+       the part that is about this maker: saving and reopening its designs. */
     var pro = AP.account.isPro();
-    box.appendChild(el('div', { class: 'acct-row' }, [
-      el('span', { class: 'acct-email', text: user.email || 'Signed in' }),
-      el('span', { class: 'badge' + (pro ? '' : ' badge-soon'), text: pro ? 'Pro' : 'Free' })
-    ]));
-    box.appendChild(el('div', { class: 'row-wrap', style: { marginTop: '8px' } }, [
+    box.appendChild(el('div', { class: 'row-wrap' }, [
       el('button', { class: 'btn btn-sm', text: 'Save to account',
         onclick: function () {
           if (!pro) { AP.toast('Saving to your account is a Pro feature'); return; }
@@ -374,9 +358,7 @@ AP.studio = function (config) {
           AP.account.saveDesign(config.key, name, state)
             .then(function () { AP.toast('Saved to your account'); renderAccount(); })
             .catch(function (e) { AP.toast('Save failed: ' + (e.code || e.message)); });
-        } }),
-      el('button', { class: 'btn btn-sm btn-ghost', text: 'Sign out',
-        onclick: function () { AP.account.signOut().then(renderAccount); } })
+        } })
     ]));
 
     if (!pro) {
