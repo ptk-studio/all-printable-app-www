@@ -5,7 +5,7 @@ What this project is trying to move, stated publicly so it can be held to it.
 Two primary metrics. Anything that does not plausibly serve one of them needs a reason of
 its own.
 
-Last reading: **2026-09-01**. Last reviewed: **2026-09-02**.
+Last reading: **2026-09-03**. Last reviewed: **2026-09-03**.
 
 ---
 
@@ -17,7 +17,7 @@ Last reading: **2026-09-01**. Last reviewed: **2026-09-02**.
 | **Why** | It is the honest test of a printables site: people came back and made something. Not pageviews, which reward a good search snippet and nothing after it. |
 | **Where** | [Firebase console → Project overview](https://console.firebase.google.com/project/ptk-studio-allprintable/overview), Analytics card. |
 | **Baseline** | **2** — 2026-09-01 |
-| **Current** | **2** — 2026-09-01 |
+| **Current** | **2** — 2026-09-02 |
 | **Target** | **25** by 2026-12-01 |
 
 ### Read this number correctly
@@ -59,7 +59,7 @@ would be exactly the wrong trade. A measured floor we can trust beats a total we
 | **Why** | The only revenue the project has, and the only signal that the free product is worth paying to keep. DAU says people come; this says the exchange is fair. |
 | **Where** | **Stripe dashboard is the authority.** The mirror is Firestore: `users` where `pro == true`. GA4 measures the *funnel*, not the count — see below. |
 | **Baseline** | **0** — 2026-09-02. Checkout went live on 2026-09-02 (`5c2944f`); no purchase has been made. |
-| **Current** | **0** — 2026-09-02 |
+| **Current** | **0** — 2026-09-03 |
 | **Target** | **5 paying subscribers** by 2026-12-01 |
 
 Price is USD 5.00/month, read live from Stripe by `getPrice` — the page and the charge
@@ -102,6 +102,29 @@ show purchases the funnel never recorded, and that is expected** — not a bug t
 tracking harder.
 
 ---
+
+## Readings so far
+
+| Date | DAU | Subscriptions | Note |
+|---|---|---|---|
+| 2026-09-01 | 2 | — | Baseline. **Makers only** — landing, category, home and `/pro/` were not instrumented |
+| 2026-09-02 | 2 | 0 | Wider coverage shipped late this day, so it barely counts here |
+| 2026-09-03 | 2 (as of 09-02) | 0 | Console's latest point is still the 2nd |
+
+Unchanged at 2 across every reading. **Do not read that as "the wider coverage changed
+nothing."** It shipped late on the 2nd, and GA4's standard reports lag 24–48 hours besides.
+The first honest look at what the new coverage measures is the re-baseline due on or after
+**2026-09-09**.
+
+> **Still unverified as of 2026-09-03:** that the events added on 2026-09-02 are *arriving*.
+> The console's report range that day ended 2026-09-01 — before the deploy — so `landing:*`,
+> `category:*`, `pro` and the eight funnel events have never actually been observed. This was
+> equally unverified when #4 and #5 shipped, for the same reason. Diarised for 2026-09-05; if
+> they are still absent then, that is a defect rather than a lag.
+>
+> It was not confirmed the easy way on purpose. Loading production with consent granted would
+> have generated a real event and moved a metric whose baseline is 2 — the agent's own
+> footprint, reported as traffic.
 
 ## Secondary — Day 1 retention
 
