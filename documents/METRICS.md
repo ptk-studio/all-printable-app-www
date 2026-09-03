@@ -81,14 +81,34 @@ is. As of this commit:
 | `checkout_start` | Get Pro clicked | How many reach Stripe |
 | `checkout_return` (`result`) | Back from Stripe | `done` vs `cancelled` — checkout's own conversion |
 | `checkout_error` | Checkout failed before Stripe | Broken, not declined. Never counted as a cancellation |
-| `pro_activated` | Client first sees `pro: true` | Activations, from the server's answer |
+| `pro_activated` | Client first sees `pro: true` since its cached flag was last false | **Not activations.** Re-fires on sign-out and back in, and after any failed profile read |
 | `pro_pending` | Paid, webhook not landed yet | The grant path is slow or broken |
-| `billing_portal` | Manage billing opened | The earliest churn signal we get |
+| `billing_portal` | The *click* that opens Stripe's portal | Intent to manage billing. **Not cancellations** — see below |
 | `preset_locked` | A Pro preset was refused | Demand for Pro from inside the makers |
 
-`checkout_return: done` is **not** a subscription. It means the payment page finished; the
-subscription exists only once the webhook has written it. Never report the GA4 number as the
-subscriber count.
+### Three rows that do not mean what their names suggest
+
+A browser can only see what a browser can see. Each of these is the closest observable proxy
+for something it cannot observe, and each is named here so a future reader does not quote it
+as the thing itself.
+
+- **`checkout_return: done` is not a subscription.** It means the payment page finished; the
+  subscription exists only once the webhook has written it. Never report the GA4 number as
+  the subscriber count.
+- **`billing_portal` is not a cancellation.** It fires on the click that opens Stripe's
+  portal, before the portal loads — so someone who opens it, looks and closes it counts
+  identically to someone who cancels. It is *intent to manage billing*, the same shape as
+  `print` firing "on intent, not on paper" further down this file. The real cancellation
+  arrives as a Stripe webhook, and that is what moves the metric.
+- **`pro_activated` is not an activation count.** It fires when the client first sees
+  `pro: true` since its cached flag was last false, which also happens on signing out and
+  back in, and after a profile read that failed — both `.catch` and the not-`exists` branch
+  reset the flag, so the next successful read looks new. Counting once per subscriber would
+  need a marker stored under the uid rather than a bare local flag; that is deliberately not
+  done at this volume.
+
+None of these is a defect to be fixed by tracking harder. They are what the browser can
+honestly report, and the fix for wanting the real number is to read Stripe.
 
 ### Read this number correctly
 
