@@ -240,8 +240,11 @@ Three things are worth knowing about this pipeline:
   `Sitemap:` line in `docs/robots.txt`. Those carry the origin as a literal string — nine
   URLs in all — so changing `SITE` means changing them too, and rerunning the generators
   will not do it for you. (`docs/CNAME` holds a bare host, not a URL, and has to change with
-  the origin for the same reason.) Not to be confused with the *printed* credit, which is
-  the brand string and does not follow `SITE`.
+  the origin for the same reason.) **`node tools/check-site-urls.mjs` is the guard**: it
+  imports the same `SITE` and exits non-zero listing every hand-maintained URL that
+  disagrees with it. Run it after changing the origin — it *catches* the divergence, it does
+  not repair it. Not to be confused with the *printed* credit, which is the brand string and
+  does not follow `SITE`.
 
 `registry.js` is **duplicated in `all-printable-www`**, which draws the marketing home
 page's category cards in the browser. Adding a printable here leaves that copy stale until
