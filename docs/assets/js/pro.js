@@ -54,8 +54,11 @@
         box.appendChild(h('button', { class: 'btn', type: 'button', text: 'Manage billing',
           onclick: function () {
             say('Opening Stripe…');
-            /* Opening the portal is the clearest cancellation signal we get
-               before Stripe tells us; most people who open it are leaving. */
+            /* Fires on this click, before the portal has opened — so someone
+               who opens it, looks and closes it is indistinguishable here from
+               someone who cancels. It is intent to manage billing, not churn.
+               Stripe is the authority for a cancellation; see the funnel table
+               in documents/METRICS.md for what this does and does not license. */
             track('billing_portal');
             AP.account.manageBilling().catch(function (e) { say(e.message, 'warn'); });
           } }));
