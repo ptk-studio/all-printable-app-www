@@ -6,10 +6,28 @@
 
    - Nothing loads and no cookie is set until someone opts in. Decline, and
      the Firebase SDK is never even fetched.
-   - Only interface choices are recorded: which maker, which layout, which
-     paper size. Never the content — no event text, habit names, addresses,
-     word lists or photos. Parameters are whitelisted, not filtered.
    - The choice is remembered locally and can be changed from the footer.
+
+   What is recorded, as of 2026-09-03, is three kinds of thing:
+
+   - Arrivals — 'page_view', sent by init(), which names the page in the
+     'maker' parameter: a maker, a landing page, a category, 'home' or 'pro'.
+     Every served page calls init() except docs/404.html, which loads no
+     script at all, so an arrival there is not recorded even as an arrival.
+   - Interface choices — 'preset_applied', 'preset_locked', 'print',
+     'copy_link', 'download_html', from core/studio.js: which maker, which
+     layout, which paper size.
+   - The subscription funnel — 'checkout_start', 'checkout_return',
+     'checkout_error', 'pro_signin_start', 'pro_pending', 'billing_portal',
+     'pro_activated', from pro.js and core/account.js.
+
+   Never the content, and that holds across all three — no event text, habit
+   names, addresses, word lists or photos. Parameters are whitelisted, not
+   filtered (ALLOWED, below), so a careless call site cannot leak a user's
+   own text. The two the funnel added are closed sets rather than free
+   strings: 'mode' is one of three words from AP.account.checkoutMode(), and
+   'result' is read off the return URL through a (done|cancelled) regex. No
+   amount, no email, no Stripe id.
 
    Set DEFAULT_ON to true to make analytics opt-OUT instead. That is a policy
    decision with legal weight in the EU, so it is deliberately one constant in
