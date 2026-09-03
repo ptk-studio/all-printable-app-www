@@ -13,10 +13,13 @@ The split exists so a dynamic version can grow under `app.` without disturbing
 the static site — the two are separate deployments, and this one is free to
 stop being buildless.
 
-Every absolute URL comes from one constant, `tools/site.mjs`. Change it and
-rerun the two generators and the canonicals, `og:url`, JSON-LD and sitemap all
-follow. The credit printed on each sheet is *not* a URL and does not follow: it
-is the brand `all-printable.com` whatever host serves the page.
+Every generated absolute URL comes from one constant, `tools/site.mjs`. Change
+it and rerun the two generators and the canonicals, `og:url`, JSON-LD and
+sitemap on all 33 generated pages follow. The seven makers and `/pro/` are
+hand-maintained and do not: `tools/check-site-urls.mjs` is what catches them
+falling behind. The credit printed on each sheet is *not* a URL and does not
+follow either: it is the brand `all-printable.com` whatever host serves the
+page.
 
 > This repo was copied from `all-printable-www` with its full history, so
 > commits before the split describe the combined site.
@@ -88,6 +91,32 @@ node tools/build-landing.mjs     # landing pages, and the sitemap
 Previews come from the generators themselves via a `?preview=1` mode, so the
 pictures cannot drift from what the site makes. The output is committed — the
 site stays buildless to serve. See `features/landing.md`.
+
+## Checking the hand-maintained pages
+
+The generators cover 33 pages and `docs/sitemap.xml`. The seven makers under
+`docs/printables/`, `docs/pro/` and `docs/robots.txt` are written by hand, so
+their URLs are the only absolute ones on the site that do **not** follow
+`tools/site.mjs`. Change `SITE` and rerunning the generators would move the
+sitemap to the new origin while these kept the old one — and `robots.txt` would
+go on pointing every crawler at a sitemap that is no longer there. This catches
+that:
+
+```sh
+node tools/check-site-urls.mjs   # run from the repo root
+```
+
+It exits non-zero and lists every offending file and URL when a hand-maintained
+file carries an `all-printable.com` URL whose origin is not `SITE`'s; other
+hosts are left alone. `docs/404.html` is scanned too — it carries no absolute
+URL today, and is in the list so it is covered the day it gains one.
+
+**`docs/CNAME` is not covered and still has to change with the origin.** It
+holds a bare host (`app.all-printable.com`), not a URL, so there is nothing for
+this check to compare — but the site is served from whatever it says.
+
+Run the check whenever `SITE` changes, next to the generators. Nothing runs it
+automatically — there is no CI here.
 
 ## Sheet credit
 
