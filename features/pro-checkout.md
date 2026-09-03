@@ -47,12 +47,16 @@ subscription's status and nothing else — see `functions/entitlement.js`.
 ## Why there are two modes
 
 Automatic activation needs a webhook, which needs Cloud Functions, which needs
-the **Blaze plan**. This project is on Spark: billing is not enabled and the
-Cloud Functions, Run, Build and Secret Manager APIs are all disabled. Enabling
-Blaze means entering payment details, which is the account owner's job.
+the **Blaze plan**. The project is on Blaze and the functions are deployed, so
+`useFunctions` is the live mode and has been since 2026-09-02.
 
-So `core/account.js` has two modes, both switched by a config block at the top
-of the file. Neither value is a secret.
+The other mode is kept rather than deleted. A Stripe Payment Link needs no
+functions at all, so it is the fallback if the functions ever become
+unavailable — and the honest answer for anyone forking this onto a project
+without billing enabled.
+
+`core/account.js` switches between them in a config block at the top of the
+file. Neither value is a secret.
 
 | | `paymentLink` set | `useFunctions: true` |
 |---|---|---|
@@ -214,6 +218,13 @@ the webhook writes is one the rules lock. Add a field to the webhook without
 adding it to `locked()` in `firestore.rules` and the test fails rather than a
 hole opening quietly.
 
-**What is not tested:** everything in `functions/index.js`. It has never run —
-it cannot be deployed on Spark, and the Firestore emulator needs a JDK this
-machine does not have. Stripe test mode is the first real exercise it gets.
+**What is not tested:** everything in `functions/index.js`. It is deployed and
+live, but there is no automated test of it — the Firestore emulator needs a JDK
+this machine does not have, so the plumbing has only ever been exercised by
+hand. What has been checked is that the deployed webhook verifies against the
+live signing secret: a synthetic signed `customer.subscription.deleted` is
+answered 200 on the current secret and 400 on the previous one, naming a
+customer that does not exist so nobody's entitlement is touched.
+
+The gap that leaves is the happy path. No real purchase has been through it
+yet, and the first one is what actually proves the grant works end to end.

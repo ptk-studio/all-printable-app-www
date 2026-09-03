@@ -2,8 +2,10 @@
  *
  *   node functions/test-entitlement.js
  *
- * These are the only part of the checkout that can be verified before the
- * project moves off the Spark plan, so they carry more weight than usual.
+ * These cover the decisions, not the plumbing. They were the only part of the
+ * checkout that could be verified before it was deployed; now that it is live
+ * and taking money, they are the cheapest way to keep it honest — run them
+ * before touching entitlement.js or the webhook's writes.
  */
 const assert = require('node:assert');
 const E = require('./entitlement.js');

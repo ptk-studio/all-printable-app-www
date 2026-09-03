@@ -1,15 +1,24 @@
 /* Stripe checkout for the Pro tier.
  *
- * Three functions:
+ * Four functions:
  *   createCheckoutSession  callable — starts a subscription checkout
+ *   getPrice               callable — the live price, so /pro/ cannot misquote it
  *   createPortalSession    callable — opens Stripe's billing portal to cancel
  *   stripeWebhook          https    — the only thing that may grant Pro
  *
- * NOT YET DEPLOYED. Cloud Functions need the Blaze plan and this project is on
- * Spark, so none of this has run against real Stripe. What is tested is
- * entitlement.js, which holds the decisions; see test-entitlement.js. Treat
- * the plumbing here as unverified until the first webhook arrives, and use
- * Stripe's test mode for that.
+ * DEPLOYED AND LIVE. The project is on Blaze, these functions are deployed to
+ * us-central1, and checkout is switched on in core/account.js. getPrice reports
+ * USD 5.00 monthly with livemode true: this is real money, not test mode.
+ *
+ * What that does not mean is that every path has been exercised. As of the
+ * deploy (5c2944f) the webhook was verified against a synthetic signed event —
+ * answered 200 on the current signing secret and 400 on the previous one — but
+ * no real purchase has been through it yet. Until one has, treat the happy
+ * path as deployed-and-plausible rather than proven, and change it with the
+ * care you would give code that is already taking someone's money.
+ *
+ * The decisions live in entitlement.js, which is pure and separately tested;
+ * see test-entitlement.js.
  *
  * Secrets are set with the CLI and never live in this repo:
  *   firebase functions:secrets:set STRIPE_SECRET_KEY

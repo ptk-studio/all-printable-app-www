@@ -4,7 +4,7 @@ Status: **live** — `docs/assets/js/core/analytics.js`
 
 Firebase / Google Analytics 4, behind consent.
 
-- Firebase project: `ptk-studio-allprintable` (Spark, no billing)
+- Firebase project: `ptk-studio-allprintable` (Blaze, pay-as-you-go)
 - GA account: `ptk-studio`, measurement id `G-8KW8B8XRSJ`
 - Web app: `all-printable.com`
 

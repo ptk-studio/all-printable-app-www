@@ -282,12 +282,12 @@ the Firestore console) or `useFunctions: true`. It is currently **`useFunctions:
 ### Deployment state
 
 **Deployed and live, taking real money — USD 5.00/month, `livemode: true`, as of
-`5c2944f` (2026-09-02).**
+`5c2944f` (2026-09-02).** The project is on the **Blaze** plan.
 
-> The comment block at the top of `functions/index.js` still says *"NOT YET DEPLOYED …
-> Spark plan … none of this has run against real Stripe"*. **That comment is stale** and
-> contradicts the deployment. It was true when written; it is not true now. Do not treat
-> the functions as a safe sandbox.
+The webhook was verified against a synthetic signed event at deploy time — 200 on the
+current signing secret, 400 on the previous one, naming a customer that does not exist so
+no entitlement was touched. **No real purchase has been through it yet**, so the happy path
+is deployed-and-plausible rather than proven. Nothing here is a sandbox.
 
 Two decisions in the entitlement logic are worth carrying forward:
 
@@ -337,7 +337,7 @@ firestore.rules           readable source of truth for the security rules
 
 - **A merge to `main` deploys.** There is no staging on either repo.
 - **`registry.js` is duplicated** in `all-printable-www` and drifts silently.
-- **The `functions/index.js` header comment is stale** — see §8.
+- **`functions/` is live.** It is not a sandbox, and no automated test covers `index.js`.
 - **The sheet credit must not take layout space.** Absolute positioning in the margin is
   load-bearing, not a style choice.
 - **Never add a URL or UI override to `AP.brand.hidden()`.**
