@@ -217,13 +217,31 @@ for (const entry of printables) {
   made++;
 }
 
-/* Sitemap covers the home page, the six category pages, the makers and every
-   landing page. */
+/* Sitemap covers the home page, the six category pages, the makers, /pro/ and
+   every landing page.
+
+   /pro/ is the subscription page, and it was missing here until 2026-09-03. It
+   is worth understanding why, because the shape of this list invites the same
+   omission again: everything else below is derived — the categories from
+   categories.json, the landing pages from printables.json — so those cannot be
+   forgotten. The makers and /pro/ are the two hand-written parts of the site,
+   and a hand-written page reaches the sitemap only because someone remembered
+   to type it. The makers were typed as a group; /pro/ arrived alone and was
+   not.
+
+   Nothing outside the site links to /pro/, so the sitemap was the only route a
+   crawler had to it, and it was absent for as long as the page has existed.
+
+   tools/check-site-urls.mjs now fails when a hand-written page under docs/ is
+   missing from this list, so the next one cannot be dropped in silence. */
 const makers = ['calendar', 'paper', 'tracker', 'cards', 'puzzles', 'forms', 'worksheets'];
 const urls = [
   { loc: `${SITE}/`, pri: '1.0' },
   ...categories.map((c) => ({ loc: `${SITE}/${c.slug}/`, pri: '0.8' })),
   ...makers.map((m) => ({ loc: `${SITE}/printables/${m}/`, pri: '0.7' })),
+  /* Above the makers and the landing pages: it is the one page on the site
+     that asks for money, and the only page serving paid subscriptions. */
+  { loc: `${SITE}/pro/`, pri: '0.9' },
   ...printables.filter((p) => copy[p.id] && p.status === 'live')
     .map((p) => ({ loc: `${SITE}/${p.id}/`, pri: '0.9' }))
 ];

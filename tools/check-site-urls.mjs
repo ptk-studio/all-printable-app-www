@@ -10,7 +10,11 @@
  * to prefer a host the sitemap no longer names, and, in robots.txt, pointing
  * every crawler at a sitemap on the old origin.
  *
- * Run it from the repo root after changing SITE, alongside the generators:
+ * It also fails when a hand-written page under docs/ is missing from
+ * docs/sitemap.xml — see the second check at the foot of the file.
+ *
+ * Run it from the repo root after changing SITE or adding a hand-written page,
+ * alongside the generators:
  *
  *   node tools/check-site-urls.mjs
  *
@@ -100,4 +104,47 @@ console.log(`check-site-urls: ${checked} URL(s) across ${files.length} hand-main
    passed over the file without seeing anything. */
 if (empty.length) {
   console.log(`check-site-urls: no URL of ours in ${empty.join(', ')} — worth a look; each of these carries one today.`);
+}
+
+/* Second check: is every hand-written page actually in the sitemap?
+ *
+ * This is a different failure from the one above, and it is the one that
+ * actually happened. /pro/ carried a correct canonical the whole time — it
+ * would have passed every check above — and was simply absent from
+ * sitemap.xml, so nothing crawled it. Nothing outside the site links to /pro/,
+ * so the sitemap was its only route in.
+ *
+ * The reason is structural rather than careless. build-landing.mjs derives the
+ * category and landing entries from JSON, so those cannot be forgotten; the
+ * hand-written pages are typed into that list by hand, and a page added on its
+ * own is easy to type into docs/ and not into the list. The files here are
+ * already read from disk, so comparing them against the sitemap costs nothing
+ * and covers the next hand-written page as well as today's.
+ *
+ * A missing entry is a failure, not a note: the page exists, is meant to be
+ * found, and silently is not. */
+const pages = files.filter((f) => f.path.endsWith('/index.html'));
+if (existsSync('docs/sitemap.xml') && pages.length) {
+  const sitemap = readFileSync('docs/sitemap.xml', 'utf8');
+  const locs = new Set(
+    [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => {
+      try {
+        return new URL(m[1]).pathname;
+      } catch {
+        return m[1];
+      }
+    })
+  );
+  /* docs/pro/index.html -> /pro/ */
+  const missing = pages
+    .map((f) => '/' + f.path.replace(/^docs\//, '').replace(/index\.html$/, ''))
+    .filter((path) => !locs.has(path));
+
+  if (missing.length) {
+    console.error(`check-site-urls: ${missing.length} hand-written page(s) exist under docs/ but are not in docs/sitemap.xml:`);
+    for (const path of missing) console.error(`  ${path}`);
+    console.error('Add them to the urls list in tools/build-landing.mjs and rerun it. A page absent from the sitemap and unlinked from elsewhere is a page nothing crawls.');
+    process.exit(1);
+  }
+  console.log(`check-site-urls: all ${pages.length} hand-written page(s) appear in docs/sitemap.xml.`);
 }
