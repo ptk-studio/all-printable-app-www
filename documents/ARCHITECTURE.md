@@ -202,9 +202,11 @@ test rather than quietly opening a hole.
 
 ## 6. The catalogue and the generated pages
 
-`docs/assets/js/registry.js` is the source of truth: 6 categories, 26 printables, all
-currently `status: 'live'`, mapping onto **7 makers** (`calendar`, `paper`, `tracker`,
-`cards`, `forms`, `puzzles`, `worksheets`). Most entries are a maker plus `?preset=`.
+`docs/assets/js/registry.js` is the source of truth. **As of 2026-09-03:** 6 categories,
+26 printables, all `status: 'live'`, mapping onto **7 makers** (`calendar`, `paper`,
+`tracker`, `cards`, `forms`, `puzzles`, `worksheets`), with 25 of the 26 entries a maker
+plus `?preset=`. Counts date themselves here because adding a printable is the ordinary
+way this document goes stale — read them as of that date, not as a claim about today.
 
 Three generators in `tools/` read it and write committed HTML:
 
@@ -231,9 +233,15 @@ Three things are worth knowing about this pipeline:
   serve elsewhere, or it photographs whatever else holds that port.)
 - **The registry is evaluated, not parsed.** It is a browser script, so the Node tools run
   it against a `{ window, AP }` shim via `new Function`.
-- **One origin constant.** `tools/site.mjs` exports `SITE`; every canonical, `og:url`,
-  JSON-LD `url` and sitemap entry derives from it. Not to be confused with the *printed*
-  credit, which is the brand string and does not follow `SITE`.
+- **One origin constant, with one exception.** `tools/site.mjs` exports `SITE`, and every
+  absolute URL on a *generated* page derives from it — canonicals, `og:url`, JSON-LD `url`,
+  every `sitemap.xml` entry. The exception is the files no generator writes: the seven
+  maker pages under `docs/printables/{maker}/index.html`, `docs/pro/index.html`, and the
+  `Sitemap:` line in `docs/robots.txt`. Those carry the origin as a literal string — nine
+  URLs in all — so changing `SITE` means changing them too, and rerunning the generators
+  will not do it for you. (`docs/CNAME` holds a bare host, not a URL, and has to change with
+  the origin for the same reason.) Not to be confused with the *printed* credit, which is
+  the brand string and does not follow `SITE`.
 
 `registry.js` is **duplicated in `all-printable-www`**, which draws the marketing home
 page's category cards in the browser. Adding a printable here leaves that copy stale until
@@ -253,9 +261,34 @@ Everyone else downloads nothing.
 for saved designs (a Pro feature). Rules in §5.
 
 **Analytics** — GA4, and *nothing loads until someone opts in*: decline and the SDK is never
-fetched, no cookie is set. Only interface choices are recorded — which maker, layout, paper
-size — never field contents. Parameters are **whitelisted, not filtered**. `DEFAULT_ON` is
-one constant in one place because opt-in vs opt-out carries legal weight in the EU.
+fetched, no cookie is set. Do Not Track and Global Privacy Control count as a "no", and the
+banner is not even shown.
+
+What is recorded, **as of 2026-09-03**, is three kinds of thing:
+
+| | Events | Where |
+|---|---|---|
+| **Arrivals** | `page_view` | `AP.analytics.init` runs on **41 pages**: 7 makers, 26 landing, 6 category, home, `/pro/`. That is every served page but one — see below |
+| **Interface choices** | `preset_applied`, `preset_locked`, `print`, `copy_link`, `download_html` | `core/studio.js` |
+| **The subscription funnel** | `checkout_start`, `checkout_return`, `checkout_error`, `pro_signin_start`, `pro_pending`, `billing_portal`, `pro_activated` | `pro.js`, `account.js` |
+
+**Never field contents** — no event text, habit names, addresses, word lists or photos.
+That holds across all three: parameters are **whitelisted, not filtered** (`ALLOWED` in
+`core/analytics.js`), so a careless call site cannot leak a user's own text. The two the
+funnel added are closed sets, not free strings: `mode` is `functions`, `link` or `none`
+from `AP.account.checkoutMode()`, and `result` is read off the return URL but through a
+`(done|cancelled)` regex, so nothing else can reach it. No amount, no email, no Stripe id.
+
+**`docs/404.html` is the one served page with no analytics on it** — it loads no script at
+all, so a visitor arriving on a URL we no longer serve produces no event, not even an
+arrival, and is never offered the consent choice. That is the state today, not a considered
+policy; it is recorded here so the next reader does not assume 404s are counted.
+
+`DEFAULT_ON` is one constant in one place because opt-in vs opt-out carries legal weight in
+the EU. The mechanism worth knowing before reading any of these numbers: `track()` **drops**
+rather than queues when consent has not been given, so a visitor who never answers the
+banner sends nothing at all — not even the `page_view`. What that does to the numbers is
+[`METRICS.md`](METRICS.md)'s to say, not this document's.
 
 Sign-in deliberately lives on `app.all-printable.com` only: a Firebase auth session belongs
 to one origin, so signing in on the marketing site would leave you signed out here.
