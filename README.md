@@ -94,19 +94,28 @@ site stays buildless to serve. See `features/landing.md`.
 
 ## Checking the hand-maintained pages
 
-The generators cover 33 pages. The seven makers under `docs/printables/` and
-`docs/pro/` are written by hand, so their canonicals are the only absolute URLs
-on the site that do **not** follow `tools/site.mjs`. Change `SITE` and rerunning
-the generators would move the sitemap to the new origin while these eight pages
-silently kept the old one. This catches that:
+The generators cover 33 pages and `docs/sitemap.xml`. The seven makers under
+`docs/printables/`, `docs/pro/` and `docs/robots.txt` are written by hand, so
+their URLs are the only absolute ones on the site that do **not** follow
+`tools/site.mjs`. Change `SITE` and rerunning the generators would move the
+sitemap to the new origin while these kept the old one — and `robots.txt` would
+go on pointing every crawler at a sitemap that is no longer there. This catches
+that:
 
 ```sh
 node tools/check-site-urls.mjs   # run from the repo root
 ```
 
-It exits non-zero and lists every offending file and URL when a page carries an
-`all-printable.com` URL whose origin is not `SITE`'s; other hosts are left
-alone. Run it whenever `SITE` changes, next to the generators. Nothing runs it
+It exits non-zero and lists every offending file and URL when a hand-maintained
+file carries an `all-printable.com` URL whose origin is not `SITE`'s; other
+hosts are left alone. `docs/404.html` is scanned too — it carries no absolute
+URL today, and is in the list so it is covered the day it gains one.
+
+**`docs/CNAME` is not covered and still has to change with the origin.** It
+holds a bare host (`app.all-printable.com`), not a URL, so there is nothing for
+this check to compare — but the site is served from whatever it says.
+
+Run the check whenever `SITE` changes, next to the generators. Nothing runs it
 automatically — there is no CI here.
 
 ## Sheet credit
