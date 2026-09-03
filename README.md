@@ -13,10 +13,13 @@ The split exists so a dynamic version can grow under `app.` without disturbing
 the static site — the two are separate deployments, and this one is free to
 stop being buildless.
 
-Every absolute URL comes from one constant, `tools/site.mjs`. Change it and
-rerun the two generators and the canonicals, `og:url`, JSON-LD and sitemap all
-follow. The credit printed on each sheet is *not* a URL and does not follow: it
-is the brand `all-printable.com` whatever host serves the page.
+Every generated absolute URL comes from one constant, `tools/site.mjs`. Change
+it and rerun the two generators and the canonicals, `og:url`, JSON-LD and
+sitemap on all 33 generated pages follow. The seven makers and `/pro/` are
+hand-maintained and do not: `tools/check-site-urls.mjs` is what catches them
+falling behind. The credit printed on each sheet is *not* a URL and does not
+follow either: it is the brand `all-printable.com` whatever host serves the
+page.
 
 > This repo was copied from `all-printable-www` with its full history, so
 > commits before the split describe the combined site.
@@ -88,6 +91,23 @@ node tools/build-landing.mjs     # landing pages, and the sitemap
 Previews come from the generators themselves via a `?preview=1` mode, so the
 pictures cannot drift from what the site makes. The output is committed — the
 site stays buildless to serve. See `features/landing.md`.
+
+## Checking the hand-maintained pages
+
+The generators cover 33 pages. The seven makers under `docs/printables/` and
+`docs/pro/` are written by hand, so their canonicals are the only absolute URLs
+on the site that do **not** follow `tools/site.mjs`. Change `SITE` and rerunning
+the generators would move the sitemap to the new origin while these eight pages
+silently kept the old one. This catches that:
+
+```sh
+node tools/check-site-urls.mjs   # run from the repo root
+```
+
+It exits non-zero and lists every offending file and URL when a page carries an
+`all-printable.com` URL whose origin is not `SITE`'s; other hosts are left
+alone. Run it whenever `SITE` changes, next to the generators. Nothing runs it
+automatically — there is no CI here.
 
 ## Sheet credit
 
