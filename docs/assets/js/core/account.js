@@ -143,11 +143,24 @@ window.AP = window.AP || {};
     return mods.db.getDoc(ref).then(function (snap) {
       if (snap.exists()) {
         var data = snap.data();
-        /* The one place the client learns it has become Pro. Fired on the
-           transition only, from the server's answer rather than the cached
-           flag, so it counts activations and not page loads by a subscriber.
-           This is the closest the browser gets to "a subscription started" —
-           Stripe is still the authority for how many exist. */
+        /* The one place the client learns it has become Pro, and the closest
+           a browser gets to "a subscription started" — Stripe is still the
+           authority for how many exist.
+
+           What `pro_activated` counts, exactly: the first time this browser
+           sees `pro: true` since the cached flag was last false. The value is
+           the server's, but the transition is decided by PRO_KEY in
+           localStorage, which is per browser and is written false by every
+           applyPro(false). So a subscriber who is already paying fires it
+           again on a second device or browser, in a private window, after
+           clearing site data, after signing out and back in, and after any
+           profile read that failed — the catch below resets the cache, so the
+           next successful read looks like an activation.
+
+           Read it as a funnel signal, not a subscription count. Counting once
+           per account would mean a marker stored under the uid rather than a
+           bare flag; that option is open and deliberately not taken at this
+           volume — see #13. */
         var was = local(PRO_KEY, false);
         applyPro(data.pro === true);
         if (data.pro === true && !was) track('pro_activated');
