@@ -268,7 +268,7 @@ What is recorded, **as of 2026-09-03**, is three kinds of thing:
 
 | | Events | Where |
 |---|---|---|
-| **Arrivals** | `page_view` | every page — `AP.analytics.init` runs on 41 of them: 7 makers, 26 landing, 6 category, home, `/pro/` |
+| **Arrivals** | `page_view` | `AP.analytics.init` runs on **41 pages**: 7 makers, 26 landing, 6 category, home, `/pro/`. That is every served page but one — see below |
 | **Interface choices** | `preset_applied`, `preset_locked`, `print`, `copy_link`, `download_html` | `core/studio.js` |
 | **The subscription funnel** | `checkout_start`, `checkout_return`, `checkout_error`, `pro_signin_start`, `pro_pending`, `billing_portal`, `pro_activated` | `pro.js`, `account.js` |
 
@@ -278,6 +278,11 @@ That holds across all three: parameters are **whitelisted, not filtered** (`ALLO
 funnel added are closed sets, not free strings: `mode` is `functions`, `link` or `none`
 from `AP.account.checkoutMode()`, and `result` is read off the return URL but through a
 `(done|cancelled)` regex, so nothing else can reach it. No amount, no email, no Stripe id.
+
+**`docs/404.html` is the one served page with no analytics on it** — it loads no script at
+all, so a visitor arriving on a URL we no longer serve produces no event, not even an
+arrival, and is never offered the consent choice. That is the state today, not a considered
+policy; it is recorded here so the next reader does not assume 404s are counted.
 
 `DEFAULT_ON` is one constant in one place because opt-in vs opt-out carries legal weight in
 the EU. The mechanism worth knowing before reading any of these numbers: `track()` **drops**
