@@ -5,7 +5,7 @@ What this project is trying to move, stated publicly so it can be held to it.
 Two primary metrics. Anything that does not plausibly serve one of them needs a reason of
 its own.
 
-Last reading: **2026-09-01**. Last reviewed: **2026-09-02**.
+Last reading: **2026-09-03**. Last reviewed: **2026-09-03**.
 
 ---
 
@@ -13,11 +13,11 @@ Last reading: **2026-09-01**. Last reviewed: **2026-09-02**.
 
 | | |
 |---|---|
-| **Definition** | Distinct users with at least one Firebase Analytics session in a UTC day, on `app.all-printable.com`. |
+| **Definition** | GA4 **active users** for one day on `app.all-printable.com`, as reported by the Firebase console's Analytics card. Active users is engagement-based: a visit GA4 does not count as engaged is not an active user, so this is *not* "anyone who loaded a page". The day boundary is the **GA4 property's reporting timezone**, which is not confirmed to be UTC — see below. |
 | **Why** | It is the honest test of a printables site: people came back and made something. Not pageviews, which reward a good search snippet and nothing after it. |
 | **Where** | [Firebase console → Project overview](https://console.firebase.google.com/project/ptk-studio-allprintable/overview), Analytics card. |
 | **Baseline** | **2** — 2026-09-01 |
-| **Current** | **2** — 2026-09-01 |
+| **Current** | **2** — 2026-09-02 |
 | **Target** | **25** by 2026-12-01 |
 
 ### Read this number correctly
@@ -59,7 +59,7 @@ would be exactly the wrong trade. A measured floor we can trust beats a total we
 | **Why** | The only revenue the project has, and the only signal that the free product is worth paying to keep. DAU says people come; this says the exchange is fair. |
 | **Where** | **Stripe dashboard is the authority.** The mirror is Firestore: `users` where `pro == true`. GA4 measures the *funnel*, not the count — see below. |
 | **Baseline** | **0** — 2026-09-02. Checkout went live on 2026-09-02 (`5c2944f`); no purchase has been made. |
-| **Current** | **0** — 2026-09-02 |
+| **Current** | **0** — 2026-09-03 |
 | **Target** | **5 paying subscribers** by 2026-12-01 |
 
 Price is USD 5.00/month, read live from Stripe by `getPrice` — the page and the charge
@@ -102,6 +102,25 @@ show purchases the funnel never recorded, and that is expected** — not a bug t
 tracking harder.
 
 ---
+
+## Where the readings are logged
+
+`Current` above is the latest reading and always carries its date. The **log** of past
+readings — what was read, when, and what was or was not observable that day — lives with the
+agent that takes them:
+
+    agents/product1/metrics/<date>/metrics.md   (ptk-studio-agents)
+
+Kept there rather than here so this file stays a *declaration* — what we are trying to move
+and why — instead of growing a table that only gets longer. The declaration and the current
+value stay public in this repo, which is what makes the target something to be held to.
+
+> **Open question, 2026-09-03: which timezone bounds the day?** GA4 reports in the property's
+> reporting timezone. If that is not UTC, the boundary in the definition above is not the
+> boundary in the number — and at a value of 2, one visitor either side of midnight is half
+> the metric. The property settings page could not be read: it is behind an email-preferences
+> dialog whose only buttons change the account's settings, which an agent should not click.
+> **One look by a human closes this.**
 
 ## Secondary — Day 1 retention
 
