@@ -129,7 +129,8 @@ tracking harder.
 readings — what was read, when, and what was or was not observable that day — lives with the
 agent that takes them:
 
-    agents/product1/metrics/<date>/metrics.md   (ptk-studio-agents)
+    data/teams/webapp-team1/agents/product1/metrics/<date>/metrics.md
+    (in ptk-studio/mochi-agent-manager)
 
 Kept there rather than here so this file stays a *declaration* — what we are trying to move
 and why — instead of growing a table that only gets longer. The declaration and the current
