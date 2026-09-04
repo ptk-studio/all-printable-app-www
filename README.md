@@ -125,6 +125,24 @@ forgotten; the hand-written ones are typed into a list in
 `docs/` and not into that list. **Run this after adding a hand-written page,
 not only after changing `SITE`.**
 
+Two more absences fail it, and both used to pass silently: **a hand-maintained
+file that carries no URL of ours at all** (a dropped canonical stops the file
+being compared, so every other check here walks past it), and **`docs/sitemap.xml`
+itself being missing** (which means every page on the site is unlisted — the
+worst case, and it used to produce no output at all). `docs/404.html` is exempt
+from the first, because it genuinely carries none today.
+
+**Every fault is collected and printed before the script exits**, so one run
+tells you everything that is wrong rather than the first thing it tripped over.
+The single exception is a `SITE` disagreement, which still stops immediately:
+once the origin is wrong, nothing measured after it means anything.
+
+| Exit | Meaning |
+|---|---|
+| `0` | nothing wrong |
+| `1` | one or more faults, all of them listed |
+| `2` | no hand-maintained files found — you ran it from the wrong directory. Kept distinct from `1` on purpose: a missing sitemap in a tree that *does* have makers is a real fault, not a bad `cwd`. |
+
 **`docs/CNAME` is not covered and still has to change with the origin.** It
 holds a bare host (`app.all-printable.com`), not a URL, so there is nothing for
 this check to compare — but the site is served from whatever it says.

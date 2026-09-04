@@ -20,6 +20,35 @@
  *
  * Nothing runs it automatically; this repo has no CI. It exits 1 on a
  * disagreement, 2 if it found no pages to check at all.
+ *
+ * ---------------------------------------------------------------------------
+ * Every fault is collected and reported; only then does the script exit.
+ *
+ * It used to exit from wherever a fault was found, and with no CI behind it
+ * that made the run that told you least the run where most was wrong: you
+ * fixed the one reported fault, reran, and only then met the second. Worse,
+ * two of the three faults below did not fail at all — absence was read as
+ * "nothing to say" rather than as the thing going missing:
+ *
+ *   - a hand-maintained file carrying no URL of ours       was a note, exit 0
+ *   - docs/sitemap.xml itself being absent                 skipped the whole
+ *                                                          second check, exit 0
+ *   - a page absent from the sitemap                       exit 1, but from
+ *                                                          the middle
+ *
+ * A missing sitemap means every page on the site is unlisted, which is
+ * strictly worse than the single omission the second check was written for —
+ * so once again the most severe failure had the weakest signal.
+ *
+ * The one exit that stays where it is is the SITE disagreement: once the
+ * origin is wrong, nothing measured after it can be trusted, so there is
+ * nothing to be gained by collecting more.
+ *
+ * exit 0  nothing wrong
+ * exit 1  one or more faults, all of them listed
+ * exit 2  no hand-maintained files found at all — you ran this from the wrong
+ *         directory. Deliberately distinct from 1: a missing sitemap in a tree
+ *         that does have makers is a real fault, not a bad cwd.
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { SITE } from './site.mjs';
@@ -67,6 +96,12 @@ if (files.length === 0) {
   process.exit(2);
 }
 
+/* Faults are pushed here and reported together at the foot. Each entry is a
+   headline plus the lines that belong under it, so one run can explain several
+   unrelated failures without them running into each other. */
+const faults = [];
+const fail = (headline, lines = [], hint = null) => faults.push({ headline, lines, hint });
+
 const offenders = [];
 const empty = [];
 let checked = 0;
@@ -98,12 +133,20 @@ if (offenders.length) {
 
 console.log(`check-site-urls: ${checked} URL(s) across ${files.length} hand-maintained file(s) agree with SITE (${expected}).`);
 
-/* Not a failure — a file may legitimately carry no absolute URL of ours — but
-   the seven makers and /pro/ each carry a canonical today and robots.txt names
-   the sitemap, so a zero in one of those means it was dropped and this check
-   passed over the file without seeing anything. */
+/* A failure, though it reads like an absence. Only the files marked
+   carriesOne reach this: the seven makers and /pro/ each carry a canonical
+   today and robots.txt names the sitemap, so a zero in one of those means the
+   URL was dropped and this check walked the file without seeing anything to
+   compare. That is the check being blind, not the file being fine — which is
+   why it used to pass, and why it no longer does. 404.html is marked
+   carriesOne: false and is exempt, so it can gain a URL later without this
+   complaining that it has none. */
 if (empty.length) {
-  console.log(`check-site-urls: no URL of ours in ${empty.join(', ')} — worth a look; each of these carries one today.`);
+  fail(
+    `${empty.length} hand-maintained file(s) carry no URL of ours, and each carries one today:`,
+    empty,
+    'A dropped canonical is invisible to every other check here: the file simply stops being compared. Put it back, or mark the file carriesOne: false in handMaintainedFiles() if it is genuinely meant to have none.'
+  );
 }
 
 /* Second check: is every hand-written page actually in the sitemap?
@@ -122,9 +165,22 @@ if (empty.length) {
  * and covers the next hand-written page as well as today's.
  *
  * A missing entry is a failure, not a note: the page exists, is meant to be
- * found, and silently is not. */
+ * found, and silently is not.
+ *
+ * And so is a missing sitemap. This block used to be wrapped in an existsSync
+ * that skipped it silently when docs/sitemap.xml was gone, which meant the
+ * check reported nothing at all in the one case where every page on the site
+ * is unlisted — the same shape of mistake as the two above, in the code
+ * written to fix them. Absence of the file is now the loudest fault here, not
+ * the quietest. */
 const pages = files.filter((f) => f.path.endsWith('/index.html'));
-if (existsSync('docs/sitemap.xml') && pages.length) {
+if (!existsSync('docs/sitemap.xml')) {
+  fail(
+    'docs/sitemap.xml does not exist.',
+    [],
+    'Every page on the site is unlisted, and robots.txt points crawlers at a sitemap that is not there. Run node tools/build-landing.mjs to regenerate it. This is a fault, not a reason to skip the check — which is what it used to be.'
+  );
+} else if (pages.length) {
   const sitemap = readFileSync('docs/sitemap.xml', 'utf8');
   const locs = new Set(
     [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => {
@@ -141,10 +197,27 @@ if (existsSync('docs/sitemap.xml') && pages.length) {
     .filter((path) => !locs.has(path));
 
   if (missing.length) {
-    console.error(`check-site-urls: ${missing.length} hand-written page(s) exist under docs/ but are not in docs/sitemap.xml:`);
-    for (const path of missing) console.error(`  ${path}`);
-    console.error('Add them to the urls list in tools/build-landing.mjs and rerun it. A page absent from the sitemap and unlinked from elsewhere is a page nothing crawls.');
-    process.exit(1);
+    fail(
+      `${missing.length} hand-written page(s) exist under docs/ but are not in docs/sitemap.xml:`,
+      missing,
+      'Add them to the urls list in tools/build-landing.mjs and rerun it. A page absent from the sitemap and unlinked from elsewhere is a page nothing crawls.'
+    );
+  } else {
+    console.log(`check-site-urls: all ${pages.length} hand-written page(s) appear in docs/sitemap.xml.`);
   }
-  console.log(`check-site-urls: all ${pages.length} hand-written page(s) appear in docs/sitemap.xml.`);
+}
+
+/* The one exit for everything collected above. Each fault gets its own block,
+   so a run with three faults says three things instead of the one it happened
+   to reach first. */
+if (faults.length) {
+  console.error('');
+  for (const { headline, lines, hint } of faults) {
+    console.error(`check-site-urls: ${headline}`);
+    for (const line of lines) console.error(`  ${line}`);
+    if (hint) console.error(`  ${hint}`);
+    console.error('');
+  }
+  console.error(`check-site-urls: ${faults.length} fault(s). Nothing here is fixed by a generator except where a hint says so.`);
+  process.exit(1);
 }
