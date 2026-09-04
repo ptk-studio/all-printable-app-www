@@ -111,6 +111,20 @@ file carries an `all-printable.com` URL whose origin is not `SITE`'s; other
 hosts are left alone. `docs/404.html` is scanned too — it carries no absolute
 URL today, and is in the list so it is covered the day it gains one.
 
+It also fails when a hand-written page under `docs/` is **missing from
+`docs/sitemap.xml`**, which is a different fault and the one that actually bit
+us: `/pro/` carried a perfectly correct canonical and was simply not in the
+sitemap, from the day the page was created until 2026-09-03. Nothing outside
+the site links to `/pro/`, so the sitemap was the only route a crawler had to
+the one page that asks for money.
+
+The reason is worth keeping in mind when you add a page. The categories and
+landing pages in the sitemap are derived from JSON, so they cannot be
+forgotten; the hand-written ones are typed into a list in
+`tools/build-landing.mjs`, and a page added on its own is easy to type into
+`docs/` and not into that list. **Run this after adding a hand-written page,
+not only after changing `SITE`.**
+
 **`docs/CNAME` is not covered and still has to change with the origin.** It
 holds a bare host (`app.all-printable.com`), not a URL, so there is nothing for
 this check to compare — but the site is served from whatever it says.
