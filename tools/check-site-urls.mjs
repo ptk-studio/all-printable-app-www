@@ -40,9 +40,14 @@
  * strictly worse than the single omission the second check was written for —
  * so once again the most severe failure had the weakest signal.
  *
- * The one exit that stays where it is is the SITE disagreement: once the
- * origin is wrong, nothing measured after it can be trusted, so there is
- * nothing to be gained by collecting more.
+ * A SITE disagreement is collected too, and is reported first. It used to exit
+ * from where it was found, because once the origin is wrong nothing measured
+ * after it can be trusted — true of the URL counts, which are still withheld
+ * when it fires, and false of the other two faults, neither of which consults
+ * SITE at all. One is existsSync; the other compares pathnames. They were
+ * being withheld as unreached rather than as untrustworthy, and the run that
+ * produces all three is a single ordinary mistake: change SITE, fix the makers
+ * by hand, forget to rerun the generator.
  *
  * exit 0  nothing wrong
  * exit 1  one or more faults, all of them listed
@@ -124,14 +129,25 @@ for (const { path, carriesOne } of files) {
   if (ours === 0 && carriesOne) empty.push(path);
 }
 
+/* Collected like the rest, and pushed first so it is still the first thing
+   printed. It used to exit from here, on the reasoning that once the origin is
+   wrong nothing measured afterwards can be trusted. That is true of the count
+   of agreeing URLs — which is why it is no longer printed when this fires —
+   and false of the two faults that follow: whether docs/sitemap.xml exists,
+   and whether each hand-written page appears in it, are both decided without
+   reference to SITE. So they were not being withheld as untrustworthy, only as
+   unreached, and a single ordinary mistake — change SITE, fix the makers by
+   hand, forget to rerun the generator — produces this fault and a missing
+   sitemap together. */
 if (offenders.length) {
-  console.error(`check-site-urls: ${offenders.length} URL(s) disagree with SITE (${expected}):`);
-  for (const { path, url } of offenders) console.error(`  ${path}  ${url}`);
-  console.error('These files are hand-maintained: no generator will fix them. Edit them by hand, or put SITE back.');
-  process.exit(1);
+  fail(
+    `${offenders.length} URL(s) disagree with SITE (${expected}):`,
+    offenders.map(({ path, url }) => `${path}  ${url}`),
+    'These files are hand-maintained: no generator will fix them. Edit them by hand, or put SITE back. The count of URLs that agree is withheld while an origin disagrees, because it cannot be trusted; the two sitemap checks do not consult SITE and their results stand.'
+  );
+} else {
+  console.log(`check-site-urls: ${checked} URL(s) across ${files.length} hand-maintained file(s) agree with SITE (${expected}).`);
 }
-
-console.log(`check-site-urls: ${checked} URL(s) across ${files.length} hand-maintained file(s) agree with SITE (${expected}).`);
 
 /* A failure, though it reads like an absence. Only the files marked
    carriesOne reach this: the seven makers and /pro/ each carry a canonical
