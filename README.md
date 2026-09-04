@@ -141,6 +141,15 @@ do not consult `SITE` at all, so they are reported normally, and the run where
 someone changed `SITE`, fixed the makers by hand and forgot to rerun the
 generator now says both things at once.
 
+**Nothing is printed until the run knows its outcome**, and that decides which
+stream it goes to. A clean run writes its success lines to **stdout**; a failing
+run writes everything to **stderr** — the faults *and* the checks that passed —
+and leaves stdout empty. The success lines used to go out as each check passed,
+so a failing run had already announced its passes and `2>/dev/null` returned a
+green line above an exit of `1`. In a terminal the two streams interleave and
+the output was correct, which is exactly why it went unnoticed. A partial
+reading can now be incomplete, but not wrong.
+
 | Exit | Meaning |
 |---|---|
 | `0` | nothing wrong |

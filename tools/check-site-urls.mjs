@@ -49,6 +49,25 @@
  * produces all three is a single ordinary mistake: change SITE, fix the makers
  * by hand, forget to rerun the generator.
  *
+ * Nothing is printed until the run knows its outcome. The success lines used
+ * to go to stdout as each check passed, while the faults went to stderr at the
+ * foot — so a failing run had already announced its passes, and reading stdout
+ * alone gave the opposite of the truth:
+ *
+ *   $ node tools/check-site-urls.mjs 2>/dev/null   # with a canonical broken
+ *   check-site-urls: all 8 hand-written page(s) appear in docs/sitemap.xml.
+ *   $ echo $?
+ *   1
+ *
+ * In a terminal both streams interleave and the output was correct, which is
+ * why it survived three passes over this file. It is the same family as the
+ * three faults above — the tool knowing something and not saying it — in the
+ * one place a reader is most likely to be a script.
+ *
+ * So a failing run puts everything on stderr, passes included, and leaves
+ * stdout empty; a clean run puts the success lines on stdout as before. A
+ * partial reading can now be incomplete but not wrong.
+ *
  * exit 0  nothing wrong
  * exit 1  one or more faults, all of them listed
  * exit 2  no hand-maintained files found at all — you ran this from the wrong
@@ -107,6 +126,14 @@ if (files.length === 0) {
 const faults = [];
 const fail = (headline, lines = [], hint = null) => faults.push({ headline, lines, hint });
 
+/* Passes are collected the same way, and for the same reason. Printing one as
+   it happens commits the run to a verdict it does not have yet: the checks do
+   not all run before the first of them can succeed, so a success line is only
+   ever "so far". Where it goes is decided at the foot, once the outcome is
+   known. */
+const passes = [];
+const pass = (line) => passes.push(line);
+
 const offenders = [];
 const empty = [];
 let checked = 0;
@@ -146,7 +173,7 @@ if (offenders.length) {
     'These files are hand-maintained: no generator will fix them. Edit them by hand, or put SITE back. The count of URLs that agree is withheld while an origin disagrees, because it cannot be trusted; the two sitemap checks do not consult SITE and their results stand.'
   );
 } else {
-  console.log(`check-site-urls: ${checked} URL(s) across ${files.length} hand-maintained file(s) agree with SITE (${expected}).`);
+  pass(`${checked} URL(s) across ${files.length} hand-maintained file(s) agree with SITE (${expected}).`);
 }
 
 /* A failure, though it reads like an absence. Only the files marked
@@ -219,13 +246,18 @@ if (!existsSync('docs/sitemap.xml')) {
       'Add them to the urls list in tools/build-landing.mjs and rerun it. A page absent from the sitemap and unlinked from elsewhere is a page nothing crawls.'
     );
   } else {
-    console.log(`check-site-urls: all ${pages.length} hand-written page(s) appear in docs/sitemap.xml.`);
+    pass(`all ${pages.length} hand-written page(s) appear in docs/sitemap.xml.`);
   }
 }
 
-/* The one exit for everything collected above. Each fault gets its own block,
-   so a run with three faults says three things instead of the one it happened
-   to reach first. */
+/* The one report, and the one exit, for everything collected above. Each fault
+   gets its own block, so a run with three faults says three things instead of
+   the one it happened to reach first.
+
+   A failing run writes all of it to stderr — the passes included, so a person
+   reading a terminal still sees which checks were clean, and loses nothing by
+   this. What they lose is the ability to read stdout alone and be told the run
+   went well. Nothing goes to stdout unless the run passed. */
 if (faults.length) {
   console.error('');
   for (const { headline, lines, hint } of faults) {
@@ -234,6 +266,13 @@ if (faults.length) {
     if (hint) console.error(`  ${hint}`);
     console.error('');
   }
+  if (passes.length) {
+    console.error(`check-site-urls: ${passes.length} check(s) did pass, listed so the faults above are not read as everything being wrong:`);
+    for (const line of passes) console.error(`  ${line}`);
+    console.error('');
+  }
   console.error(`check-site-urls: ${faults.length} fault(s). Nothing here is fixed by a generator except where a hint says so.`);
   process.exit(1);
 }
+
+for (const line of passes) console.log(`check-site-urls: ${line}`);
