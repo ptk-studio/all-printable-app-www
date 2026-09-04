@@ -16,11 +16,14 @@ product; the day's work is not here.
 | Repo | Publishes | Holds |
 |---|---|---|
 | [`all-printable-app-www`](https://github.com/ptk-studio/all-printable-app-www) | **https://app.all-printable.com/** | the whole catalogue — makers, categories, landing pages, `/pro/`, `features/`, `tools/`, `functions/`, Firestore rules |
-| [`all-printable-www`](https://github.com/ptk-studio/all-printable-www) | **https://all-printable.com/** | the one-page marketing home, plus ~40 redirect stubs for pre-split URLs |
 
-Both are public, default branch `main`.
+Public, default branch `main`.
 
-The split lets a dynamic version grow under `app.` without disturbing the static site.
+**The marketing home is a separate product.** [`all-printable-www`](https://github.com/ptk-studio/all-printable-www)
+publishes **https://all-printable.com/** — a one-page site plus ~40 redirect stubs for URLs
+that predate the split — and keeps its own `_mochi-agent/`. The two were worked as one project
+until 2026-09-04; they are now two, one repo each. The domain split lets this dynamic version
+grow under `app.` without disturbing the static site.
 
 ## Metrics
 
