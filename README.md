@@ -132,6 +132,24 @@ itself being missing** (which means every page on the site is unlisted — the
 worst case, and it used to produce no output at all). `docs/404.html` is exempt
 from the first, because it genuinely carries none today.
 
+**Three checks run and a clean run reports three.** Worth stating because it was
+two for a while: the carries-no-URL check had no success line at all, and the
+gap was easy to miss because the first line looks like it covers the same
+ground. It does not. *"46 URL(s) across 10 hand-maintained file(s)"* counts the
+files **scanned**, so it reads exactly the same whether or not one of those ten
+has silently lost its canonical — which is the failure the second check exists
+to catch. Its own line therefore counts the files **required** to carry a URL of
+ours, and names the exempt ones separately:
+
+```
+check-site-urls: 46 URL(s) across 10 hand-maintained file(s) agree with SITE (https://app.all-printable.com).
+check-site-urls: each of the 9 hand-maintained file(s) required to carry a URL of ours does, and the 1 exempt file(s) — docs/404.html — are not asked to.
+check-site-urls: all 8 hand-written page(s) appear in docs/sitemap.xml.
+```
+
+10 scanned, 9 required, 1 exempt — the difference between the first line and the
+second is the assertion.
+
 **Every fault is collected and printed before the script exits**, so one run
 tells you everything that is wrong rather than the first thing it tripped over.
 There is no exception: a `SITE` disagreement is collected like the rest and

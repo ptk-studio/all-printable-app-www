@@ -68,6 +68,16 @@
  * stdout empty; a clean run puts the success lines on stdout as before. A
  * partial reading can now be incomplete but not wrong.
  *
+ * Three checks run and three are reported. Two of them used to be: the
+ * carries-no-URL check had an if with no else, so a clean run announced the
+ * other two and said nothing about the one whose success is hardest to infer.
+ * It survived because the URL-count line looks like it covers the same ground
+ * and does not — that line counts files scanned, and reads the same whether or
+ * not one of them has silently lost its canonical. Its pass line therefore
+ * names the files *required* to carry a URL rather than the files looked at,
+ * and accounts for the exempt one separately, so the sentence asserts the thing
+ * that was tested instead of a superset of it.
+ *
  * exit 0  nothing wrong
  * exit 1  one or more faults, all of them listed
  * exit 2  no hand-maintained files found at all — you ran this from the wrong
@@ -184,11 +194,35 @@ if (offenders.length) {
    why it used to pass, and why it no longer does. 404.html is marked
    carriesOne: false and is exempt, so it can gain a URL later without this
    complaining that it has none. */
+const required = files.filter((f) => f.carriesOne);
 if (empty.length) {
   fail(
     `${empty.length} hand-maintained file(s) carry no URL of ours, and each carries one today:`,
     empty,
     'A dropped canonical is invisible to every other check here: the file simply stops being compared. Put it back, or mark the file carriesOne: false in handMaintainedFiles() if it is genuinely meant to have none.'
+  );
+} else {
+  /* This else is the point of the block, not an afterthought. Without it the
+     run made three checks and reported two, and the missing one was the one
+     whose success is least self-evident.
+
+     The number said here is deliberately not files.length. The URL-count line
+     above says "N URL(s) across M hand-maintained file(s)", and M counts files
+     *scanned* — so that sentence reads identically whether or not one of them
+     has quietly lost its canonical, which is exactly the reassurance this check
+     exists to refuse. What is asserted here is narrower and is the thing
+     actually tested: every file we require to carry a URL of ours does, and the
+     exempt one is named rather than folded into the total. Today 9 required and
+     1 exempt against the 10 scanned; the difference is the assertion. */
+  const exempt = files.length - required.length;
+  pass(
+    `each of the ${required.length} hand-maintained file(s) required to carry a URL of ours does` +
+      (exempt
+        ? `, and the ${exempt} exempt file(s) — ${files
+            .filter((f) => !f.carriesOne)
+            .map((f) => f.path)
+            .join(', ')} — are not asked to.`
+        : '.')
   );
 }
 
