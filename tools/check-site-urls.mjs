@@ -13,6 +13,13 @@
  * It also fails when a hand-written page under docs/ is missing from
  * docs/sitemap.xml — see the second check at the foot of the file.
  *
+ * And it fails when one of those pages' own descriptions is over DESC_MAX, or
+ * when the four copies of it that every page carries — meta, og:description,
+ * twitter:description, JSON-LD — have stopped agreeing. The 33 generated pages
+ * get that guard from build-landing.mjs, which fails the build; the eight
+ * hand-written ones are typed by hand and had nothing, which is the wrong way
+ * round. See the third check at the foot of the file.
+ *
  * Run it from the repo root after changing SITE or adding a hand-written page,
  * alongside the generators:
  *
@@ -75,7 +82,7 @@
  *         that does have makers is a real fault, not a bad cwd.
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
-import { SITE } from './site.mjs';
+import { SITE, DESC_MAX } from './site.mjs';
 
 /* Every file under docs/ that no generator writes — not only the pages, since
    robots.txt carries the sitemap URL and is typed by hand like the rest.
@@ -248,6 +255,141 @@ if (!existsSync('docs/sitemap.xml')) {
   } else {
     pass(`all ${pages.length} hand-written page(s) appear in docs/sitemap.xml.`);
   }
+}
+
+/* Third check: the eight hand-written pages' own descriptions.
+ *
+ * The 33 generated pages have had a description guard since #37 —
+ * build-landing.mjs fails the build when one exceeds DESC_MAX. The eight
+ * hand-written ones had nothing, which is the wrong way round: a generated
+ * description cannot drift without somebody editing JSON, and a hand-written
+ * one is edited by hand, one page at a time, by whoever is doing something
+ * else. That is how docs/printables/calendar/ reached 232 characters and
+ * stayed there long enough to need two issues, and when it was fixed the
+ * next longest was 196 — four characters of headroom, in a file that carries
+ * the same string four times.
+ *
+ * Four copies is the other half of it, and arguably the more valuable half.
+ * Each page states its description in meta, og:description, twitter:description
+ * and the JSON-LD, and nothing anywhere compares them. A page whose meta says
+ * 189 and whose og:description still says 232 is a page that is correct in a
+ * search result and wrong in a share card, and no check on this site would see
+ * it. So this reports three separable faults: a copy missing, the copies
+ * disagreeing, and a description over the limit.
+ *
+ * It reads `pages` — the same list the sitemap check uses, not a similar one.
+ * A guard whose filter is narrower than the set it guards leaves pages nothing
+ * measures, which is the fault this whole family of issues is about, one level
+ * up. docs/404.html and docs/robots.txt are excluded by that filter because
+ * they are not pages, and the eighth maker is covered the day it is added.
+ *
+ * DESC_MAX comes from site.mjs so this file and build-landing.mjs cannot
+ * disagree about the limit. */
+const decodeEntities = (s) =>
+  s
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&(?:apos|#0?39);/g, "'")
+    .replace(/&amp;/g, '&'); /* last, so &amp;lt; decodes to &lt; and not to < */
+
+/* Returns one entry per copy, in the order a reader meets them. `text: null`
+   means the copy is absent — reported rather than skipped, because a missing
+   og:description is a share card with no words in it. */
+function descriptionCopies(html) {
+  const attr = (label, re) => {
+    const m = html.match(re);
+    return { label, text: m ? decodeEntities(m[1]) : null };
+  };
+  const copies = [
+    attr('meta', /<meta name="description" content="([^"]*)"/),
+    attr('og:description', /<meta property="og:description" content="([^"]*)"/),
+    attr('twitter:description', /<meta name="twitter:description" content="([^"]*)"/),
+  ];
+
+  const block = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  let jsonLd = null;
+  if (block) {
+    try {
+      const parsed = JSON.parse(block[1]);
+      if (typeof parsed.description === 'string') jsonLd = parsed.description;
+    } catch {
+      /* Left null: an unparseable block has no description to compare, and
+         saying "missing" understates it. The hint below says to check that it
+         parses at all. */
+    }
+  }
+  copies.push({ label: 'JSON-LD description', text: jsonLd });
+  return copies;
+}
+
+const missingCopies = [];
+const disagreeing = [];
+const overLong = [];
+let longest = null;
+
+for (const { path } of pages) {
+  const copies = descriptionCopies(readFileSync(path, 'utf8'));
+  const absent = copies.filter((c) => c.text === null);
+  const present = copies.filter((c) => c.text !== null);
+
+  if (absent.length) missingCopies.push(`${path}  ${absent.map((c) => c.label).join(', ')}`);
+
+  const distinct = [...new Set(present.map((c) => c.text))];
+  if (distinct.length > 1) {
+    disagreeing.push(
+      `${path}  ${present.map((c) => `${c.label} ${c.text.length}`).join(', ')} — ${distinct.length} different strings`
+    );
+  }
+
+  /* One line per page where the copies agree — a single sentence stated four
+     times is one fault, not four — and one line per offending copy where they
+     do not, since then they really are different strings. All four are
+     measured either way, which is the half of this check the filing said was
+     worth more than the length. */
+  const over = present.filter((c) => c.text.length > DESC_MAX);
+  if (over.length && distinct.length === 1) {
+    const n = over[0].text.length;
+    overLong.push(`${path}  ${n} (${n - DESC_MAX} over) — all ${over.length} copies`);
+  } else {
+    for (const copy of over) {
+      overLong.push(`${path}  ${copy.label}  ${copy.text.length} (${copy.text.length - DESC_MAX} over)`);
+    }
+  }
+
+  for (const copy of present) {
+    if (!longest || copy.text.length > longest.n) longest = { n: copy.text.length, path };
+  }
+}
+
+if (missingCopies.length) {
+  fail(
+    `${missingCopies.length} hand-written page(s) are missing a description copy:`,
+    missingCopies,
+    'Each of these pages states its description four times — meta, og:description, twitter:description and the JSON-LD — and every one is read by something. A JSON-LD copy reported missing may instead be a block that does not parse; check that first.'
+  );
+}
+
+if (disagreeing.length) {
+  fail(
+    `${disagreeing.length} hand-written page(s) state more than one description:`,
+    disagreeing,
+    'The four copies are meant to be the same sentence. When they drift, the page is correct in a search result and wrong in a share card, or the reverse — edit all four, which is what makes these pages easy to get wrong.'
+  );
+}
+
+if (overLong.length) {
+  fail(
+    `${overLong.length} hand-written description(s) are over ${DESC_MAX} characters:`,
+    overLong,
+    `These pages are typed by hand, so no generator will fix them — shorten the sentence in all four places. ${DESC_MAX} is ours rather than Google's: results truncate nearer 155-160, so this is the limit that keeps the string a complete sentence.`
+  );
+}
+
+if (pages.length && !missingCopies.length && !disagreeing.length && !overLong.length) {
+  pass(
+    `each of the ${pages.length} hand-written page(s) states one description in all 4 places, within ${DESC_MAX} characters — the longest is ${longest.n} on ${longest.path}, ${DESC_MAX - longest.n} to spare.`
+  );
 }
 
 /* The one report, and the one exit, for everything collected above. Each fault
