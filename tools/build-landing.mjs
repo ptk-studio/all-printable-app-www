@@ -41,6 +41,15 @@ function related(entry) {
     .slice(0, 4);
 }
 
+/* The one string that becomes meta, og: and twitter: description.
+
+   `intro` is the visible hero paragraph and may run as long as it earns;
+   `desc` exists for the entries where that runs past what a description can
+   hold. Both callers below go through here so the check and the page can never
+   disagree about which string is being measured. */
+const DESC_MAX = 200;
+const descriptionOf = (c) => (c.desc ?? c.intro).replace(/\s+/g, ' ');
+
 /* The Pro presets a visitor would find inside this printable's maker. Named
    on the page rather than left to be discovered after paying — and only where
    they exist, so a landing page for a maker with none says nothing. */
@@ -67,7 +76,7 @@ function page(entry, c) {
   const catName = cat.label || '';
   const maker = '../' + entry.href;
   const title = `${c.h1} — free, true to size · All Printable`;
-  const desc = c.intro.replace(/\s+/g, ' ');
+  const desc = descriptionOf(c);
   const shot = pngSize(`docs/assets/previews/${entry.id}.png`);
   const shotUrl = `${SITE}/assets/previews/${entry.id}.png`;
 
@@ -89,12 +98,12 @@ function page(entry, c) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
-<meta name="description" content="${esc(desc.slice(0, 200))}">
+<meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${SITE}/${entry.id}/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Printable">
 <meta property="og:title" content="${esc(c.h1)}">
-<meta property="og:description" content="${esc(desc.slice(0, 200))}">
+<meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${SITE}/${entry.id}/">
 ${shot ? `<meta property="og:image" content="${shotUrl}">
 <meta property="og:image:width" content="${shot.w}">
@@ -102,7 +111,7 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${shotUrl}">` : '<meta name="twitter:card" content="summary">'}
 <meta name="twitter:title" content="${esc(c.h1)}">
-<meta name="twitter:description" content="${esc(desc.slice(0, 200))}">
+<meta name="twitter:description" content="${esc(desc)}">
 <link rel="stylesheet" href="../assets/css/base.css">
 <link rel="stylesheet" href="../assets/css/home.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='6' width='26' height='23' rx='3' fill='none' stroke='%23b4472e' stroke-width='2.5'/><path d='M3 13h26' stroke='%23b4472e' stroke-width='2.5'/><path d='M10 3v6M22 3v6' stroke='%23b4472e' stroke-width='2.5' stroke-linecap='round'/></svg>">
@@ -205,6 +214,42 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
 </body>
 </html>
 `;
+}
+
+/* Descriptions are checked before a single file is written, and the build stops
+   rather than shipping a shortened one.
+
+   This used to slice at 200 — three times, silently — so an entry whose copy
+   ran long produced a page whose description stopped mid-word, and the build
+   said `landing pages written: 26` either way. Ten of the 26 shipped that way
+   for as long as the copy existed (#31). `slice` does not complain, so nothing
+   in this tool ever knew.
+
+   Two shapes deliberately avoided, both of which this repo has spent #24, #26,
+   #28 and #32 removing from its other tool:
+
+   - It collects every offender rather than throwing on the first, so a run
+     that has three problems reports three.
+   - It runs as its own pass before the write loop, so a failing build leaves
+     docs/ untouched rather than half-regenerated — and leaves stdout empty,
+     since nothing has been printed yet.
+
+   To exercise this you have to delete a `desc`: by construction no entry
+   triggers it naturally any more. */
+const overLong = [];
+for (const entry of printables) {
+  const c = copy[entry.id];
+  if (!c || entry.status !== 'live' || !entry.href) continue;
+  const n = descriptionOf(c).length;
+  if (n > DESC_MAX) overLong.push({ id: entry.id, n });
+}
+if (overLong.length) {
+  console.error(`build-landing: ${overLong.length} description(s) over ${DESC_MAX} characters.`);
+  for (const { id, n } of overLong) {
+    console.error(`  ${id}: ${n} (${n - DESC_MAX} over) — give it a shorter 'desc' in tools/landing-copy.js`);
+  }
+  console.error('build-landing: nothing written.');
+  process.exit(1);
 }
 
 let made = 0, skipped = [];
