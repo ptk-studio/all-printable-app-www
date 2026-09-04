@@ -6,7 +6,16 @@
    — rather than restating the tagline in longer form. Where an entry has
    nothing particular to say, it should not have a page.
 
-   `search` is the phrase people actually type; it shapes the title and H1.  */
+   `search` is the phrase people actually type; it shapes the title and H1.
+
+   `intro` does two jobs: it is the visible hero paragraph, where it should be
+   as long as it earns, and it is the source of the meta, og: and twitter:
+   description, which must fit 200 characters. Those rules disagree, so an
+   entry whose intro runs past 200 carries an explicit `desc` as well —
+   written to be a complete sentence at that length, not the intro trimmed.
+   Sixteen entries are 199 or under and deliberately have no `desc`; `intro`
+   is the fallback. Do not shorten an intro to avoid writing a `desc`: that
+   pays for the tag with the page. See issue #31.  */
 module.exports = {
 
   calendar: {
@@ -16,6 +25,9 @@ module.exports = {
       'Seven layouts cover the wall, the desk, the planner insert and the year-at-a-glance ' +
       'sheet, and holidays are computed from each country’s rules rather than looked up in ' +
       'a table that stops at next year.',
+    desc: 'Build a calendar for any month or year and print it at the exact size you chose. ' +
+      'Seven layouts, from the wall to a planner insert, and holidays computed from each ' +
+      'country’s own rules.',
     points: [
       'Month, multi-month, year, year grid, agenda list, weekly planner and photo layouts',
       'Holidays for 42 countries, correct for any year — including Easter-linked dates, ' +
@@ -36,6 +48,9 @@ module.exports = {
     intro: 'A week to a page, either as open writing space or with hourly time slots. ' +
       'It is the calendar maker’s week layout, so it carries the same holiday data and the ' +
       'same true-to-size printing as everything else here.',
+    desc: 'A week to a page, either as open writing space or with hourly time slots. It is the ' +
+      'calendar maker’s week layout, so it prints true to size and carries the same holiday ' +
+      'data.',
     points: [
       'Days as rows, columns or a grid — whichever suits your paper',
       'Hourly slots over a range you set, or blank, ruled or dotted space',
@@ -55,6 +70,8 @@ module.exports = {
     intro: 'A time-blocked day beside the things you actually want to get done. ' +
       'The split between the schedule and the side column is yours to slide, so it works ' +
       'whether your day is mostly meetings or mostly tasks.',
+    desc: 'A time-blocked day beside the things you actually want to get done. The split between ' +
+      'the schedule and the task column slides, so it suits a day of meetings or a day of tasks.',
     points: [
       'Any hour range, in whole or half hours, on a 12- or 24-hour clock',
       'A priorities block, a to-do list and notes down the side',
@@ -74,6 +91,9 @@ module.exports = {
     intro: 'A week of meals with a shopping list beside it. The meal slots are yours — ' +
       'add a snack row, drop breakfast, or plan only dinners — and the week grid takes ' +
       'the bulk of the sheet so there is room to actually write a recipe name.',
+    desc: 'A week of meals with a shopping list beside it. Add a snack row, drop breakfast or ' +
+      'plan only dinners, and the week grid still takes the bulk of the sheet so there is room ' +
+      'to write.',
     points: [
       'Your own meal slots, not a fixed breakfast/lunch/dinner',
       'A shopping checklist in one to four columns',
@@ -93,6 +113,8 @@ module.exports = {
     intro: 'Squared paper at the spacing you ask for, drawn as vectors on a sheet that carries ' +
       'its exact media size. Most free graph paper prints at whatever scale the browser picks, ' +
       'so 5 mm squares arrive at 4.8 mm and the sheet is useless for anything measured.',
+    desc: 'Squared paper at the spacing you ask for, drawn as vectors on a sheet that carries ' +
+      'its exact media size. Ask for 5 mm squares and they measure 5 mm on the page, not 4.8.',
     points: [
       'Any square size in millimetres or inches, including engineering 1/10 in',
       'A heavier line every 2 to 10 squares',
@@ -112,6 +134,8 @@ module.exports = {
     intro: 'Bullet-journal dots at true spacing, in the size your notebook actually is. ' +
       'The usual reason to print your own is that you want A5 or a planner insert rather ' +
       'than Letter, and that is exactly what most sites will not give you.',
+    desc: 'Bullet-journal dots at true spacing, in the size your notebook actually is. A5 and ' +
+      'planner inserts, not only Letter — which is the whole reason to print your own.',
     points: [
       'True 5 mm spacing by default, or any value you like',
       'Adjustable dot size, and a larger dot every 4, 5 or 6',
@@ -290,6 +314,8 @@ module.exports = {
     intro: 'Checklists by category with blank lines to add to. Tell it how many nights you ' +
       'are away and each category gets a quantity hint — clothing counts as nights plus ' +
       'one, toiletries suggest travel sizes. A nudge, not a rule.',
+    desc: 'Checklists by category with blank lines to add to. Say how many nights you are away ' +
+      'and each category gets a quantity hint: clothing is nights plus one. A nudge, not a rule.',
     points: [
       'Your own categories, typed as one list',
       'Blank lines under each so you can add as you think of things',
@@ -309,6 +335,9 @@ module.exports = {
       'That sounds obvious and it is the thing most free flashcard sheets get wrong: ' +
       'flipping a sheet on its long edge reverses the column order, so the back of the ' +
       'top-left card has to print top-right.',
+    desc: 'Double-sided flashcards where the backs land on the right cards. Flipping a sheet on ' +
+      'its long edge reverses the column order, so the back of the top-left card has to print ' +
+      'top-right.',
     points: [
       'Duplex layout for long-edge or short-edge flip, checked geometrically',
       'Term and definition from a plain list — one line per card',
@@ -347,6 +376,8 @@ module.exports = {
     intro: 'Sudoku at five difficulties, every puzzle checked for a single solution before ' +
       'it is offered, with answer sheets at the end. The levels are genuinely different: ' +
       'about 43 clues at easy down to 25 at evil.',
+    desc: 'Sudoku at five difficulties, every puzzle checked for a single solution before it is ' +
+      'offered, with answer sheets at the end. About 43 clues at easy, down to 25 at evil.',
     points: [
       'Five difficulties that actually differ — 43, 36, 30, 27 and 25 clues',
       'Every puzzle verified to have exactly one solution',
@@ -366,6 +397,8 @@ module.exports = {
     intro: 'A word search from your own list, at any grid size, with an answer grid that ' +
       'highlights every word. Diagonals and backwards are optional, so an easy sheet for ' +
       'a small child is two directions on a 10 × 10 grid.',
+    desc: 'A word search from your own list, at any grid size, with an answer grid that ' +
+      'highlights every word. Diagonals and backwards are optional, so an easy sheet stays easy.',
     points: [
       'Your own words — spelling lists, names, topic vocabulary',
       'Diagonals and backwards on or off, for age-appropriate difficulty',
