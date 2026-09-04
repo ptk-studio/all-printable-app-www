@@ -134,8 +134,12 @@ from the first, because it genuinely carries none today.
 
 **Every fault is collected and printed before the script exits**, so one run
 tells you everything that is wrong rather than the first thing it tripped over.
-The single exception is a `SITE` disagreement, which still stops immediately:
-once the origin is wrong, nothing measured after it means anything.
+There is no exception: a `SITE` disagreement is collected like the rest and
+printed first. What it does still suppress is the count of URLs that *agree* —
+that number means nothing while an origin is wrong. The faults printed under it
+do not consult `SITE` at all, so they are reported normally, and the run where
+someone changed `SITE`, fixed the makers by hand and forgot to rerun the
+generator now says both things at once.
 
 | Exit | Meaning |
 |---|---|
