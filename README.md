@@ -174,6 +174,39 @@ reading can now be incomplete, but not wrong.
 | `1` | one or more faults, all of them listed |
 | `2` | no hand-maintained files found — you ran it from the wrong directory. Kept distinct from `1` on purpose: a missing sitemap in a tree that *does* have makers is a real fault, not a bad `cwd`. |
 
+**It also guards the eight hand-written pages' own descriptions**, which is the
+one thing on this site the generators cannot look after. `build-landing.mjs`
+fails the build when a *generated* description passes `DESC_MAX`; the seven
+makers and `/pro/` are typed by hand and had no such guard, which is the wrong
+way round — a generated description cannot drift without somebody editing JSON,
+and a hand-written one is edited by hand, one page at a time, by whoever is
+doing something else. `docs/printables/calendar/` reached **232** characters
+that way and stayed there long enough to need two issues; once it was fixed the
+next longest was **196**, four characters clear.
+
+Each of those pages states its description **four times** — `meta`,
+`og:description`, `twitter:description` and the JSON-LD — so the check reports
+three separable things, and the second matters more than the first:
+
+- a copy that is **missing** (or a JSON-LD block that does not parse),
+- the four copies **disagreeing**, which makes a page correct in a search result
+  and wrong in a share card with nothing anywhere noticing,
+- a description **over `DESC_MAX`**.
+
+A clean run says which page is closest to the limit, so the headroom is visible
+before it is spent rather than after:
+
+```
+check-site-urls: each of the 8 hand-written page(s) states one description in all 4 places, within 200 characters — the longest is 196 on docs/printables/cards/index.html, 4 to spare.
+```
+
+**`DESC_MAX` lives in `tools/site.mjs`**, next to `SITE` and for the same
+reason: this check and `build-landing.mjs` both enforce it, and two copies of a
+number that must agree eventually will not. It is **200**, and 200 is ours
+rather than Google's — results truncate nearer 155–160, so it is the limit that
+keeps the string a complete sentence rather than the limit that keeps it
+visible. Shorten the description; do not raise the constant.
+
 **`docs/CNAME` is not covered and still has to change with the origin.** It
 holds a bare host (`app.all-printable.com`), not a URL, so there is nothing for
 this check to compare — but the site is served from whatever it says.

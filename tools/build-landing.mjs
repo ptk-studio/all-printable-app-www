@@ -8,7 +8,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { SITE } from './site.mjs';
+import { SITE, DESC_MAX } from './site.mjs';
 import { loadPresets, makerOf, proPresets } from './presets.mjs';
 
 const require = createRequire(import.meta.url);
@@ -47,7 +47,9 @@ function related(entry) {
    `desc` exists for the entries where that runs past what a description can
    hold. Both callers below go through here so the check and the page can never
    disagree about which string is being measured. */
-const DESC_MAX = 200;
+/* DESC_MAX is imported from site.mjs: check-site-urls.mjs enforces the same
+   number over the eight hand-written pages, and two copies of a limit that
+   must agree eventually will not. */
 const descriptionOf = (c) => (c.desc ?? c.intro).replace(/\s+/g, ' ');
 
 /* The Pro presets a visitor would find inside this printable's maker. Named
