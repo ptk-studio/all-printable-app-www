@@ -70,8 +70,9 @@ module.exports = {
     intro: 'A time-blocked day beside the things you actually want to get done. ' +
       'The split between the schedule and the side column is yours to slide, so it works ' +
       'whether your day is mostly meetings or mostly tasks.',
-    desc: 'A time-blocked day beside the things you actually want to get done. The split between ' +
-      'the schedule and the task column slides, so it suits a day of meetings or a day of tasks.',
+    desc: 'A time-blocked day beside the things you actually want to get done. Slide the split ' +
+      'between the schedule and the side column — priorities, to-dos, notes — to suit a day of ' +
+      'meetings or one of tasks.',
     points: [
       'Any hour range, in whole or half hours, on a 12- or 24-hour clock',
       'A priorities block, a to-do list and notes down the side',
@@ -113,8 +114,8 @@ module.exports = {
     intro: 'Squared paper at the spacing you ask for, drawn as vectors on a sheet that carries ' +
       'its exact media size. Most free graph paper prints at whatever scale the browser picks, ' +
       'so 5 mm squares arrive at 4.8 mm and the sheet is useless for anything measured.',
-    desc: 'Squared paper at the spacing you ask for, drawn as vectors on a sheet that carries ' +
-      'its exact media size. Ask for 5 mm squares and they measure 5 mm on the page, not 4.8.',
+    desc: 'Squared paper at the spacing you ask for, drawn as vectors at true size rather than ' +
+      'at whatever scale the browser picks, so 5 mm squares measure 5 mm on the page, not 4.8.',
     points: [
       'Any square size in millimetres or inches, including engineering 1/10 in',
       'A heavier line every 2 to 10 squares',
@@ -398,7 +399,8 @@ module.exports = {
       'highlights every word. Diagonals and backwards are optional, so an easy sheet for ' +
       'a small child is two directions on a 10 × 10 grid.',
     desc: 'A word search from your own list, at any grid size, with an answer grid that ' +
-      'highlights every word. Diagonals and backwards are optional, so an easy sheet stays easy.',
+      'highlights every word. Diagonals and backwards are optional, so an easy sheet is two ' +
+      'directions on a 10 × 10 grid.',
     points: [
       'Your own words — spelling lists, names, topic vocabulary',
       'Diagonals and backwards on or off, for age-appropriate difficulty',
