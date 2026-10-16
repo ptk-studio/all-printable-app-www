@@ -25,7 +25,7 @@ page.
 > commits before the split describe the combined site.
 
 ```
-docs/        the site — open docs/index.html, or serve the folder
+docs/        the site — serve the folder (see Run it)
 features/    product specs: what each printable does and why
 functions/   Stripe checkout and webhook for Pro (deployed and live)
 tools/       maintenance scripts (category and landing-page generation); output is committed
@@ -36,7 +36,7 @@ straight from `main` → `/docs` with no workflow or build step.
 
 ## Run it
 
-Any static server, or open the files directly:
+Any static server:
 
 ```sh
 cd docs && python3 -m http.server 8777
@@ -45,6 +45,14 @@ cd docs && python3 -m http.server 8777
 
 There is no build step, no package manager and no dependencies. `docs/` can
 be deployed as-is to any static host.
+
+**It has to be served, not opened from disk.** Every internal link is now the
+directory form the page's own canonical uses — `../calendar/`, `./`, `../../` —
+rather than `../calendar/index.html`, because until #53 not one link on the
+site pointed at a URL the sitemap actually lists. A `file://` URL will not
+resolve a directory to its `index.html`, so opening the files directly gets you
+one page and no navigation. The generated pages had already been part-way there
+for much longer; this finished the job in the other direction.
 
 ## What's here
 
@@ -92,6 +100,25 @@ Previews come from the generators themselves via a `?preview=1` mode, so the
 pictures cannot drift from what the site makes. The output is committed — the
 site stays buildless to serve. See `features/landing.md`.
 
+**The three or four questions on each landing page are also `FAQPage`
+structured data.** They had been in the HTML since the pages existed with
+nothing telling a search engine they were questions, which is the long-tail
+half of these pages given away for nothing (#53). The block is emitted after
+the `WebApplication` one, not merged into an `@graph`, because
+`check-site-urls.mjs` reads the *first* `ld+json` block on a page for its
+description — it only inspects the hand-written eight, but the order is worth
+keeping the same across the site.
+
+Structured data has to match what the page shows, so the questions are written
+once in `tools/landing-copy.js` and rendered into both. **Every answer there is
+checkable against the maker it describes.** A wrong answer is now a wrong answer
+in a search result, which is a different standard from a wrong answer in body
+copy.
+
+**The title template carries no brand suffix.** `· All Printable` cost 16 of the
+~60 characters a result shows; `og:site_name` carries the brand for the share
+cards, and nobody is searching it.
+
 ## Checking the hand-maintained pages
 
 The generators cover 33 pages and `docs/sitemap.xml`. The seven makers under
@@ -132,11 +159,18 @@ itself being missing** (which means every page on the site is unlisted — the
 worst case, and it used to produce no output at all). `docs/404.html` is exempt
 from the first, because it genuinely carries none today.
 
-**Three checks run and a clean run reports three.** Worth stating because it was
-two for a while: the carries-no-URL check had no success line at all, and the
-gap was easy to miss because the first line looks like it covers the same
-ground. It does not. *"46 URL(s) across 10 hand-maintained file(s)"* counts the
-files **scanned**, so it reads exactly the same whether or not one of those ten
+**Six checks run and a clean run reports six.** Worth stating because the
+number has been wrong twice. It was two for a while: the carries-no-URL check
+had no success line at all, and the gap was easy to miss because the first line
+looks like it covers the same ground. Then the description check arrived and
+made it four while this paragraph and the tool's own header both went on saying
+three — which is #50, and is fixed here along with the two checks #53 adds. The
+count is the only thing you can hold the output against, so it belongs in both
+places or neither.
+
+The first line does not cover the second's ground, which is why the second has
+one at all. *"46 URL(s) across 10 hand-maintained file(s)"* counts the files
+**scanned**, so it reads exactly the same whether or not one of those ten
 has silently lost its canonical — which is the failure the second check exists
 to catch. Its own line therefore counts the files **required** to carry a URL of
 ours, and names the exempt ones separately:
@@ -145,6 +179,9 @@ ours, and names the exempt ones separately:
 check-site-urls: 46 URL(s) across 10 hand-maintained file(s) agree with SITE (https://app.all-printable.com).
 check-site-urls: each of the 9 hand-maintained file(s) required to carry a URL of ours does, and the 1 exempt file(s) — docs/404.html — are not asked to.
 check-site-urls: all 8 hand-written page(s) appear in docs/sitemap.xml.
+check-site-urls: each of the 8 hand-written page(s) states one description in all 4 places, within 160 characters — the longest is 146 on docs/pro/index.html, 14 to spare.
+check-site-urls: no internal link in the 8 hand-written page(s) points at an index.html URL.
+check-site-urls: all 26 landing page(s) are linked from the maker that makes them.
 ```
 
 10 scanned, 9 required, 1 exempt — the difference between the first line and the
@@ -182,7 +219,9 @@ way round — a generated description cannot drift without somebody editing JSON
 and a hand-written one is edited by hand, one page at a time, by whoever is
 doing something else. `docs/printables/calendar/` reached **232** characters
 that way and stayed there long enough to need two issues; once it was fixed the
-next longest was **196**, four characters clear.
+next longest was **196**, four characters clear. All seven makers were rewritten
+again for #53 when the limit came down to 160; the longest description on the
+site is now **156**.
 
 Each of those pages states its description **four times** — `meta`,
 `og:description`, `twitter:description` and the JSON-LD — so the check reports
@@ -197,15 +236,44 @@ A clean run says which page is closest to the limit, so the headroom is visible
 before it is spent rather than after:
 
 ```
-check-site-urls: each of the 8 hand-written page(s) states one description in all 4 places, within 200 characters — the longest is 196 on docs/printables/cards/index.html, 4 to spare.
+check-site-urls: each of the 8 hand-written page(s) states one description in all 4 places, within 160 characters — the longest is 146 on docs/pro/index.html, 14 to spare.
 ```
 
 **`DESC_MAX` lives in `tools/site.mjs`**, next to `SITE` and for the same
 reason: this check and `build-landing.mjs` both enforce it, and two copies of a
-number that must agree eventually will not. It is **200**, and 200 is ours
-rather than Google's — results truncate nearer 155–160, so it is the limit that
-keeps the string a complete sentence rather than the limit that keeps it
-visible. Shorten the description; do not raise the constant.
+number that must agree eventually will not.
+
+It is **160**, and was **200** until #53. The old reasoning was that 200 keeps
+the string a complete sentence while Google truncates nearer 155–160 — sound as
+far as it went, and still the wrong conclusion: 23 of the 41 descriptions sat
+between 161 and 199, which is to say they were complete sentences no search
+result ever showed the end of. The limit is now the visible one, and all 23 were
+rewritten to fit it rather than cut to it. Shorten the description; do not raise
+the constant.
+
+**It also guards the two halves of the orphaned-maker fault**, which is what
+#53 was mostly about. The seven makers carry the richest keyword titles on the
+site and were dead ends in both directions.
+
+*Nothing pointed at them.* Every internal link to a maker was written
+`printables/paper/index.html?preset=graph-5-mm` while the page's canonical said
+`/printables/paper/` — so every URL in the sitemap had an inbound-link count of
+zero, including `/` itself, linked 126 times as `../index.html`. The pages were
+reachable and `rel=canonical` was consolidating the signals, which is a thing to
+rely on rather than a thing to arrange. The generated pages take those hrefs
+from one template each and cannot drift back alone; these eight are typed by
+hand, and `index.html` is what a person types when copying a link out of the
+address bar. So an internal `index.html` link in a hand-written page is a fault.
+
+*Nothing pointed out of them.* The only way out of a maker was the brand link
+and an ad-hoc set of sibling-maker links that three of the seven did not have.
+Each maker's sidebar now ends in a `.maker-links` block naming the landing page
+of every sheet that maker makes, plus its categories. Which sheets those are is
+derived — a registry entry's `href` names its maker — so the check knows the
+answer without a second list, a printable added to the registry is covered the
+moment it is added, and a maker that stops naming one of its own sheets fails.
+That derivation is the point: the block is typed, so something has to compare it
+against the thing it was typed from.
 
 **`docs/CNAME` is not covered and still has to change with the origin.** It
 holds a bare host (`app.all-printable.com`), not a URL, so there is nothing for
