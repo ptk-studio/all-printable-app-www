@@ -24,6 +24,20 @@ body.app { overflow: hidden; }
 .sidebar-head h1 { font-size: 1.15rem; margin: 0 0 2px; }
 .sidebar-head p { margin: 0; font-size: 12.5px; color: var(--muted); }
 
+/* Links out of a maker to the page for each sheet it makes.
+   The seven makers were in the sitemap with nothing on the site pointing at
+   their canonical URLs and nothing pointing back out of them either, so the
+   richest keyword titles on the site sat on seven dead ends (#53). This is the
+   way back out: one link per sheet this maker makes, then its categories.
+   It lives at the foot of the sidebar rather than in .sidebar-head, which is
+   sticky, already carries two paragraphs and is the subject of #51. */
+.maker-links { display: block; padding: 18px 16px 0; }
+.maker-links-label {
+  display: block; font-size: 12px; font-weight: 600; letter-spacing: .03em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
+}
+.maker-links p { margin: 0 0 6px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+
 .presets { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--line); }
 .preset-chip {
   font-size: 12px; padding: 4px 9px; border-radius: 999px;

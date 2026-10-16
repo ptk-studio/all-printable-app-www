@@ -20,6 +20,13 @@
  * hand-written ones are typed by hand and had nothing, which is the wrong way
  * round. See the third check at the foot of the file.
  *
+ * Since #53 it also fails on the two halves of a fault that had the makers
+ * holding the best titles on the site and passing nothing on: an internal link
+ * written as /x/index.html, which is a URL the sitemap does not list and the
+ * page's own canonical disowns, and a maker that does not link out to the
+ * landing page of a sheet the registry says it makes. See the fourth and fifth
+ * checks at the foot of the file.
+ *
  * Run it from the repo root after changing SITE or adding a hand-written page,
  * alongside the generators:
  *
@@ -27,6 +34,10 @@
  *
  * Nothing runs it automatically; this repo has no CI. It exits 1 on a
  * disagreement, 2 if it found no pages to check at all.
+ *
+ * It reads docs/assets/js/registry.js and tools/landing-copy.js as well as the
+ * files it checks, so the two checks that compare a maker against the
+ * catalogue derive what they expect rather than carrying a second copy of it.
  *
  * ---------------------------------------------------------------------------
  * Every fault is collected and reported; only then does the script exit.
@@ -75,15 +86,20 @@
  * stdout empty; a clean run puts the success lines on stdout as before. A
  * partial reading can now be incomplete but not wrong.
  *
- * Three checks run and three are reported. Two of them used to be: the
- * carries-no-URL check had an if with no else, so a clean run announced the
- * other two and said nothing about the one whose success is hardest to infer.
- * It survived because the URL-count line looks like it covers the same ground
- * and does not — that line counts files scanned, and reads the same whether or
- * not one of them has silently lost its canonical. Its pass line therefore
- * names the files *required* to carry a URL rather than the files looked at,
- * and accounts for the exempt one separately, so the sentence asserts the thing
- * that was tested instead of a superset of it.
+ * Six checks run and a clean run reports six. The count is stated here, and in
+ * the README, because it has twice been wrong in a way nobody noticed: the
+ * carries-no-URL check had an if with no else, so a clean run announced two of
+ * three; then the description check arrived and made it four while both
+ * documents went on saying three (#50). The number is the only thing a reader
+ * can check the output against, so it is part of the output's meaning.
+ *
+ * It survived the first time because the URL-count line looks like it covers
+ * the same ground as the carries-no-URL check and does not — that line counts
+ * files scanned, and reads the same whether or not one of them has silently
+ * lost its canonical. Its pass line therefore names the files *required* to
+ * carry a URL rather than the files looked at, and accounts for the exempt one
+ * separately, so the sentence asserts the thing that was tested instead of a
+ * superset of it.
  *
  * exit 0  nothing wrong
  * exit 1  one or more faults, all of them listed
@@ -92,7 +108,16 @@
  *         that does have makers is a real fault, not a bad cwd.
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { SITE, DESC_MAX } from './site.mjs';
+
+/* The registry and the landing copy, read the way both generators read them.
+   The fourth and fifth checks compare the makers against what the catalogue
+   says they make, so they need the same two sources those pages come from. */
+const require_ = createRequire(import.meta.url);
+const landingCopy = require_('./landing-copy.js');
+const REG = {};
+new Function('window', 'AP', readFileSync('docs/assets/js/registry.js', 'utf8'))({ AP: REG }, REG);
 
 /* Every file under docs/ that no generator writes — not only the pages, since
    robots.txt carries the sitemap URL and is typed by hand like the rest.
@@ -424,6 +449,83 @@ if (pages.length && !missingCopies.length && !disagreeing.length && !overLong.le
   pass(
     `each of the ${pages.length} hand-written page(s) states one description in all 4 places, within ${DESC_MAX} characters — the longest is ${longest.n} on ${longest.path}, ${DESC_MAX - longest.n} to spare.`
   );
+}
+
+/* Fourth check: does anything on the site still link to an index.html URL?
+ *
+ * Every page here declares a canonical that ends in a slash —
+ * /printables/paper/, not /printables/paper/index.html — and until #53 not one
+ * internal link on the site used that form. The makers were linked 125 times
+ * as `printables/paper/index.html?preset=graph-5-mm` and the home page 126
+ * times as `../index.html`, so every canonical URL in the sitemap had an
+ * inbound-link count of zero. The pages were reachable and the equity was
+ * being consolidated by rel=canonical rather than pointed at the right URL in
+ * the first place, which is a thing to rely on and not a thing to arrange.
+ *
+ * The generated pages cannot drift back on their own — the templates are the
+ * single place those hrefs are written. These eight are typed by hand, which
+ * is the whole reason this file exists, and `index.html` is what a person
+ * types when they are copying the link out of their address bar.
+ *
+ * Only our own relative links are examined. An absolute URL to another host is
+ * not ours to shape, and the first check already has opinions about absolute
+ * URLs that are. */
+const indexLinks = [];
+for (const { path } of pages) {
+  const text = readFileSync(path, 'utf8');
+  for (const m of text.matchAll(/href="([^"]*index\.html[^"]*)"/g)) {
+    if (/^(?:https?:|mailto:|#|data:)/.test(m[1])) continue;
+    indexLinks.push(`${path}  ${m[1]}`);
+  }
+}
+if (indexLinks.length) {
+  fail(
+    `${indexLinks.length} internal link(s) point at an index.html URL:`,
+    indexLinks,
+    'Write the directory form the page\'s own canonical uses — href="../../" for the home page, href="./" for this page, href="../calendar/" for a sibling maker. A link to /x/index.html is a link to a URL the sitemap does not contain and the canonical disowns.'
+  );
+} else {
+  pass(`no internal link in the ${pages.length} hand-written page(s) points at an index.html URL.`);
+}
+
+/* Fifth check: can a crawler get from a maker to the pages for what it makes?
+ *
+ * This is the other half of the same fault. The makers held the richest
+ * keyword titles on the site and were dead ends: nothing linked in at their
+ * canonical URL, and the only way out of one was the brand link and an ad-hoc
+ * handful of sibling-maker links that three of the seven did not have. #53
+ * added a block to each sidebar linking the landing page of every sheet that
+ * maker makes.
+ *
+ * Which sheets those are is derived — a registry entry's href names its maker —
+ * so a printable added to the catalogue is covered the moment it is added, and
+ * a maker that stops naming one of its own sheets fails here. That is the
+ * difference between this and the block it guards: the block is typed, so
+ * something has to compare it against the list it was typed from.
+ *
+ * It asks only that the link exists, not where it sits or what it says. */
+const makerOf = (entry) => (/printables\/([^/]+)\//.exec(entry.href || '') || [])[1] || null;
+const missingLinks = [];
+let linked = 0;
+for (const { path } of pages) {
+  const maker = (/^docs\/printables\/([^/]+)\//.exec(path) || [])[1];
+  if (!maker) continue;
+  const text = readFileSync(path, 'utf8');
+  for (const entry of REG.PRINTABLES) {
+    if (makerOf(entry) !== maker) continue;
+    if (entry.status !== 'live' || !landingCopy[entry.id]) continue;
+    if (text.includes(`href="../../${entry.id}/"`)) linked += 1;
+    else missingLinks.push(`${path}  no link to /${entry.id}/`);
+  }
+}
+if (missingLinks.length) {
+  fail(
+    `${missingLinks.length} landing page(s) are not linked from the maker that makes them:`,
+    missingLinks,
+    'Add them to the .maker-links block at the foot of that maker\'s sidebar. The list is derived from the registry — a printable whose href names this maker belongs in it — and a maker nothing links out of is a maker that holds its keywords and passes none of them on.'
+  );
+} else if (linked) {
+  pass(`all ${linked} landing page(s) are linked from the maker that makes them.`);
 }
 
 /* The one report, and the one exit, for everything collected above. Each fault
