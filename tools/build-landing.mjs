@@ -77,10 +77,29 @@ function page(entry, c) {
   const cat = categories.find((x) => x.id === entry.cat) || {};
   const catName = cat.label || '';
   const maker = '../' + entry.href;
-  const title = `${c.h1} — free, true to size · All Printable`;
+  /* No brand suffix. ` · All Printable` cost 16 of the ~60 characters a result
+     shows and bought nothing: nobody searches the brand, and og:site_name
+     already carries it for the share cards. Eighteen of the 41 titles were over
+     length and seven of them were over only because of this (#53). */
+  const title = `${c.h1} — free, true to size`;
   const desc = descriptionOf(c);
   const shot = pngSize(`docs/assets/previews/${entry.id}.png`);
   const shotUrl = `${SITE}/assets/previews/${entry.id}.png`;
+
+  /* The questions have been in the page's HTML since the landing pages existed
+     and nothing ever said they were questions. A second block rather than an
+     @graph, and after the WebApplication one, because check-site-urls.mjs reads
+     the *first* ld+json block on a page for its description — a habit worth not
+     breaking from here even though it only inspects the hand-written eight. */
+  const faqld = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: c.faq.map(([q, a]) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a }
+    }))
+  };
 
   const jsonld = {
     '@context': 'https://schema.org',
@@ -118,12 +137,13 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
 <link rel="stylesheet" href="../assets/css/home.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='6' width='26' height='23' rx='3' fill='none' stroke='%23b4472e' stroke-width='2.5'/><path d='M3 13h26' stroke='%23b4472e' stroke-width='2.5'/><path d='M10 3v6M22 3v6' stroke='%23b4472e' stroke-width='2.5' stroke-linecap='round'/></svg>">
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
+<script type="application/ld+json">${JSON.stringify(faqld)}</script>
 </head>
 <body>
 
 <header class="site-header">
-  <a class="brand" href="../index.html"><span class="brand-mark"></span> All Printable</a>
-  <nav class="nav"><a href="../index.html">All printables</a>${
+  <a class="brand" href="../"><span class="brand-mark"></span> All Printable</a>
+  <nav class="nav"><a href="../">All printables</a>${
     cat.slug ? `<a href="../${cat.slug}/">${esc(cat.label)}</a>` : ''}</nav>
   <span class="spacer"></span>
   <a class="btn btn-sm btn-primary" href="${esc(maker)}">Open the maker</a>
@@ -131,7 +151,7 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
 
 <div class="wrap lp">
   <nav class="lp-crumbs" aria-label="Breadcrumb">
-    <a href="../index.html">All printables</a> <span>/</span>
+    <a href="../">All printables</a> <span>/</span>
     <a href="../${esc(cat.slug || '')}/">${esc(catName)}</a>
   </nav>
 
@@ -199,7 +219,7 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
     <div class="row-wrap">
       <span>All Printable — printable generators that respect the paper.</span>
       <span class="spacer"></span>
-      <a href="../index.html">All printables</a>
+      <a href="../">All printables</a>
       <a href="https://ptk-studio.com/" target="_blank" rel="noopener noreferrer">Made by PTK Studio</a>
     </div>
   </div>

@@ -88,7 +88,19 @@ function page(cat) {
   const items = printables.filter((p) => p.cat === cat.id);
   const live = items.filter(isLive);
   const others = categories.filter((c) => c.id !== cat.id);
-  const title = `Printable ${cat.label.toLowerCase()} — free, true to size · All Printable`;
+  /* No brand suffix. ` · All Printable` cost 16 of the ~60 characters a result
+     shows and bought nothing: nobody searches the brand, and og:site_name
+     already carries it for the share cards. Dropping it is what brings the six
+     category titles — and the 26 landing ones — back under the limit (#53). */
+  const title = `Printable ${cat.label.toLowerCase()} — free, true to size`;
+  /* The H1 is not `cat.label`, and the difference is the point. /paper-and-grids/
+     and /printables/paper/ both used to say "Paper & grids" in their one H1 —
+     two pages telling a search engine they are the same page, which is what #53
+     measured as cannibalisation. The category page is the browse page, so its
+     H1 says what the browse contains; the maker's says it is the maker. Neither
+     gives up its title keywords to get there. */
+  const h1 = `Printable ${cat.label.toLowerCase()} — ${live.length} free generator${
+    live.length === 1 ? '' : 's'}`;
   const desc = `${cat.blurb} ${live.length} free printable ${
     live.length === 1 ? 'generator' : 'generators'}, every paper size, true to scale.`;
   const url = `${SITE}/${cat.slug}/`;
@@ -107,7 +119,7 @@ function page(cat) {
         '@type': 'ListItem',
         position: i + 1,
         name: p.name,
-        url: hasLanding(p) ? `${SITE}/${p.id}/` : `${SITE}/${p.href.replace(/index\.html.*$/, '')}`
+        url: hasLanding(p) ? `${SITE}/${p.id}/` : `${SITE}/${p.href.replace(/\?.*$/, '')}`
       }))
     }
   };
@@ -123,11 +135,11 @@ function page(cat) {
 <meta name="robots" content="index,follow">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Printable">
-<meta property="og:title" content="${esc(cat.label)}">
+<meta property="og:title" content="${esc(h1)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${url}">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="${esc(cat.label)}">
+<meta name="twitter:title" content="${esc(h1)}">
 <meta name="twitter:description" content="${esc(desc)}">
 <link rel="stylesheet" href="../assets/css/base.css">
 <link rel="stylesheet" href="../assets/css/home.css">
@@ -137,20 +149,20 @@ function page(cat) {
 <body>
 
 <header class="site-header">
-  <a class="brand" href="../index.html"><span class="brand-mark"></span> All Printable</a>
+  <a class="brand" href="../"><span class="brand-mark"></span> All Printable</a>
   <nav class="nav">${categories.map((c) => c.id === cat.id
     ? `<a href="../${c.slug}/" aria-current="page">${esc(c.nav)}</a>`
     : `<a href="../${c.slug}/">${esc(c.nav)}</a>`).join('')}</nav>
   <span class="spacer"></span>
-  <a class="btn btn-sm btn-primary" href="../printables/calendar/index.html">Make a calendar</a>
+  <a class="btn btn-sm btn-primary" href="../printables/calendar/">Make a calendar</a>
 </header>
 
 <div class="wrap lp lp-wide">
   <nav class="lp-crumbs" aria-label="Breadcrumb">
-    <a href="../index.html">All printables</a> <span>/</span> ${esc(cat.label)}
+    <a href="../">All printables</a> <span>/</span> ${esc(cat.label)}
   </nav>
 
-  <h1>${esc(cat.label)}</h1>
+  <h1>${esc(h1)}</h1>
   <p class="lp-intro">${esc(cat.blurb)} Every sheet prints at true scale on the
      paper size you pick, and nothing here asks you to sign up.</p>
 
@@ -175,7 +187,7 @@ ${items.map((p) => card(p, '../')).join('\n')}
     <div class="row-wrap">
       <span>All Printable — printable generators that respect the paper.</span>
       <span class="spacer"></span>
-      <a href="../index.html">All printables</a>
+      <a href="../">All printables</a>
       <a href="../pro/">Pro</a>
       <a href="https://ptk-studio.com/" target="_blank" rel="noopener noreferrer">Made by PTK Studio</a>
     </div>
@@ -233,7 +245,7 @@ function indexPage() {
       itemListElement: live.map((p, i) => ({
         '@type': 'ListItem', position: i + 1, name: p.name,
         url: hasLanding(p) ? `${SITE}/${p.id}/`
-                           : `${SITE}/${p.href.replace(/index\.html.*$/, '')}`
+                           : `${SITE}/${p.href.replace(/\?.*$/, '')}`
       }))
     }
   };
@@ -281,7 +293,7 @@ ${items.map((p) => card(p, '')).join('\n')}
   <nav class="nav">${categories.map((c) =>
     `<a href="${c.slug}/">${esc(c.nav)}</a>`).join('')}</nav>
   <span class="spacer"></span>
-  <a class="btn btn-sm btn-primary" href="printables/calendar/index.html">Make a calendar</a>
+  <a class="btn btn-sm btn-primary" href="printables/calendar/">Make a calendar</a>
 </header>
 
 <div class="wrap lp lp-wide">
