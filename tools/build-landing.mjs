@@ -35,9 +35,18 @@ function pngSize(path) {
   return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
 }
 
+/* "Also in <category>": up to 4 siblings, the same kind first. The kind is the
+   id's last word (weekly-planner -> planner, 2027-january-calendar ->
+   calendar), so a planner page lists the other planners before the calendars
+   rather than four calendar pages. The sort is stable, so registry order holds
+   within each kind. */
+const kindOf = (p) => p.id.split('-').pop();
+
 function related(entry) {
+  const kind = kindOf(entry);
   return printables
     .filter((p) => p.cat === entry.cat && p.id !== entry.id && copy[p.id])
+    .sort((a, b) => (kindOf(b) === kind) - (kindOf(a) === kind))
     .slice(0, 4);
 }
 
