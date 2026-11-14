@@ -214,6 +214,32 @@ this check to compare — but the site is served from whatever it says.
 Run the check whenever `SITE` changes, next to the generators. Nothing runs it
 automatically — there is no CI here.
 
+## Checking the live site after a release
+
+`node tools/smoke-live.mjs` checks the **live** site, where `check-site-urls.mjs`
+checks files before release. Run it after every merge to `main` (each merge is a
+production deploy), once the Pages build shows `built`, and paste its summary on
+the PR. It needs Node 22, has no dependencies, takes a few seconds, and exits 1 on
+any failure, with each `FAIL` naming the URL and the reason. It is read-only: one
+request per URL, no sign-in, no forms, nothing that buys.
+
+1. `robots.txt` names the sitemap.
+2. The live sitemap lists at least as many URLs as `docs/sitemap.xml` in your
+   checkout, all on `SITE`, and every one returns 200 without a redirect.
+3. `/`, `/calendar/` and `/pro/` each have a title, exactly one `<h1>` and the
+   right canonical.
+4. The seven makers, and every script and stylesheet they load, return 200.
+5. An unknown path returns a real 404.
+6. `getPrice` (the read-only call `/pro/` makes) returns the live $5.00/month price
+   (`livemode: true`).
+
+With `--browser`, and only if Playwright is already installed, two more run:
+7. each maker draws its preview without console errors;
+8. the consent banner shows before any analytics request, and `/pro/` shows
+   the price. Nothing is ever clicked.
+
+The project's lighter, every-sweep health check is `HEALTH-CHECK.md`.
+
 ## Sheet credit
 
 Every printed sheet carries a small `all-printable.com` in the corner, stamped
