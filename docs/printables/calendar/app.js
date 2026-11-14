@@ -133,6 +133,13 @@
     },
     presets: PRESETS,
     keepOnPreset: ['startMonth', 'startYear', 'events', 'subtitle', 'footer'],
+    /* /2027-calendar/ and friends link ?preset=…&year=2027[&month=1][&count=N] (#60). */
+    fromQuery: function (s, search) {
+      var start = AP.queryStart(search);
+      if (start) { s.startYear = start.year; s.startMonth = start.month; }
+      var count = AP.queryCount(search);
+      if (count) s.count = count;
+    },
     css: ['../../assets/css/sheet.css', 'print.css'],
     buildControls: buildControls,
     render: function (s) { return AP.calendar.render(s); },
