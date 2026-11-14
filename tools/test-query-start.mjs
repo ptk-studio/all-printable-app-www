@@ -22,7 +22,7 @@ const src = readFileSync(new URL('../docs/assets/js/core/util.js', import.meta.u
 const sandbox = vm.createContext({});
 sandbox.window = sandbox;
 vm.runInContext(src, sandbox);
-const { queryStart } = sandbox.AP;
+const { queryStart, queryCount } = sandbox.AP;
 
 test('year and month on a preset link', () => {
   assert.deepEqual({ ...queryStart('?preset=family-wall&year=2027&month=1') }, { year: 2027, month: 0 });
@@ -62,4 +62,28 @@ test('bounds are inclusive', () => {
 
 test('a fragment after the query does not leak into the values', () => {
   assert.deepEqual({ ...queryStart('?preset=x&year=2027&month=1#c=abc') }, { year: 2027, month: 0 });
+});
+
+test('count: an integer 1-24 on a preset link', () => {
+  assert.equal(queryCount('?preset=family-wall&year=2027&month=1&count=1'), 1);
+  assert.equal(queryCount('?preset=x&count=24'), 24);
+});
+
+test('count: 0, 25 and non-integers are ignored', () => {
+  for (const c of ['0', '25', '1.5', 'one', '', '-1', '001', '2e1']) {
+    assert.equal(queryCount(`?preset=x&count=${c}`), null, `count=${c}`);
+  }
+});
+
+test('count: absent means no override', () => {
+  assert.equal(queryCount('?preset=x&year=2027'), null);
+  assert.equal(queryCount(''), null);
+});
+
+// "count without a preset": the parser returns the number, but studio.js only
+// calls config.fromQuery inside its ?preset= branch, so a bare ?count (like a
+// bare ?year) never reaches the state. That half is checked in the browser.
+test('count parses independently of year', () => {
+  assert.equal(queryCount('?count=3'), 3);
+  assert.equal(queryStart('?count=3'), null);
 });

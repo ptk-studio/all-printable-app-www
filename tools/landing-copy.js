@@ -80,6 +80,26 @@ module.exports = {
     ]
   },
 
+  '2027-january-calendar': {
+    search: 'January 2027 calendar printable',
+    h1: 'January 2027 calendar',
+    intro: 'January 2027 on a single page, printed at the exact size you pick. It starts on a ' +
+      'Friday, carries New Year\u2019s Day and, with US holidays on, Martin Luther King Jr. Day ' +
+      'on the 18th. Change the country, the first day of the week or the paper in the maker.',
+    desc: 'January 2027 on one page, printed true to size: New Year\u2019s Day on Friday the 1st, ' +
+      'MLK Day on the 18th (US). Holidays for 42 countries, any of 18 paper sizes.',
+    points: [
+      'One month, one page: January 2027',
+      'New Year\u2019s Day on Friday 1 January; MLK Day on Monday 18 January (US)',
+      'Holidays for 42 countries, or none',
+      'Mini calendars of December 2026 and February 2027 in the corner'
+    ],
+    specs: [['Pages', '1'], ['Paper sizes', '18'], ['Countries', '42']],
+    faq: [
+      ['Can I print February next?', 'Yes. Change the start month in the maker, or set more pages to print several months in a row.']
+    ]
+  },
+
   '2027-calendar-with-holidays': {
     search: '2027 calendar with holidays',
     h1: '2027 holiday calendar',

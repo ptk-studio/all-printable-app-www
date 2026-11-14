@@ -170,6 +170,16 @@ AP.queryStart = function (search) {
   return { year: +y, month: month };
 };
 
+/* ?count=N on a preset deep link (#60): how many pages/months the preset
+   should print, so a "January 2027" page can open a one-month setup. Same
+   strictness as AP.queryStart: an integer 1-24 or nothing (null). Independent
+   of ?year; the studio applies it only on top of a ?preset=. */
+AP.queryCount = function (search) {
+  var c = (String(search || '').match(/[?&]count=([^&#]*)/) || [])[1];
+  if (c === undefined || !/^\d{1,2}$/.test(c) || +c < 1 || +c > 24) return null;
+  return +c;
+};
+
 AP.encodeState = function (obj) {
   try {
     var json = JSON.stringify(obj);
