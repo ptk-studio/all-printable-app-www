@@ -42,6 +42,67 @@ module.exports = {
     ]
   },
 
+  '2027-calendar': {
+    search: '2027 printable calendar',
+    h1: '2027 printable calendar',
+    intro: 'Twelve months of 2027, one month to a page, printed at the exact paper size you pick. ' +
+      'It opens on January 2027 in the calendar maker, so you can still change the layout, ' +
+      'start the week on Monday, add your own dates or switch the holidays to your country.',
+    desc: 'Twelve months of 2027, a month to a page, printed true to size on Letter, A4 or 16 ' +
+      'other papers. Start the week on Monday, add your own dates, pick your country\u2019s holidays.',
+    points: [
+      'January to December 2027, a month per page',
+      'Sunday, Monday or Saturday as the first day of the week',
+      'US holidays to start with; switch to any of 42 countries, or none',
+      'Your own birthdays and recurring events, printed on the right days'
+    ],
+    specs: [['Months', '12'], ['Paper sizes', '18'], ['Countries', '42']],
+    faq: [
+      ['Can I start it in a different month?', 'Yes. The start month and the number of pages are both settings in the maker, so a school year from August works the same way.']
+    ]
+  },
+
+  '2027-yearly-calendar': {
+    search: '2027 yearly calendar',
+    h1: '2027 yearly calendar',
+    intro: 'All twelve months of 2027 on one sheet, the year-at-a-glance layout, ready to print. ' +
+      'Change the paper size up to poster sizes, add week numbers or moon phases, and mark the ' +
+      'holidays of your country.',
+    points: [
+      'The whole of 2027 on a single page',
+      'Paper from A5 up to poster sizes, printed true to size',
+      'Optional ISO or US week numbers and moon phases',
+      'Holidays for 42 countries, or none'
+    ],
+    specs: [['Pages', '1'], ['Paper sizes', '18'], ['Countries', '42']],
+    faq: [
+      ['Can I make it bigger for a wall?', 'Yes. Pick a poster size such as 18 \u00d7 24 in and it is drawn at that size, not scaled up from Letter.']
+    ]
+  },
+
+  '2027-calendar-with-holidays': {
+    search: '2027 calendar with holidays',
+    h1: '2027 holiday calendar',
+    intro: 'A 2027 calendar with the public holidays of the country you choose, worked out from ' +
+      'each country\u2019s own rules: Easter-linked dates, Monday substitutes when a holiday falls ' +
+      'on a weekend, and observed days. 42 countries, including the US, the UK, Canada, Australia ' +
+      'and most of Europe.',
+    desc: 'A 2027 calendar with your country\u2019s public holidays, computed from its rules: ' +
+      'Easter dates, weekend substitutes and observed days. 42 countries, including the US, UK, ' +
+      'Canada and Australia.',
+    points: [
+      '42 countries, each from its own rules rather than a copied list',
+      'Weekend substitutes: in 2027 the US observes Independence Day on Monday 5 July and Christmas on Friday 24 December',
+      'UK bank holidays for England and Wales, including Easter Monday on 29 March 2027',
+      'Several countries at once, for families and teams split across borders'
+    ],
+    specs: [['Countries', '42'], ['Months', '12'], ['Paper sizes', '18']],
+    faq: [
+      ['Which countries are covered?', 'Argentina, Australia, Austria, Belgium, Brazil, Bulgaria, Canada, Chile, Croatia, the Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Iceland, India, Ireland, Italy, Japan, Latvia, Lithuania, Luxembourg, Mexico, the Netherlands, New Zealand, Norway, Poland, Portugal, Romania, Russia, Slovakia, Slovenia, South Africa, South Korea, Spain, Sweden, Switzerland, the United Kingdom and the United States.'],
+      ['Does it include regional holidays?', 'No. It shows national public holidays. For the UK that means the England and Wales bank holidays.']
+    ]
+  },
+
   'weekly-planner': {
     search: 'printable weekly planner',
     h1: 'Printable weekly planner',
