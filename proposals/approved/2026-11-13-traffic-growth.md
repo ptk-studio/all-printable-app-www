@@ -1,7 +1,16 @@
 # Traffic proposal — toward DAU 25
 
+> **Approved 2026-11-13 by Thomas** (on #57, with the manager's review). Order, as amended by Thomas and the manager:
+> 1. 2027 calendar landing pages: #60 (High; first, per Thomas)
+> 2. Revive and ship SEO PR #54, plus the all-printable-www link fix: #59 (High)
+> 3. One Reddit post, drafted by the agent and posted by Thomas: #61 (Medium)
+> 4. Search Console baseline and weekly readings: #62 (Medium; Thomas verifies Search Console first)
+>
+> Deferred: Show HN, Pinterest. Dropped: TPT/Etsy. Dec 1 is judged by Search Console impressions; DAU 25 is a Q1 target.
+
+
 Issue: [all-printable-app-www#57](https://github.com/ptk-studio/all-printable-app-www/issues/57). Written 2026-11-13 by Claude (worker, `allprintable-worker`).
-Status: **pending** (`proposals/pending/`). **Proposal only:** nothing here is built, posted or paid for until
+Status: **approved** (`proposals/approved/`). **Proposal only:** nothing here is built, posted or paid for until
 Thomas approves it, or picks from it, on [#57](https://github.com/ptk-studio/all-printable-app-www/issues/57).
 
 ## TL;DR
