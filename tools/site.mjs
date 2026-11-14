@@ -25,9 +25,18 @@ export const SITE = 'https://app.all-printable.com';
  * all: a description drifted to 232 characters across four copies and nothing
  * said anything.
  *
- * 200 is ours, not Google's. Results truncate nearer 155-160, so this is the
- * limit that keeps the string a complete sentence rather than the limit that
- * keeps it visible. Do not raise it to make a description fit; shorten the
- * description.
+ * It was 200 until #53, on the reasoning that 200 is the limit that keeps the
+ * string a complete sentence while Google's own truncation sits nearer 155-160.
+ * That reasoning was sound and the conclusion was still wrong: 23 of the 41
+ * descriptions sat between 161 and 199, which is to say they were complete
+ * sentences that no search result ever showed the end of. A complete sentence
+ * the reader cannot see is not worth more than a complete sentence they can, so
+ * the limit is now the visible one and the sentences were rewritten to fit it
+ * rather than trimmed to it.
+ *
+ * 160 is still ours rather than Google's — Google measures pixels, not
+ * characters, and the real cutoff moves with the words. It is the character
+ * count that keeps a typical sentence inside that pixel budget. Do not raise it
+ * to make a description fit; shorten the description.
  */
-export const DESC_MAX = 200;
+export const DESC_MAX = 160;

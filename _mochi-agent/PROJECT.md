@@ -127,6 +127,8 @@ A reviewer reads this table every time rather than remembering it.
 | Redirect stubs in `all-printable-www` still present | They hold search rankings. Deleting one needs Search Console, and months. |
 | `functions/`, `firestore.rules`, anything touching Stripe or auth | Live, on Blaze, taking real money. Treat any change here as high-risk and say so. |
 | Anything under `docs/` | Deploys as-is on merge. There is no staging. |
+| Internal links are the **directory** form | `../calendar/`, `./`, `../../` — never `../calendar/index.html`. A link to `/x/index.html` is a link to a URL the sitemap does not list and the page's own canonical disowns, which is how every URL on the site came to have zero inbound links (#53). `check-site-urls.mjs` fails on one in a hand-written page. |
+| The site must be **served**, not opened from disk | A consequence of the row above: `file://` will not resolve a directory to its `index.html`. |
 
 - `docs/assets/js/registry.js` is the catalogue's source of truth and is **duplicated in
   both repos**. Add a printable in the app repo and the home page's counts go stale until
@@ -137,6 +139,15 @@ A reviewer reads this table every time rather than remembering it.
   ones on the site that do **not** flow from `tools/site.mjs` — change the origin and the
   generators will update 33 pages and silently leave the seven makers pointing at the old
   host. Grep `docs/printables/*/index.html` by hand when `SITE` changes.
+- **Each maker's sidebar ends in a `.maker-links` block** naming the landing page of every
+  sheet that maker makes, plus its categories. It is typed, like the rest of those pages, but
+  what belongs in it is derived — a registry entry's `href` names its maker — so
+  `check-site-urls.mjs` fails when a maker stops naming one of its own sheets. Add a
+  printable to the registry and the check will tell you which maker needs the link (#53).
+- **A maker page's H1 says "maker"; a category page's H1 says "Printable &lt;label&gt;".**
+  They used to be the same string on three pairs of pages, which is two pages telling a
+  search engine they are the same page. Neither gives up its `<title>` keywords to stay
+  apart — the H1s carry the distinction (#53).
 - The makers take their setup from a **`?preset=` query string, applied at runtime** by
   `core/studio.js`. The served HTML is identical for every preset, so each maker is one page
   reachable at many URLs — anything URL-shaped (canonicals, sitemap entries, analytics page
