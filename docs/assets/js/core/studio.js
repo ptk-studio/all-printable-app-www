@@ -87,7 +87,14 @@ AP.studio = function (config) {
         return p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug ||
                p.name.toLowerCase() === slug;
       })[0];
-      if (found) return merge(freshState(), clone(found.s));
+      if (found) {
+        var fromPreset = merge(freshState(), clone(found.s));
+        /* ...optionally starting on a given month (?year=&month=, #60). Only
+           here, on top of a preset: a bare ?year is ignored, and a #c= share
+           link (handled above) always wins. */
+        if (config.fromQuery) config.fromQuery(fromPreset, location.search);
+        return fromPreset;
+      }
     }
     var last = AP.store.get(LAST_KEY, null);
     return last ? merge(freshState(), last) : freshState();

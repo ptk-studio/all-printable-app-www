@@ -150,6 +150,26 @@ AP.store = {
 };
 
 /* ---------- URL state ---------------------------------------------------- */
+/* ?year=YYYY[&month=M] on a preset deep link (#60): the start month a
+   preset should open on, so a page about 2027 can link straight into 2027.
+   Presets otherwise keep the visitor's own month and year. Returns
+   { year, month } with month 0-based, or null when there is no usable year.
+   Strict on purpose: an integer year in 1900-2100 and an integer month 1-12;
+   anything else is ignored rather than guessed at, and a month without a year
+   means nothing. Pure (takes the search string), so it can be tested in Node. */
+AP.queryStart = function (search) {
+  var q = String(search || '');
+  var y = (q.match(/[?&]year=([^&#]*)/) || [])[1];
+  if (!y || !/^\d{4}$/.test(y) || +y < 1900 || +y > 2100) return null;
+  var m = (q.match(/[?&]month=([^&#]*)/) || [])[1];
+  var month = 0;
+  if (m !== undefined) {
+    if (!/^\d{1,2}$/.test(m) || +m < 1 || +m > 12) return null;
+    month = +m - 1;
+  }
+  return { year: +y, month: month };
+};
+
 AP.encodeState = function (obj) {
   try {
     var json = JSON.stringify(obj);
