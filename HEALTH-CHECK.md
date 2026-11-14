@@ -15,8 +15,8 @@ repo change.
 - **Traffic source:**
   - Google Analytics 4 (Firebase project `ptk-studio-allprintable`, web measurement ID `G-8KW8B8XRSJ`);
   - Google Search Console, Domain property `all-printable.com` (verified 2026-11-13; sitemap submitted).
-- **Smoke test:** `tools/smoke-live.mjs` (#64; not merged yet). Once it exists, it runs after every
-  deploying merge.
+- **Smoke test:** `node tools/smoke-live.mjs` (#64). It runs after every deploying merge; see README,
+  "Checking the live site after a release".
 
 ## Sign-in-free checks (manager, every sweep)
 
@@ -37,7 +37,7 @@ request per URL.
 
 | Call | Expected status | Must contain |
 |---|---|---|
-| `POST https://us-central1-ptk-studio-allprintable.cloudfunctions.net/getPrice`, body `{"data":{}}` | 200 | `"interval":"month"` |
+| `POST https://us-central1-ptk-studio-allprintable.cloudfunctions.net/getPrice`, body `{"data":{}}` | 200 | `"interval":"month"` and `"livemode":true` |
 
 `getPrice` is the read-only price lookup `/pro/` makes. It answers with the live Stripe price (2026-11-13:
 `amount 500`, `usd`, `month`, `livemode true`). It creates no checkout session and charges nothing.
@@ -54,7 +54,7 @@ API:
 
 ```sh
 curl -s --max-time 15 -X POST -H 'content-type: application/json' -d '{"data":{}}' \
-  https://us-central1-ptk-studio-allprintable.cloudfunctions.net/getPrice | grep -c '"interval":"month"'
+  https://us-central1-ptk-studio-allprintable.cloudfunctions.net/getPrice | grep '"interval":"month"' | grep -c '"livemode":true'
 ```
 
 A status other than the expected one, or a count of `0`, is a failure. Report it at once, with the URL and
