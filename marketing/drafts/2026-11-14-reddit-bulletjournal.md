@@ -1,11 +1,11 @@
 # Reddit draft: r/bulletjournal, true-size dot grid (#61)
 
-**Status:** draft for Thomas to read, edit and post from his own account. **The worker never posts.**
+**Status:** draft for the Owner to read, edit and post from their own account. **The worker never posts.**
 **Written:** 2026-11-14 by web-worker1 (Claude). Approved approach: #61, manager option 2.
 
 ## The sub's rules: UNVERIFIED
 
-**Thomas reads the sub's rules before posting.** This session couldn't open Reddit: Reddit returned a block page, and
+**The Owner reads the sub's rules before posting.** This session couldn't open Reddit: Reddit returned a block page, and
 Chrome and the fetch tool refuse reddit.com (#61, update 1). So nothing here was checked against the rules.
 
 - Rules: https://www.reddit.com/r/bulletjournal/about/rules
@@ -66,7 +66,7 @@ sub's rules or wiki name a day for resource posts, and use that if so.
 
 r/homeschool: the times-tables worksheet with answer keys (`/times-tables/`), same UTM pattern with `utm_campaign=homeschool-<date>`.
 
-## Measuring (worker, after Thomas posts)
+## Measuring (worker, after the Owner posts)
 
 GA4 property for app.all-printable.com, source `reddit`, campaign `bulletjournal-<date>`. Read at **48 hours** and **7 days**
 and record them on #61.
