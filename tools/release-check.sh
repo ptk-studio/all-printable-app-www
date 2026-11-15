@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checks for app.all-printable.com (RELEASE-CHECKS.md). Runs the repo's existing checks in order.
+# Release checks for app.all-printable.com (mochi-agent/RELEASE-CHECKS.md). Runs the repo's existing checks in order.
 #   tools/release-check.sh pre    # on the PR branch: generators in step, URL/sitemap rules, unit tests, no secrets
 #   tools/release-check.sh post   # after the merge's Pages build: build status + tools/smoke-live.mjs
 # Read-only: nothing is written outside the working tree, nothing signs in, nothing buys.
