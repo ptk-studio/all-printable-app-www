@@ -6,7 +6,7 @@ Static, dependency-free printable generators. Everything renders in the browser 
 it is theirs to read before changing anything. Everything here is a stable fact about the
 product; the day's work is not here.
 
-> Moved into `_mochi-agent/` on 2026-09-04, from the fleet's own repo, where it had lived as
+> Moved into `mochi-agent/` on 2026-09-04, from the fleet's own repo, where it had lived as
 > `data/teams/webapp-team1/projects/all-printable/PROJECT.md`. The sections below are that file's, verbatim —
 > what the product *is* belongs with the product. What stayed behind is how one fleet works it:
 > which team, which agents, priority, mode, proposal cap and the board.
@@ -21,7 +21,7 @@ Public, default branch `main`.
 
 **The marketing home is a separate product.** [`all-printable-www`](https://github.com/ptk-studio/all-printable-www)
 publishes **https://all-printable.com/** — a one-page site plus ~40 redirect stubs for URLs
-that predate the split — and keeps its own `_mochi-agent/`. The two were worked as one project
+that predate the split — and keeps its own `mochi-agent/`. The two were worked as one project
 until 2026-09-04; they are now two, one repo each. The domain split lets this dynamic version
 grow under `app.` without disturbing the static site.
 

@@ -68,7 +68,7 @@ stubs.
 
 ## 2026-09-04 · framework session — this directory was created
 
-`_mochi-agent/` now carries this product's own record: what it is, how it deploys, how a change
+`mochi-agent/` now carries this product's own record: what it is, how it deploys, how a change
 is verified, and what it is trying to move. `documents/METRICS.md` moved here unchanged.
 
 **Learned:** the split that decides what belongs here is one question — *would this still be

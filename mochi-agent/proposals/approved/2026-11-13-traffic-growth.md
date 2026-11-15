@@ -40,7 +40,7 @@ Thomas approves it, or picks from it, on [#57](https://github.com/ptk-studio/all
 
 How to read these numbers:
 
-- **Analytics is opt-in** ([`_mochi-agent/METRICS.md`](https://github.com/ptk-studio/all-printable-app-www/blob/main/_mochi-agent/METRICS.md)), so DAU is a floor.
+- **Analytics is opt-in** ([`mochi-agent/METRICS.md`](https://github.com/ptk-studio/all-printable-app-www/blob/main/mochi-agent/METRICS.md)), so DAU is a floor.
   At 0–2 users, though, the floor and the truth are both "nobody".
 - **The 2 users in 30 days are probably us.** One is likely an agent or
   Thomas checking the site. The 1 realtime user during this reading was the
@@ -125,7 +125,7 @@ anything posted, any new account.
 
 Caveat for every row: DAU counts consenting users only. A change in
 consent rate moves DAU without one extra visitor, so check consent before
-calling any movement growth (see [`_mochi-agent/METRICS.md`](https://github.com/ptk-studio/all-printable-app-www/blob/main/_mochi-agent/METRICS.md)).
+calling any movement growth (see [`mochi-agent/METRICS.md`](https://github.com/ptk-studio/all-printable-app-www/blob/main/mochi-agent/METRICS.md)).
 
 ## 6. Asks for Thomas
 

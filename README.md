@@ -306,7 +306,7 @@ With `--browser`, and only if Playwright is already installed, two more run:
 8. the consent banner shows before any analytics request, and `/pro/` shows
    the price. Nothing is ever clicked.
 
-The project's lighter, every-sweep health check is `HEALTH-CHECK.md`.
+The project's lighter, every-sweep health check is `mochi-agent/HEALTH-CHECK.md`.
 
 ## Sheet credit
 
