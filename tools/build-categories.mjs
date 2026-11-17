@@ -189,6 +189,7 @@ ${items.map((p) => card(p, '../')).join('\n')}
       <span class="spacer"></span>
       <a href="../">All printables</a>
       <a href="../pro/">Pro</a>
+      <a href="../privacy/">Privacy</a>
       <a href="https://ptk-studio.com/" target="_blank" rel="noopener noreferrer">Made by PTK Studio</a>
     </div>
   </div>
@@ -197,6 +198,7 @@ ${items.map((p) => card(p, '../')).join('\n')}
 <script src="../assets/js/core/analytics.js"></script>
 <script>AP.analytics.init('category:${cat.slug}');</script>
 
+<script src="https://api.88eggs.com/feedback/widget.js?v=2" data-key="fk_P-rM6_5_qJgO6UldBDZ9r1uh" async></script>
 </body>
 </html>
 `;
@@ -317,6 +319,7 @@ ${proSections(printables, '')}
       <span class="spacer"></span>
       <a href="https://all-printable.com/">all-printable.com</a>
       <a href="pro/">Pro</a>
+      <a href="privacy/">Privacy</a>
       <a href="https://ptk-studio.com/" target="_blank" rel="noopener noreferrer">Made by PTK Studio</a>
     </div>
   </div>
@@ -329,6 +332,7 @@ ${proSections(printables, '')}
      catalogue recorded nothing and never even offered the consent choice. -->
 <script>AP.analytics.init('home');</script>
 
+<script src="https://api.88eggs.com/feedback/widget.js?v=2" data-key="fk_P-rM6_5_qJgO6UldBDZ9r1uh" async></script>
 </body>
 </html>
 `;
