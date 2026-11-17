@@ -229,6 +229,7 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
       <span>All Printable — printable generators that respect the paper.</span>
       <span class="spacer"></span>
       <a href="../">All printables</a>
+      <a href="../privacy/">Privacy</a>
       <a href="https://ptk-studio.com/" target="_blank" rel="noopener noreferrer">Made by PTK Studio</a>
     </div>
   </div>
@@ -242,6 +243,7 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
 <script src="../assets/js/core/analytics.js"></script>
 <script>AP.analytics.init('landing:${entry.id}');</script>
 
+<script src="https://api.88eggs.com/feedback/widget.js?v=2" data-key="fk_P-rM6_5_qJgO6UldBDZ9r1uh" async></script>
 </body>
 </html>
 `;
@@ -318,6 +320,8 @@ const urls = [
   /* Above the makers and the landing pages: it is the one page on the site
      that asks for money, and the only page serving paid subscriptions. */
   { loc: `${SITE}/pro/`, pri: '0.9' },
+  /* The privacy page (88eggs-backend#341 step 6, 2026-11-17): hand-written like /pro/. */
+  { loc: `${SITE}/privacy/`, pri: '0.3' },
   ...printables.filter((p) => copy[p.id] && p.status === 'live')
     .map((p) => ({ loc: `${SITE}/${p.id}/`, pri: '0.9' }))
 ];
