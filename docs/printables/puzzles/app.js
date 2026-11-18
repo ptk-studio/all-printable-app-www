@@ -46,6 +46,13 @@
     { name: 'Bingo words', s: { type: 'bingo', bingoMode: 'words', bingoSize: 4,
         freeSquare: false, count: 8, perPage: 2, solutions: 'none', bingoHeader: '',
         words: 'cat\ndog\nhouse\ntree\nboat\nsun\nmoon\nstar\nfish\nbird\ncar\nbook\nshoe\nhat\ncup\nball\nkey\nleaf\nrock\ncloud' } },
+    /* December (all-printable-app-www#86): free seasonal presets, deep-linked from /word-search/ and /bingo/. */
+    { name: 'Christmas word search', s: { type: 'search', count: 2, perPage: 1, gridSize: 12,
+        diagonals: true, backwards: false, showWords: true, solutions: 'end', title: 'Christmas word search',
+        words: 'reindeer\nsnowman\nstocking\nmistletoe\nornament\nsleigh\ngingerbread\npresents\ncarols\ntinsel\nwreath\nchimney\nholly\nlights\nstar' } },
+    { name: 'Christmas bingo', s: { type: 'bingo', bingoMode: 'words', bingoSize: 5,
+        freeSquare: true, count: 20, perPage: 2, solutions: 'none', bingoHeader: 'BINGO',
+        words: 'elf\nstar\nbells\nsleigh\nholly\ntinsel\nwreath\ncarols\ncocoa\ngifts\nangel\ncandle\nscarf\nsled\nsnow\ntree\nlights\ncookie\nmittens\nSanta\ntoys\nbow\nivy\nsocks\npie' } },
     /* ---- Pro ---- */
     { name: 'Expert sudoku pack', pro: true, note: 'Twelve expert grids, two to a page, answers at the back.', s: { type: 'sudoku', difficulty: 'expert',
         count: 12, perPage: 2, solutions: 'end', paper: 'letter', theme: 'minimal' } }

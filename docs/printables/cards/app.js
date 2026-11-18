@@ -39,6 +39,12 @@
         cardBorder: true, corner: 3, align: 'center', numbering: false,
         items: 'To:\\\\From:\nTo:\\\\From:\nTo:\\\\From:\nTo:\\\\From:',
         paper: 'letter', orientation: 'portrait' } },
+    /* December (all-printable-app-www#86): a free seasonal preset, deep-linked from /gift-tags/. */
+    { name: 'Christmas gift tags', s: { type: 'tag', stock: 'auto', sizePreset: 'tag',
+        cardW: 50.8, cardH: 88.9, duplex: 'none', marks: 'crop', hole: true,
+        cardBorder: true, corner: 3, align: 'center', numbering: false, accent: '#2e6b45',
+        items: 'Merry Christmas\\\\To:\\\\From:', fillSheet: true,
+        paper: 'letter', orientation: 'portrait' } },
     { name: 'Bookmarks', s: { type: 'bookmark', stock: 'auto', sizePreset: 'bookmark',
         cardW: 50.8, cardH: 152.4, duplex: 'none', marks: 'crop', cardBorder: true,
         hole: true, numbering: false, align: 'center',

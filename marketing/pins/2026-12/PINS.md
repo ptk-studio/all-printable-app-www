@@ -1,0 +1,11 @@
+# Pinterest pin drafts, December 2026 (#86): drafts only, not posted (R4/R98)
+
+Images: real renders of each preset (`?preset=…&preview=1`, headless Chrome, window 120 px taller, cropped), composed by `make_pins.py`. Assets in Web:All Printable.
+
+| # | Asset | Pin title | Description | Link |
+|---|---|---|---|---|
+| 1 | `rTKzYm1P-5CQAgirf3M7E` | Printable Christmas Gift Tags (Free, To & From) | Free printable Christmas gift tags with To and From, rounded corners and a marked punch hole that lands in the same spot on every tag. Change the words or the color, then print on card stock. | https://app.all-printable.com/gift-tags/?utm_source=pinterest&utm_medium=pin&utm_campaign=december-2026&utm_content=gift-tags |
+| 2 | `OTJGBb5ZpMaiUFug4RQpk` | Christmas Word Search Printable with Answer Key | A free Christmas word search: 15 holiday words from reindeer to gingerbread on a 12 x 12 grid, with the answer key. Add your family's names, or turn diagonals off for younger kids. | https://app.all-printable.com/word-search/?utm_source=pinterest&utm_medium=pin&utm_campaign=december-2026&utm_content=word-search |
+| 3 | `SbCzOU8JKXO97mKOnsYvM` | Christmas Bingo Cards, Free Printable (20 Different Cards) | Twenty different Christmas bingo cards with a free center: sleigh, cocoa, mittens and more. Two cards to a sheet, ready for a class party or family night. Free to print. | https://app.all-printable.com/bingo/?utm_source=pinterest&utm_medium=pin&utm_campaign=december-2026&utm_content=bingo |
+| 4 | `CMEiYrlTDVq0EpDlVlS8E` | 2027 Family Calendar to Print, a Homemade Gift | Add your family's birthdays and they print on the right days of 2027. A quick, personal New Year present for grandparents. Free, true to size on Letter or A4. | https://app.all-printable.com/2027-calendar/?utm_source=pinterest&utm_medium=pin&utm_campaign=december-2026&utm_content=2027-calendar |
+| 5 | `8Xc7IIsacL6qI0PHLmzKC` | New Year Habit Tracker 2027, Free Printable | Start 2027 with a simple habit tracker: January, five habits, one circle a day. Rename the habits to your own resolutions before you print. Free. | https://app.all-printable.com/habit-tracker/?utm_source=pinterest&utm_medium=pin&utm_campaign=december-2026&utm_content=habit-tracker |

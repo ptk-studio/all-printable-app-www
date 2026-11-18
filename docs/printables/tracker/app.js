@@ -26,6 +26,11 @@
   var PRESETS = [
     { name: 'Habit month', s: { layout: 'month', shape: 'circle', listHeading: 'Habit',
         orientation: 'landscape', paper: 'letter', zebra: false, weekendShade: true } },
+    /* December (all-printable-app-www#86): a free preset for January 2027, deep-linked from /habit-tracker/. */
+    { name: 'New Year habits 2027', s: { layout: 'month', shape: 'circle', listHeading: 'Habit',
+        month: 0, year: 2027, title: 'New Year habits', orientation: 'landscape', paper: 'letter',
+        items: 'Drink water\nMove 20 minutes\nRead 10 pages\nLights out by 11\nNo phone at meals',
+        zebra: false, weekendShade: true } },
     { name: 'Chore chart', s: { layout: 'week', shape: 'square', listHeading: 'Who',
         title: 'Chore chart', items: 'Ada\nJonah\nRosa', weeks: 4, goalColumn: false,
         orientation: 'portrait', paper: 'letter', zebra: true, theme: 'bold' } },
