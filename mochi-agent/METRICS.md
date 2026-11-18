@@ -123,6 +123,28 @@ tracking harder.
 
 ---
 
+## Traffic — Search Console impressions (how Dec 1 is judged, #62)
+
+The traffic plan (#57, §5) judges Dec 1 by **Google Search Console impressions** for the Domain property
+`all-printable.com` (verified 2026-11-13; sitemap submitted the same day). DAU 25 becomes a Q1 target.
+
+**Baseline** (Search Console, read 2026-11-18 by t2-worker2 in the already-signed-in browser, read-only; Search Console
+had data for 2026-11-11 → 2026-11-16, its usual 2-day lag):
+
+| Measure | Value |
+|---|---|
+| Impressions | **42** (Search Console Performance, read 2026-11-18, covering 2026-11-11 → 11-16) |
+| Clicks | **1** (same) |
+| Average CTR | **2.4%** (same) |
+| Average position | **58.8** (same) |
+| Indexed pages | **24** indexed, **14** not (Search Console Page indexing, read 2026-11-18): 7 "alternate page with proper canonical tag", 3 "page with redirect", 4 "crawled – currently not indexed" |
+
+Top queries (impressions, 0 clicks each): printable calendar maker 3 · free sudoku print 3 · printable sudoku 3 ·
+free printable place cards 2 · create photo 10 x 5 calendar online 2 · sudoku printable 1 · daily planner printable 1 ·
+calendar maker 2017 1 · print weekly calendar 1 · day planner free 1 (19 queries in all).
+
+Weekly readings go on #62 until Dec 1; then the Dec 1 reading is summarized here against this baseline.
+
 ## Where the readings are logged
 
 `Current` above is the latest reading and always carries its date. The **log** of past
