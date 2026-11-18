@@ -160,7 +160,7 @@ window.AP = window.AP || {};
     bar.innerHTML =
       '<p>Nothing you make here leaves your device. May we count anonymous page ' +
       'and feature usage, so we know which printables to build next? ' +
-      'Never your content.</p>' +
+      'Never your content. <a href="/privacy/">Privacy</a></p>' +
       '<div class="consent-actions">' +
         '<button class="btn btn-sm" data-consent="no">No thanks</button>' +
         '<button class="btn btn-sm btn-primary" data-consent="yes">Allow</button>' +
