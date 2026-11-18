@@ -31,6 +31,10 @@
         month: 0, year: 2027, title: 'New Year habits', orientation: 'landscape', paper: 'letter',
         items: 'Drink water\nMove 20 minutes\nRead 10 pages\nLights out by 11\nNo phone at meals',
         zebra: false, weekendShade: true } },
+    /* January (all-printable-app-www#86): a free reading challenge for the winter, deep-linked from /reward-chart/. */
+    { name: 'Winter reading challenge', s: { layout: 'goal', shape: 'star', goalDays: 20, goalCols: 4,
+        numberBoxes: true, title: 'Winter reading challenge', items: 'Books I have read',
+        orientation: 'portrait', paper: 'letter', theme: 'bold', accentTitle: true } },
     { name: 'Chore chart', s: { layout: 'week', shape: 'square', listHeading: 'Who',
         title: 'Chore chart', items: 'Ada\nJonah\nRosa', weeks: 4, goalColumn: false,
         orientation: 'portrait', paper: 'letter', zebra: true, theme: 'bold' } },
