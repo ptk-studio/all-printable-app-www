@@ -80,6 +80,27 @@ ${list.map((p) => `      <li><b>${esc(p.name)}</b> ${esc(p.note)}</li>`).join('\
   </section>`;
 }
 
+/* A seasonal section (all-printable-app-www#86, December 2026): one free preset
+   in this printable's maker, deep-linked with ?preset=, and one honest line on
+   what Pro adds to that particular sheet. Only on entries that carry `season`;
+   take it off the entry when the season is over. */
+function seasonBlock(c, maker, up) {
+  const s = c.season;
+  if (!s) return '';
+  const href = s.preset ? `${maker.split('?')[0]}?preset=${s.preset}` : maker;
+  return `
+  <section class="section lp-season">
+    <div class="section-head">
+      <h2>${esc(s.h2)}</h2>
+      <p>${esc(s.text)}</p>
+    </div>
+    <p class="lp-cta"><a class="btn btn-primary" href="${esc(href)}">${esc(s.cta)}</a>
+       <span class="lp-free">Free, no sign-up</span></p>
+    <p>${esc(s.pro)} <a href="${up}pro/">What Pro adds</a></p>
+  </section>
+`;
+}
+
 function page(entry, c) {
   /* The home page no longer lists every printable, so the crumb and the nav
      point at the category's own page rather than an anchor on the home page. */
@@ -195,7 +216,7 @@ ${shot ? `<meta property="og:image" content="${shotUrl}">
       </table>
     </div>
   </section>
-
+${seasonBlock(c, maker, '../')}
   <section class="lp-print">
     <h2>Printing it correctly</h2>
     <p>Choose <b>Print</b>, then pick <b>Save as PDF</b> as the destination if you want a file.

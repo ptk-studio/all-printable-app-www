@@ -63,6 +63,15 @@ module.exports = {
   },
 
   '2027-calendar': {
+    season: {
+      h2: 'A 2027 calendar to give',
+      text: 'Add your family\u2019s birthdays in the maker and they print on the right days of 2027: ' +
+        'a quick, personal New Year present for grandparents. Print it on card.',
+      preset: null,
+      cta: 'Open 2027 in the maker',
+      pro: 'With Pro, the calendar is saved to your account, and the corner credit can carry your ' +
+        'own line, such as \u201cLove from Sam\u201d.'
+    },
     search: '2027 printable calendar',
     h1: '2027 printable calendar',
     intro: 'Twelve months of 2027, one month to a page, printed at the exact paper size you pick. ' +
@@ -361,6 +370,15 @@ module.exports = {
   },
 
   'habit-tracker': {
+    season: {
+      h2: 'New Year habits for 2027',
+      text: 'January 2027 with five starter habits (water, moving, reading, sleep and phone-free ' +
+        'meals), one circle per day. Rename them to your own resolutions before you print.',
+      preset: 'new-year-habits-2027',
+      cta: 'Open the New Year tracker',
+      pro: 'With Pro, the tracker is saved to your account, so it opens with the same habits on ' +
+        'any device all year.'
+    },
     search: 'printable habit tracker',
     h1: 'Printable habit tracker',
     intro: 'Your habits down the side, the days across the top, and a box at every crossing. ' +
@@ -536,6 +554,16 @@ module.exports = {
   },
 
   'word-search': {
+    season: {
+      h2: 'Christmas word search',
+      text: 'Fifteen holiday words, from reindeer to gingerbread, on a 12 \u00d7 12 grid: two puzzles, ' +
+        'with the answer grids at the end. Add your family\u2019s names to the list, or turn ' +
+        'diagonals off for younger children.',
+      preset: 'christmas-word-search',
+      cta: 'Open the Christmas word search',
+      pro: 'With Pro, your puzzle is saved to your account, so next year\u2019s opens with your ' +
+        'list on any device.'
+    },
     search: 'printable word search',
     h1: 'Printable word search',
     intro: 'A word search from your own list, at any grid size, with an answer grid that ' +
@@ -580,6 +608,15 @@ module.exports = {
   },
 
   bingo: {
+    season: {
+      h2: 'Christmas bingo',
+      text: 'Twenty different 5 \u00d7 5 cards with a free centre, dealt from 24 Christmas words ' +
+        '(snowman, sleigh, cocoa and more), two to a sheet. Call the words from the same list.',
+      preset: 'christmas-bingo',
+      cta: 'Open Christmas bingo',
+      pro: 'With Pro, the cards print without the all-printable.com credit, or with your own ' +
+        'line, such as the party\u2019s name.'
+    },
     search: 'printable bingo cards',
     h1: 'Printable bingo cards',
     intro: 'Unique bingo cards in one pass, with numbers drawn per column the way B-I-N-G-O ' +
@@ -599,6 +636,16 @@ module.exports = {
   },
 
   'gift-tags': {
+    season: {
+      h2: 'Christmas gift tags',
+      text: 'One click sets up a sheet of Christmas tags: \u201cMerry Christmas\u201d, To and From, a ' +
+        'marked punch hole and rounded corners, repeated to fill the page. Change the words, the ' +
+        'colour or the paper before you print.',
+      preset: 'christmas-gift-tags',
+      cta: 'Open the Christmas tags',
+      pro: 'With Pro, the small all-printable.com credit in the corner becomes your own line, ' +
+        'such as \u201cFrom the Lee family\u201d, or nothing at all.'
+    },
     search: 'printable gift tags',
     h1: 'Printable gift tags',
     intro: 'Gift tags with cut marks, rounded corners and a punch-hole mark so the hole ' +
