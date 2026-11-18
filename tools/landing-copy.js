@@ -610,8 +610,8 @@ module.exports = {
   bingo: {
     season: {
       h2: 'Christmas bingo',
-      text: 'Twenty different 5 \u00d7 5 cards with a free centre, dealt from 24 Christmas words ' +
-        '(snowman, sleigh, cocoa and more), two to a sheet. Call the words from the same list.',
+      text: 'Twenty different 5 \u00d7 5 cards with a free centre, dealt from 25 Christmas words ' +
+        '(sleigh, cocoa, mittens and more), two to a sheet. Call the words from the same list.',
       preset: 'christmas-bingo',
       cta: 'Open Christmas bingo',
       pro: 'With Pro, the cards print without the all-printable.com credit, or with your own ' +

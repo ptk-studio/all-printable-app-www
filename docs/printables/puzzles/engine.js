@@ -346,7 +346,15 @@ window.AP = window.AP || {};
     }
     var g = el('div', { class: 'pz-grid bingo' });
     g.style.gridTemplateColumns = 'repeat(' + data.size + ', 1fr)';
-    g.style.fontSize = 'calc(100cqmin / ' + (data.size + 2.5) + ')';
+    /* Size the type so the longest entry fits its square on one line: about
+       0.62em a character in the sheet faces, plus the padding. Numbers count as
+       their digits, words as their letters; never larger than the old size. */
+    var longest = 0;
+    data.grid.forEach(function (v) {
+      if (v !== null && String(v).length > longest) longest = String(v).length;
+    });
+    var per = Math.max(data.size + 2.5, data.size * (0.62 * longest + 0.8));
+    g.style.fontSize = 'calc(100cqmin / ' + per.toFixed(2) + ')';
     data.grid.forEach(function (v) {
       g.appendChild(el('div', { class: 'sq' + (v === null ? ' free' : ''),
         text: v === null ? 'FREE' : String(v) }));

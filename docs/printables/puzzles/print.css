@@ -100,6 +100,7 @@
 
 /* Word cards need much smaller type than number cards. */
 .page[data-layout="bingo"] .pz-grid.bingo .sq { text-align: center; padding: .1em; line-height: 1.05; }
+/* The size itself is set per card in engine.js bingoEl, from the longest entry. */
 
 .page.ink-saver .pz-grid .sq.hit { background: none; color: var(--accent);
   outline: 0.4mm solid var(--accent); outline-offset: -0.4mm; }

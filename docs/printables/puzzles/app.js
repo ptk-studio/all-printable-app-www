@@ -52,7 +52,7 @@
         words: 'reindeer\nsnowman\nstocking\nmistletoe\nornament\nsleigh\ngingerbread\npresents\ncarols\ntinsel\nwreath\nchimney\nholly\nlights\nstar' } },
     { name: 'Christmas bingo', s: { type: 'bingo', bingoMode: 'words', bingoSize: 5,
         freeSquare: true, count: 20, perPage: 2, solutions: 'none', bingoHeader: 'BINGO',
-        words: 'reindeer\nsnowman\nstocking\nmistletoe\nornament\nsleigh\ngingerbread\npresents\ncarols\ntinsel\nwreath\nchimney\nholly\nlights\nstar\nsnowflake\nelf\nmittens\ncocoa\nangel\nbells\ncookies\nscarf\nsled' } },
+        words: 'elf\nstar\nbells\nsleigh\nholly\ntinsel\nwreath\ncarols\ncocoa\ngifts\nangel\ncandle\nscarf\nsled\nsnow\ntree\nlights\ncookie\nmittens\nSanta\ntoys\nbow\nivy\nsocks\npie' } },
     /* ---- Pro ---- */
     { name: 'Expert sudoku pack', pro: true, note: 'Twelve expert grids, two to a page, answers at the back.', s: { type: 'sudoku', difficulty: 'expert',
         count: 12, perPage: 2, solutions: 'end', paper: 'letter', theme: 'minimal' } }
