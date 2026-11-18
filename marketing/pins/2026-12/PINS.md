@@ -9,3 +9,18 @@ Images: real renders of each preset (`?preset=…&preview=1`, headless Chrome, w
 | 3 | `SbCzOU8JKXO97mKOnsYvM` | Christmas Bingo Cards, Free Printable (20 Different Cards) | Twenty different Christmas bingo cards with a free center: sleigh, cocoa, mittens and more. Two cards to a sheet, ready for a class party or family night. Free to print. | https://app.all-printable.com/bingo/?utm_source=pinterest&utm_medium=pin&utm_campaign=december-2026&utm_content=bingo |
 | 4 | `CMEiYrlTDVq0EpDlVlS8E` | 2027 Family Calendar to Print, a Homemade Gift | Add your family's birthdays and they print on the right days of 2027. A quick, personal New Year present for grandparents. Free, true to size on Letter or A4. | https://app.all-printable.com/2027-calendar/?utm_source=pinterest&utm_medium=pin&utm_campaign=december-2026&utm_content=2027-calendar |
 | 5 | `8Xc7IIsacL6qI0PHLmzKC` | New Year Habit Tracker 2027, Free Printable | Start 2027 with a simple habit tracker: January, five habits, one circle a day. Rename the habits to your own resolutions before you print. Free. | https://app.all-printable.com/habit-tracker/?utm_source=pinterest&utm_medium=pin&utm_campaign=december-2026&utm_content=habit-tracker |
+
+## v2 (A/B, after t2-manager's 15:46 scores)
+
+`render_states.py` renders personalised real sheets from the live site through `#c=` share-link state (named gift tags, January 2027 with birthdays, the tracker); `make_pins_ab.py` composes A (headline on top, with the fixes) and B (sheet-led on a seasonal colour). Assets ids:
+
+- pin1-gift-tags-A: `-WcncXz3JmTADTntOZ1hg`
+- pin1-gift-tags-B: `8eMc3gKK73ZMCBsMcmlyg`
+- pin2-word-search-A: `50sxrOXj6wdTfu2Clto3O`
+- pin2-word-search-B: `4ZnEMKD7YIP5AhO0ZKLKr`
+- pin3-bingo-A: `DzaznV2PxytDPXBBcXS3s`
+- pin3-bingo-B: `vmHamvhuKl8WM4gu__hRj`
+- pin4-2027-calendar-A: `pGxAPJc1W22DCnTEtoDq0`
+- pin4-2027-calendar-B: `wpoRCVEyQdswQE4xDliGx`
+- pin5-habit-tracker-A: `YWAIbVBDe9rWfaQzYX_f-`
+- pin5-habit-tracker-B: `3sTMFBdY2lVYixGZh986J`
