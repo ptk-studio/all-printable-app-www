@@ -200,6 +200,15 @@ module.exports = {
   },
 
   'meal-planner': {
+    season: {
+      h2: 'A January meal plan',
+      text: 'Four weeks of January 2027, Monday to Sunday, with the dates filled in and a shopping ' +
+        'list beside each week. Change the meal slots to the ones you cook before you print.',
+      preset: 'january-meal-plan-2027',
+      cta: 'Open the January plan',
+      pro: 'With Pro, the plan is saved to your account, so February\u2019s opens with the same ' +
+        'meal slots.'
+    },
     search: 'printable meal planner',
     h1: 'Printable meal planner',
     intro: 'A week of meals with a shopping list beside it. The meal slots are yours — ' +
@@ -423,6 +432,15 @@ module.exports = {
   },
 
   'reward-chart': {
+    season: {
+      h2: 'A winter reading challenge',
+      text: 'Twenty stars for twenty books: colour one in each time a book is finished. A free ' +
+        'sheet for the winter break, with the star boxes numbered.',
+      preset: 'winter-reading-challenge',
+      cta: 'Open the reading challenge',
+      pro: 'With Pro, the chart is saved to your account, and the corner credit can carry your own ' +
+        'line, such as \u201cRead with Mum\u201d.'
+    },
     search: 'printable reward chart',
     h1: 'Printable reward chart',
     intro: 'A star grid with squares sized for the stickers that actually come in the packet. ' +
@@ -462,6 +480,15 @@ module.exports = {
   },
 
   'packing-list': {
+    season: {
+      h2: 'Your goals for 2027',
+      text: 'The same checklist maker, set up for the New Year: five headings (health, money, family, ' +
+        'learning, fun) with a few starter goals each and blank lines for your own. Edit them, then print.',
+      preset: 'new-year-goals-2027',
+      cta: 'Open the 2027 goals sheet',
+      pro: 'With Pro, the sheet is saved to your account, so next year\u2019s opens with the same ' +
+        'headings.'
+    },
     search: 'printable packing list',
     h1: 'Printable packing list',
     intro: 'Checklists by category with blank lines to add to. Tell it how many nights you ' +
