@@ -439,7 +439,7 @@ module.exports = {
       preset: 'winter-reading-challenge',
       cta: 'Open the reading challenge',
       pro: 'With Pro, the chart is saved to your account, and the corner credit can carry your own ' +
-        'line, such as \u201cRead with Mum\u201d.'
+        'line, such as \u201cRead with Mom\u201d.'
     },
     search: 'printable reward chart',
     h1: 'Printable reward chart',
