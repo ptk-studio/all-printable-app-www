@@ -16,3 +16,5 @@ the plans. Don't edit it by hand outside that process.
   project notes.
 
 Each plan has a `Status:` line (proposed, or approved with the date).
+
+**Every PTK Studio project and its GitHub repos:** [mochi-factory/project-groups/PROJECTS.md](https://github.com/ptk-studio/ptk-studio/blob/main/mochi-factory/project-groups/PROJECTS.md).
