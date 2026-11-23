@@ -5,7 +5,7 @@ What this project is trying to move, stated publicly so it can be held to it.
 Two primary metrics. Anything that does not plausibly serve one of them needs a reason of
 its own.
 
-Last reading: **2026-09-03**. Last reviewed: **2026-09-03**.
+Last reading: **2026-11-23** (Search Console traffic; the DAU and subscription figures are from 2026-09-03). Last reviewed: **2026-09-03**.
 
 ---
 
@@ -142,6 +142,26 @@ had data for 2026-11-11 → 2026-11-16, its usual 2-day lag):
 Top queries (impressions, 0 clicks each): printable calendar maker 3 · free sudoku print 3 · printable sudoku 3 ·
 free printable place cards 2 · create photo 10 x 5 calendar online 2 · sudoku printable 1 · daily planner printable 1 ·
 calendar maker 2017 1 · print weekly calendar 1 · day planner free 1 (19 queries in all).
+
+**Weekly reading 1** (Search Console, read 2026-11-23 by t2-worker2 in the already-signed-in browser, read-only; data to
+2026-11-21). The baseline is beside each number:
+
+| Measure | Baseline (11-11 → 11-16) | Last 7 days (11-15 → 11-21) |
+|---|---|---|
+| Impressions | 42 | **144** (Search Console Performance, read 2026-11-23) |
+| Clicks | 1 | **0** (same) |
+| Average CTR | 2.4% | **0%** (same) |
+| Average position | 58.8 | **52** (same) |
+| Queries | 19 | **66** (same) |
+| Indexed pages | 24 indexed, 14 not | **43** indexed, **21** not (Page indexing, read 2026-11-23, latest data point 2026-11-12): 12 alternate canonical, 3 redirect, 6 "discovered – currently not indexed", 0 "crawled – currently not indexed" |
+
+The two windows overlap on 11-15 and 11-16, so the rise in impressions is a direction, not a clean ratio. Top queries, last
+7 days (impressions, 0 clicks each): free printable place cards 6 · blank wordsearch grid printable free 5 · free printable
+daily planner 4 · print weekly calendar 4 · print graph paper 4 · print square paper 3 · sudoku printable 3 · daily planner
+printable 3 · printable daily planner 3 · print puzzles 3.
+
+**GA4: opt-in, no data** (read 2026-11-23, property `ptk-studio-allprintable`, last 7 days). Analytics is opt-in by design (see
+above), so this is not a fault.
 
 Weekly readings go on #62 until Dec 1; then the Dec 1 reading is summarized here against this baseline.
 
